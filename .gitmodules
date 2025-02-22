@@ -1,0 +1,3 @@
+[submodule "Assets/MMFramework_2.0"]
+	path = Assets/MMFramework_2.0
+	url = git@github.com:MildMania/MMFramework_2.0.git
