@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MildMania.PuzzleLevelEditor
+namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemSOBase : ScriptableObject
     {

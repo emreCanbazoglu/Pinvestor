@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     [CreateAssetMenu(menuName = "MMGame/Game/Cell/Logic/Cell Layer Info SO")]
     public class CellLayerInfoSO : ScriptableObject

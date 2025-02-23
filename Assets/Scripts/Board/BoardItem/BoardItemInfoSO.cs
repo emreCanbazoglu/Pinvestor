@@ -1,7 +1,7 @@
 ﻿using TypeReferences;
 using UnityEngine;
 
-namespace MildMania.PuzzleLevelEditor
+namespace Pinvestor.BoardSystem.Base
 {
     [CreateAssetMenu(menuName = "Puzzle Game/Board Item/Logic/Info/Board Item Info SO")]
     public class BoardItemInfoSO : ScriptableObject
@@ -10,8 +10,10 @@ namespace MildMania.PuzzleLevelEditor
             
         [ClassImplements(typeof(IBoardItemData))]
         public ClassTypeReference BoardItemDataTypeRef = typeof(BoardItemData_GenericItem_Tile);
-            
-        [field: SerializeField] public bool CanBeObjective = false;
-        [field: SerializeField] public bool ObjectiveOnly = false;
+        
+        [ClassImplements(typeof(IBoardItem))]
+        public ClassTypeReference BoardItemTypeRef = typeof(BoardItemBase);
+
+        [field: SerializeField] public BoardItemPropertySOBase[] BoardItemPropertySOs = null;
     }
 }

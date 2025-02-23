@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace  MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemVisualSortingOrderController : MonoBehaviour
     {

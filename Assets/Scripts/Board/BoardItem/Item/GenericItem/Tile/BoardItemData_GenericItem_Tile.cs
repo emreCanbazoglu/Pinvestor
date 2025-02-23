@@ -1,7 +1,7 @@
 ﻿using System;
 using Boomlagoon.JSON;
 
-namespace MildMania.PuzzleLevelEditor
+namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemData_GenericItem_Tile : BoardItemDataBase
     {
@@ -19,11 +19,6 @@ namespace MildMania.PuzzleLevelEditor
 
         public BoardItemData_GenericItem_Tile(BoardItemData_GenericItem_Tile data) : base(data)
         {
-        }
-        
-        public override int GetObjectiveCount()
-        {
-            return 0;
         }
 
         public override Enum GetItemID()

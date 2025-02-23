@@ -1,9 +1,9 @@
-﻿using MildMania.PuzzleLevelEditor;
+﻿using Pinvestor.BoardSystem.Base;
 using UnityEngine;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem
 {
-    [CreateAssetMenu(menuName = "MMGame/Game/Board Item/Logic/Core/Board Item SO")]
+    [CreateAssetMenu(menuName = "Pinvestor/Game/Board Item/Logic/Core/Board Item SO")]
     public class BoardItemSO : BoardItemSOBase<EBoardItem>
     {
     }

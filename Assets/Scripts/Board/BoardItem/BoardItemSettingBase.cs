@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MildMania.PuzzleLevelEditor
+namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemSettingBase
     {

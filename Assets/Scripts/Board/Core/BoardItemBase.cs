@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using MildMania.PuzzleLevelEditor;
 using UnityEngine;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
-    public abstract class BoardItemBase : IDisposable
+    public interface IBoardItem
     {
-        public BoardItemVisualBase Visual { get; protected set; }
         
+    }
+    
+    public abstract class BoardItemBase : IBoardItem, IDisposable
+    {
         public List<BoardItemPieceBase> Pieces { get; protected set; }
 
         public Dictionary<Type, BoardItemPropertySpecBase> BoardItemPropertySpecs { get; private set; } = new();
@@ -25,19 +27,19 @@ namespace Pinvestor.BoardSystem
 
         public Action<BoardItemBase> OnDisposed { get; set; }
         
-        private IGameStabilityChecker[] _stabilityCheckers;
+        private IBoardStabilityChecker[] _stabilityCheckers;
 
-        private IGameStabilityChecker[] _StabilityCheckers
+        private IBoardStabilityChecker[] _StabilityCheckers
         {
             get
             {
                 if (_stabilityCheckers == null)
                 {
-                    List<IGameStabilityChecker> checkers = new List<IGameStabilityChecker>();
+                    List<IBoardStabilityChecker> checkers = new List<IBoardStabilityChecker>();
                     
                     foreach (KeyValuePair<Type,BoardItemPropertySpecBase> keyValuePair in BoardItemPropertySpecs)
                     {
-                        if (keyValuePair.Value is IGameStabilityChecker stabilityChecker)
+                        if (keyValuePair.Value is IBoardStabilityChecker stabilityChecker)
                         {
                             checkers.Add(stabilityChecker);
                         }
@@ -77,8 +79,6 @@ namespace Pinvestor.BoardSystem
             
             DisposePieces();
 
-            DisposeVisual();
-
             DisposeCore();
             
             OnDisposed?.Invoke(this);
@@ -104,8 +104,6 @@ namespace Pinvestor.BoardSystem
         {
             Pieces = CreatePieces(IsPlaceholder);
 
-            Visual = CreateVisual();
-
             OnStabilityUpdated();
 
             RegisterToStabilityCheckers();
@@ -122,7 +120,7 @@ namespace Pinvestor.BoardSystem
         {
             if (isDebugEnabled && !IsStable)
             {
-                foreach (IGameStabilityChecker stabilityChecker in _StabilityCheckers)
+                foreach (IBoardStabilityChecker stabilityChecker in _StabilityCheckers)
                 {
                     bool isStable = stabilityChecker.IsStable();
 
@@ -174,7 +172,7 @@ namespace Pinvestor.BoardSystem
 
         private void RegisterToStabilityCheckers()
         {
-            foreach (IGameStabilityChecker gameStabilityChecker in _StabilityCheckers)
+            foreach (IBoardStabilityChecker gameStabilityChecker in _StabilityCheckers)
             {
                 gameStabilityChecker.OnStabilityUpdated += OnStabilityUpdated;
             }
@@ -182,7 +180,7 @@ namespace Pinvestor.BoardSystem
 
         private void UnregisterFromStabilityCheckers()
         {
-            foreach (IGameStabilityChecker gameStabilityChecker in _StabilityCheckers)
+            foreach (IBoardStabilityChecker gameStabilityChecker in _StabilityCheckers)
             {
                 gameStabilityChecker.OnStabilityUpdated -= OnStabilityUpdated;
             }
@@ -194,7 +192,7 @@ namespace Pinvestor.BoardSystem
 
             bool allStable = true;
             
-            foreach (IGameStabilityChecker stabilityChecker in _StabilityCheckers)
+            foreach (IBoardStabilityChecker stabilityChecker in _StabilityCheckers)
             {
                 if (!stabilityChecker.IsStable())
                 {
@@ -218,14 +216,6 @@ namespace Pinvestor.BoardSystem
             foreach (BoardItemPieceBase piece in Pieces)
             {
                 piece.Dispose();
-            }
-        }
-
-        private void DisposeVisual()
-        {
-            if (Visual)
-            {
-                Visual.gameObject.SetActive(false);
             }
         }
 

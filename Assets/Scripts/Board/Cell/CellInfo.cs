@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     [Serializable]
     public class CellInfo

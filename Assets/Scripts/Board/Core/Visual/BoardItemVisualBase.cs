@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
 
     public abstract class BoardItemVisualBase : MonoBehaviour

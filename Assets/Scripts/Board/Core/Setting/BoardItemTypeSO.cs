@@ -1,5 +1,5 @@
 ﻿using System;
-using MildMania.PuzzleLevelEditor;
+using Pinvestor.BoardSystem.Base;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem

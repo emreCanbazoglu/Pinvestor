@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Boomlagoon.JSON;
 using SerializableData;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public interface IBaseBoardItemData
     {

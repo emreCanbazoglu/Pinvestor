@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Pinvestor.BoardSystem.Base;
+using UnityEngine;
 
 namespace Pinvestor.BoardSystem
 {
@@ -6,6 +7,7 @@ namespace Pinvestor.BoardSystem
     {
         [field: SerializeField] public Transform BoardTransform { get; private set; }
         [field: SerializeField] public Transform BoardItemTransform { get; private set; }
+        
 
         public Board Board { get; private set; }
         
@@ -22,7 +24,14 @@ namespace Pinvestor.BoardSystem
             }
             else
             {
-                Board = new Board();
+                Board = new Board(
+                    new Vector2Int(5, 5),
+                    BoardItemSOContainer.Instance,
+                    BoardItemVisualPoolManager.Instance,
+                    new IBoardItemCreator[]
+                    {
+                        new BoardItemCreator_Default()
+                    });
             }
             
             Board.Init(boardData, isReloading, createCells);

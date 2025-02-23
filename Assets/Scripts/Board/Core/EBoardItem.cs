@@ -1,9 +1,9 @@
-﻿namespace MildMania.MMGame.Game
+﻿namespace Pinvestor.BoardSystem
 {
     public enum EBoardItem
     {
         None = 0,
         
-        Token = 10,
+        Company = 1,
     }
 }

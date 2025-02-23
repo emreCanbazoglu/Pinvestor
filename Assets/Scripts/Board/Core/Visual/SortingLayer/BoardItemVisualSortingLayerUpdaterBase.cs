@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemVisualSortingLayerUpdaterBase : MonoBehaviour
     {

@@ -2,7 +2,7 @@
 using Boomlagoon.JSON;
 using SerializableData;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public interface IBoardItemData
     {
@@ -26,7 +26,6 @@ namespace Pinvestor.BoardSystem
 
         public int Layer { get; set; }
         
-        public abstract int GetObjectiveCount();
         public abstract Enum GetItemID();
         
         public BoardItemDataBase(JSONObject jsonObj)
@@ -53,7 +52,7 @@ namespace Pinvestor.BoardSystem
         {
             Col = col;
             Row = row;
-            Layer = BoardExtensions.RetrieveBoardLayerID(layer);
+            Layer = layer;
         }
 
         public BoardItemTypeSOBase GetBoardItemType()

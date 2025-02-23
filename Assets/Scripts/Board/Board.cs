@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MildMania.PuzzleLevelEditor;
 using UnityEngine;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public class Board : IDisposable
     {
@@ -26,10 +25,12 @@ namespace Pinvestor.BoardSystem
         private IBoardItemCreator[] _boardItemCreators;
 
         public Board(
+            Vector2Int dimensions,
             BoardItemSOContainer boardItemSOContainer,
             BoardItemVisualPoolManager boardItemVisualPoolManager,
             IBoardItemCreator[] boardItemCreators)
         {
+            Dimensions = dimensions;
             _boardItemSOContainer = boardItemSOContainer;
             _boardItemVisualPoolManager = boardItemVisualPoolManager;
             _boardItemCreators = boardItemCreators;
@@ -47,8 +48,6 @@ namespace Pinvestor.BoardSystem
                 if (createCells)
                 {
                     CreateCells(boardData);
-
-                    CreateCellVisuals();
                 }
             }
             
@@ -65,40 +64,7 @@ namespace Pinvestor.BoardSystem
             }
         }
 
-        public BoardItemVisualBase CreateBoardItemVisual(
-            BoardItemTypeSO boardItemType,
-            BoardItemBase boardItem)
-        {
-            BoardItemVisualPoolManager
-                .Instance
-                .TryPopBoardItemVisual(boardItemType, out BoardItemVisualBase boardItemVisual);
-
-#if UNITY_EDITOR                
-            boardItemVisual.gameObject.name = "BoardItem_" + boardItemType.GetID();
-#endif            
-            
-            boardItemVisual.Init(boardItem);
-            
-            boardItemVisual.transform.SetParent(BoardManager.Instance.BoardItemTransform);
-
-            Vector2 position = new Vector2(boardItem.BoardItemData.Col, boardItem.BoardItemData.Row);
-            
-            //SetBoardItemVisualPosition(boardItemVisual, position);
-
-            return boardItemVisual;
-        }
-
-        public void SetBoardItemVisualPosition(
-            BoardItemVisualBase boardItemVisual,
-            Vector2 position)
-        {
-            boardItemVisual.transform.localPosition = GetCellPosition(position);
-        }
-
-        public bool IsGeneratorCell(Cell cell)
-        {
-            return GeneratorCells.Contains(cell);
-        }
+        
 
         public void AddBoardItemToBoard(BoardItemBase boardItem)
         {
@@ -118,7 +84,7 @@ namespace Pinvestor.BoardSystem
             
             BoardItemSOContainer.Instance.TryGetBoardItemInfoSO(
                 boardItemData.GetBoardItemType().GetID(),
-                out PuzzleLevelEditor.BoardItemInfoSO genericInfoSO);
+                out BoardItemInfoSO genericInfoSO);
 
             if (genericInfoSO is not BoardItemInfoSO infoSO)
             {
@@ -127,7 +93,11 @@ namespace Pinvestor.BoardSystem
 
             if (addToCell)
             {
-                BoardManager.Instance.Board.TryGetCellAt(new Vector2(boardItemData.Col, boardItemData.Row), out Cell cell);
+                TryGetCellAt(
+                    new Vector2(
+                        boardItemData.Col,
+                        boardItemData.Row),
+                    out Cell cell);
 
                 if (cell == null || !cell.CanAddBoardItem((BoardItemTypeSO) infoSO.BoardItemTypeSO))
                 {
@@ -173,12 +143,6 @@ namespace Pinvestor.BoardSystem
 
             Vector2Int offset = new Vector2Int(minIndexX, minIndexY);
             
-            Dimensions = new Vector2Int(maxIndexX - minIndexX + 1, maxIndexY - minIndexY + 1);
-
-            Dimensions = new Vector2Int(
-                GameSOContainer.Instance.GameSO.MaxColDimension,
-                GameSOContainer.Instance.GameSO.MaxRowDimension);
-            
             foreach (BoardItemDataBase boardItemData in boardData.BoardItems)
             {
                 boardItemData.Col -= offset.x;
@@ -188,10 +152,10 @@ namespace Pinvestor.BoardSystem
         
         private void CreateCells(BoardData boardData)
         {
-            Cells = new Dictionary<Vector2, Cell>();
+            _cells = new Dictionary<Vector2, Cell>();
             
-            BoardItemSOContainer.Instance.TryGetBoardItemInfoSO(
-                EGenericBoardItemType.Tile, out PuzzleLevelEditor.BoardItemInfoSO info);
+            _boardItemSOContainer.TryGetBoardItemInfoSO(
+                EGenericBoardItemType.Tile, out BoardItemInfoSO info);
             
             foreach (BoardItemDataBase boardItemData in boardData.BoardItems)
             {
@@ -235,7 +199,7 @@ namespace Pinvestor.BoardSystem
 
         private List<CellLayer> CreateLayers()
         {
-            CellLayerInfoSO[] cellLayerInfoColl = GameSOContainer.Instance.GameSO.GetCellInfo().CellLayerInfoColl;
+            CellLayerInfoSO[] cellLayerInfoColl = Array.Empty<CellLayerInfoSO>(); //= GameSOContainer.Instance.GameSO.GetCellInfo().CellLayerInfoColl;
 
             List<CellLayer> layers = new List<CellLayer>();
             
@@ -247,52 +211,6 @@ namespace Pinvestor.BoardSystem
             }
 
             return layers;
-        }
-
-        private void CreateCellVisuals()
-        {
-            GameSO gameSO = GameSOContainer.Instance.GameSO;
-            
-            GameObject cellVisualPrefab = gameSO.GetCellInfo().CellVisualPrefab;
-
-            Transform parentTransform = BoardManager.Instance.BoardTransform;
-
-            Board board = BoardManager.Instance.Board;
-
-            Vector2 cellVisualSize = board.GetCellVisualSize();
-
-            foreach (KeyValuePair<Vector2, Cell> keyValuePair in Cells)
-            {
-                Vector2 position = keyValuePair.Key;
-                
-                Vector3 cellPosition = GetCellPosition(position);
-                
-                GameObject cellObject = GameObject.Instantiate(
-                    cellVisualPrefab,
-                    cellPosition,
-                    Quaternion.identity,
-                    parentTransform);
-
-#if UNITY_EDITOR                
-                cellObject.name = "Cell_" + position.x + "_" + position.y;
-#endif
-                
-                CellVisual cellVisual = cellObject.GetComponent<CellVisual>();
-
-                this.TryGetCellAt(position, out Cell cell);
-                
-                cellVisual.VisualParent.localPosition = Vector3.zero;
-                
-                cellVisual.Init(cell);
-                cell.InitVisual(cellVisual);
-            }
-        }
-
-        public Vector3 GetCellPosition(Vector2 position)
-        {
-            Vector2 cellSize = GameSOContainer.Instance.GameSO.GetCellInfo().CellSize;
-            
-            return new Vector3(cellSize.x * position.x, cellSize.y * position.y, 0);
         }
         
         private void CreateItems(BoardData boardData)
@@ -307,6 +225,13 @@ namespace Pinvestor.BoardSystem
 
                 boardItems = filteredBoardItems;
             }
+        }
+        
+        public bool TryGetCellAt(
+            Vector2 position,
+            out Cell cell)
+        {
+            return Cells.TryGetValue(position, out cell);
         }
 
         public void Dispose()

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public class Cell
     {
@@ -12,8 +12,6 @@ namespace Pinvestor.BoardSystem
         public List<CellLayer> Layers { get; private set; }
         
         public CellLayer MainLayer { get; private set; }
-
-        public CellVisual Visual { get; private set; }
         
         public Cell(
             int col,
@@ -26,11 +24,6 @@ namespace Pinvestor.BoardSystem
             Layers = layers;
 
             MainLayer = Layers.FirstOrDefault(i => i.IsMainLayer);
-        }
-
-        public void InitVisual(CellVisual visual)
-        {
-            Visual = visual;
         }
 
         public bool TryGetTopmostFullLayer(out CellLayer cellLayer)
@@ -147,6 +140,7 @@ namespace Pinvestor.BoardSystem
         
         #region LinkedCells
 
+        /*
         private bool _linkedCellsInited;
         private Cell _linkedCellUp;
         private Cell _linkedCellDown;
@@ -228,7 +222,7 @@ namespace Pinvestor.BoardSystem
 
             _linkedCellsInited = true;
         }
-        
+        */
         #endregion
     }
 }

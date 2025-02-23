@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MildMania.PuzzleLevelEditor;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemCreator_Default : IBoardItemCreator
     {

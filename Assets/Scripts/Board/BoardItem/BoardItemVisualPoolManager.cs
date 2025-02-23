@@ -1,7 +1,7 @@
 using System;
 using MMPoolingSystem;
 using System.Collections.Generic;
-using MildMania.PuzzleLevelEditor;
+using Pinvestor.BoardSystem.Base;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem
@@ -23,7 +23,9 @@ namespace Pinvestor.BoardSystem
             }
         }
 
-        public bool TryPopBoardItemVisual(BoardItemTypeSOBase boardItemTypeSO, out BoardItemVisualBase boardItemVisual)
+        public bool TryPopBoardItemVisual(
+            BoardItemTypeSOBase boardItemTypeSO,
+            out BoardItemVisualBase boardItemVisual)
         {
             boardItemVisual = default;
             

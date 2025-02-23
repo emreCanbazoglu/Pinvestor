@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public class CellLayer
     {

@@ -1,4 +1,4 @@
-﻿namespace MildMania.PuzzleLevelEditor
+﻿namespace Pinvestor.BoardSystem.Base
 {
     public enum EGenericBoardItemType
     {

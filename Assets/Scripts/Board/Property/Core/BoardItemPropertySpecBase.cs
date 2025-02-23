@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MildMania.MMGame.Game
+namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemPropertySpecBase : IDisposable
     {

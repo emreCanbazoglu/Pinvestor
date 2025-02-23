@@ -1,7 +1,8 @@
 ﻿using System;
+using Pinvestor.BoardSystem.Base;
 using UnityEngine;
 
-namespace MildMania.PuzzleLevelEditor
+namespace Pinvestor.BoardSystem
 {
     [CreateAssetMenu(menuName = "Puzzle Game/Board Item/Logic/Type/Generic Board Item Type SO")]
     public class BoardItemTypeSO_GenericItem : BoardItemTypeSOBase

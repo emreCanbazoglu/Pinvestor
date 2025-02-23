@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pinvestor.BoardSystem
+namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemPieceBase : IDisposable
     {
