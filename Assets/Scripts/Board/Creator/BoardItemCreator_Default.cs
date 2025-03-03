@@ -6,6 +6,7 @@ namespace Pinvestor.BoardSystem.Base
     public class BoardItemCreator_Default : IBoardItemCreator
     {
         public void CreateItems(
+            Board board,
             List<BoardItemDataBase> boardItems,
             out List<BoardItemDataBase> filteredBoardItems)
         {
@@ -13,7 +14,7 @@ namespace Pinvestor.BoardSystem.Base
             {
                 BoardItemDataBase clonedData = BoardItemDataFactory.CreateBoardItemData(boardItemData);
                 
-                BoardManager.Instance.Board.TryCreateNewBoardItem(clonedData, out BoardItemBase boardItem);
+                board.TryCreateNewBoardItem(clonedData, out BoardItemBase boardItem);
             }
             
             boardItems.Clear();

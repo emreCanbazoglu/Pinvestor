@@ -32,7 +32,7 @@ namespace Pinvestor.Game
         private async UniTask InitializeAsync()
         {
             _table = new Table(
-                CreateBoard(),
+                GetBoardData(),
                 _gamePlayer,
                 _serializedDeckDataProvider);
             
@@ -43,9 +43,9 @@ namespace Pinvestor.Game
             PlayAsync().Forget();
         }
         
-        private Board CreateBoard()
+        private BoardData GetBoardData()
         {
-            return null;
+            return new BoardData(_boardSize);
         }
 
         private async UniTask PlayAsync()

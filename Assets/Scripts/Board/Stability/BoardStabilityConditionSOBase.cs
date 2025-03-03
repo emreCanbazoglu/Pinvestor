@@ -4,6 +4,8 @@ namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardStabilityConditionSOBase : ScriptableObject
     {
-        public abstract bool IsSatisfied(bool isDebugEnabled = false);
+        public abstract bool IsSatisfied(
+            Board board,
+            bool isDebugEnabled = false);
     }
 }

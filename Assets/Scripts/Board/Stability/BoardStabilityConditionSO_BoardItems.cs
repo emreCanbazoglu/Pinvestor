@@ -6,11 +6,11 @@ namespace Pinvestor.BoardSystem.Base
     [CreateAssetMenu(menuName = "MMGame/Game/Stability/Logic/Game Board Items Stability Condition SO")]
     public class BoardStabilityConditionSO_BoardItems : BoardStabilityConditionSOBase
     {
-        public override bool IsSatisfied(bool isDebugEnabled = false)
+        public override bool IsSatisfied(
+            Board board,
+            bool isDebugEnabled = false)
         {
-            return BoardManager
-                .Instance
-                .Board
+            return board
                 .BoardItems
                 .All(val => val.CheckIsStable(isDebugEnabled));
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Boomlagoon.JSON;
 using SerializableData;
+using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
@@ -15,21 +16,27 @@ namespace Pinvestor.BoardSystem.Base
     {
         #region Constants
         
+        private const string DIMENSIONS_KEY = "Dimensions";
         private const string ITEMS_KEY = "Items";
 
         #endregion
         
+        public Vector2Int Dimensions { get; private set; }
         public List<BoardItemDataBase> BoardItems { get; private set; }
 
 
-        public BoardData()
+        public BoardData(
+            Vector2Int dimensions)
         {
+            Dimensions = dimensions;
             BoardItems = new List<BoardItemDataBase>();
         }
 
         public BoardData(
+            Vector2Int dimensions,
             List<BoardItemDataBase> boardItems)
         {
+            Dimensions = dimensions;
             BoardItems = new List<BoardItemDataBase>(boardItems);
         }
         
@@ -41,6 +48,12 @@ namespace Pinvestor.BoardSystem.Base
         public JSONObject Serialize()
         {
             JSONObject jsonObj = new JSONObject();
+            
+            jsonObj.Add(DIMENSIONS_KEY, new JSONObject
+            {
+                { "x", Dimensions.x },
+                { "y", Dimensions.y }
+            });
 
             JSONObject itemsJsonObj = new JSONObject();
             
@@ -66,6 +79,12 @@ namespace Pinvestor.BoardSystem.Base
 
         public void Deserialize(JSONObject jsonObj)
         {
+            JSONObject dimensionsJsonObj = jsonObj.GetObject(DIMENSIONS_KEY);
+
+            Dimensions = new Vector2Int(
+                (int)dimensionsJsonObj.GetNumber("x"),
+                (int)dimensionsJsonObj.GetNumber("y"));
+            
             BoardItems = new List<BoardItemDataBase>();
             
             JSONObject itemDataJsonObj = jsonObj.GetObject(ITEMS_KEY);

@@ -25,12 +25,10 @@ namespace Pinvestor.BoardSystem.Base
         private IBoardItemCreator[] _boardItemCreators;
 
         public Board(
-            Vector2Int dimensions,
             BoardItemSOContainer boardItemSOContainer,
             BoardItemVisualPoolManager boardItemVisualPoolManager,
             IBoardItemCreator[] boardItemCreators)
         {
-            Dimensions = dimensions;
             _boardItemSOContainer = boardItemSOContainer;
             _boardItemVisualPoolManager = boardItemVisualPoolManager;
             _boardItemCreators = boardItemCreators;
@@ -38,9 +36,11 @@ namespace Pinvestor.BoardSystem.Base
         
         public void Init(
             BoardData boardData, 
-            bool isReloading,
-            bool createCells)
+            bool isReloading = false,
+            bool createCells = false)
         {
+            Dimensions = boardData.Dimensions;
+            
             if (!isReloading)
             {
                 ResetBoardOffset(boardData);
@@ -220,6 +220,7 @@ namespace Pinvestor.BoardSystem.Base
             foreach (IBoardItemCreator itemCreator in _boardItemCreators)
             {
                 itemCreator.CreateItems(
+                    this,
                     boardItems,
                     out List<BoardItemDataBase> filteredBoardItems);
 
