@@ -54,7 +54,7 @@ namespace Pinvestor.BoardSystem.Base
 
         protected abstract List<BoardItemPieceBase> CreatePieces(bool isPlaceholder = false);
         
-        protected abstract BoardItemVisualBase CreateVisual();
+        protected abstract BoardItemWrapperBase CreateWrapper();
         
         protected virtual void InitCore(BoardItemDataBase data)
         {

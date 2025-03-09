@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pinvestor.BoardSystem.Base
 {
@@ -14,7 +15,7 @@ namespace Pinvestor.BoardSystem.Base
             [field: SerializeField] public int BaseSortingOrder { get; private set; } = 100;
         }
         
-        [SerializeField] private BoardItemVisualBase _boardItemVisual = null;
+        [FormerlySerializedAs("_boardItemVisual")] [SerializeField] private BoardItemWrapperBase boardItemWrapper = null;
 
         [SerializeField] private SortingOrderInfo[] _sortingOrderInfoColl = null;
 
@@ -35,7 +36,7 @@ namespace Pinvestor.BoardSystem.Base
         {
             RegisterToBoardItemVisual();
 
-            if (_boardItemVisual.BoardItem != null)
+            if (boardItemWrapper.BoardItem != null)
             {
                 RegisterToBoardItem();
             }
@@ -55,12 +56,12 @@ namespace Pinvestor.BoardSystem.Base
 
         private void RegisterToBoardItemVisual()
         {
-            _boardItemVisual.OnInited += OnInited;
+            boardItemWrapper.OnInited += OnInited;
         }
 
         private void UnregisterFromBoardItemVisual()
         {
-            _boardItemVisual.OnInited -= OnInited;
+            boardItemWrapper.OnInited -= OnInited;
         }
 
         private void OnInited()
@@ -75,7 +76,7 @@ namespace Pinvestor.BoardSystem.Base
         {
             UnregisterFromBoardItem();
             
-            foreach (BoardItemPieceBase piece in _boardItemVisual.BoardItem.Pieces)
+            foreach (BoardItemPieceBase piece in boardItemWrapper.BoardItem.Pieces)
             {
                 piece.OnCellUpdated += OnPieceCellUpdated;
             }
@@ -83,7 +84,7 @@ namespace Pinvestor.BoardSystem.Base
 
         private void UnregisterFromBoardItem()
         {
-            foreach (BoardItemPieceBase piece in _boardItemVisual.BoardItem.Pieces)
+            foreach (BoardItemPieceBase piece in boardItemWrapper.BoardItem.Pieces)
             {
                 piece.OnCellUpdated -= OnPieceCellUpdated;
             }
@@ -98,14 +99,14 @@ namespace Pinvestor.BoardSystem.Base
         {
             int maxRow;
 
-            if (_boardItemVisual.BoardItem.IsPlaceholder)
+            if (boardItemWrapper.BoardItem.IsPlaceholder)
             {
                 maxRow = 99;
             }
             else
             {
                 // TODO: might need update for multiple pieces
-                maxRow = _boardItemVisual.BoardItem.Pieces.Max(val => val.Cell.Row);
+                maxRow = boardItemWrapper.BoardItem.Pieces.Max(val => val.Cell.Row);
             }
             
             foreach (SortingOrderInfo sortingOrderInfo in _sortingOrderInfoColl)

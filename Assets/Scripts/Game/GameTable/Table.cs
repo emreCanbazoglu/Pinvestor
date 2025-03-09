@@ -29,7 +29,7 @@ namespace Pinvestor.Game
         {
             Board = new Board(
                 BoardItemSOContainer.Instance,
-                BoardItemVisualPoolManager.Instance,
+                BoardItemWrapperPoolManager.Instance,
                 new IBoardItemCreator[]
                 {
                     new BoardItemCreator_Default()

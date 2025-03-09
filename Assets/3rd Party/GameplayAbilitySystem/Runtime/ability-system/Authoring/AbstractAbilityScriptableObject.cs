@@ -39,7 +39,7 @@ namespace AbilitySystem.Authoring
         /// </summary>
         /// <param name="owner">Usually the character casting thsi ability</param>
         /// <returns>Ability Spec</returns>
-        public abstract AbstractAbilitySpec CreateSpec(AbilitySystemCharacter owner, float? level);
+        public abstract AbstractAbilitySpec CreateSpec(AbilitySystemCharacter owner, float? level = default);
 
         public override bool Equals(object obj)
         {

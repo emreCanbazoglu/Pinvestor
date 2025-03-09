@@ -21,16 +21,16 @@ namespace Pinvestor.BoardSystem.Base
         
 
         private BoardItemSOContainer _boardItemSOContainer;
-        private BoardItemVisualPoolManager _boardItemVisualPoolManager;
+        private BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
         private IBoardItemCreator[] _boardItemCreators;
 
         public Board(
             BoardItemSOContainer boardItemSOContainer,
-            BoardItemVisualPoolManager boardItemVisualPoolManager,
+            BoardItemWrapperPoolManager boardItemWrapperPoolManager,
             IBoardItemCreator[] boardItemCreators)
         {
             _boardItemSOContainer = boardItemSOContainer;
-            _boardItemVisualPoolManager = boardItemVisualPoolManager;
+            _boardItemWrapperPoolManager = boardItemWrapperPoolManager;
             _boardItemCreators = boardItemCreators;
         }
         

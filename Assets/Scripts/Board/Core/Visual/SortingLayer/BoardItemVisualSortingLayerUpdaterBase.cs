@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemVisualSortingLayerUpdaterBase : MonoBehaviour
     {
-        [SerializeField] private BoardItemVisualBase _boardItemVisual = null;
+        [FormerlySerializedAs("_boardItemVisual")] [SerializeField] private BoardItemWrapperBase boardItemWrapper = null;
         
         private const string UI_LAYER = "UI";
 
@@ -28,18 +29,18 @@ namespace Pinvestor.BoardSystem.Base
 
         private void RegisterToBoardItemVisual()
         {
-            if (_boardItemVisual.IsInited)
+            if (boardItemWrapper.IsInited)
             {
                 OnInited();
                 return;
             }
             
-            _boardItemVisual.OnInited += OnInited;
+            boardItemWrapper.OnInited += OnInited;
         }
 
         private void UnregisterFromBoardItemVisual()
         {
-            _boardItemVisual.OnInited -= OnInited;
+            boardItemWrapper.OnInited -= OnInited;
         }
 
         private void OnInited()

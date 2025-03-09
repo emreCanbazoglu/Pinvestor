@@ -1,3 +1,5 @@
+using Pinvestor.AbilitySystem.Abilities;
+
 namespace Pinvestor.CardSystem
 {
     public abstract class CardBase
@@ -6,12 +8,37 @@ namespace Pinvestor.CardSystem
         public CardData CardData { get; private set; }
         public abstract CardDataScriptableObject CardDataScriptableObject { get; }
         
+        private PlayCardAbilitySpec _playCardAbilitySpec;
+        
         protected CardBase(
             CardPlayer owner,
             CardData cardData)
         {
             Owner = owner;
             CardData = cardData;
+        }
+        
+        protected void SetPlayCardAbilitySpec(
+            PlayCardAbilitySpec playCardAbilitySpec)
+        {
+            _playCardAbilitySpec = playCardAbilitySpec;
+        }
+        
+        public bool CanPlayCard(
+            CardPlayer target = null)
+        {
+            if(target == null)
+                target = Owner;
+            
+            SetTargetCardPlayer(target);
+            
+            return _playCardAbilitySpec.CanActivateAbility();
+        }
+        
+        private void SetTargetCardPlayer(
+            CardPlayer target)
+        {
+            _playCardAbilitySpec.TargetCardPlayer = target;
         }
         
         public void SetCardRemovedFromSlot()
@@ -66,6 +93,11 @@ namespace Pinvestor.CardSystem
             TCardDataScriptableObject cardDataSo) : base(owner, cardData)
         {
             CastedCardDataSo = cardDataSo;
+            
+            SetPlayCardAbilitySpec(
+                CastedCardDataSo.CardAbilityScriptableObject
+                    .CreateSpec(
+                    owner.AbilitySystemCharacter) as PlayCardAbilitySpec);
         }
     }
 }

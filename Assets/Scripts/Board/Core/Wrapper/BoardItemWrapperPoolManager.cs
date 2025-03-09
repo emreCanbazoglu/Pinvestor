@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pinvestor.BoardSystem
 {
-    public class BoardItemVisualPoolManager : Singleton<BoardItemVisualPoolManager>
+    public class BoardItemWrapperPoolManager : Singleton<BoardItemWrapperPoolManager>
     {
         [SerializeField] private GOPoolController _poolController = null;
 
@@ -25,9 +25,9 @@ namespace Pinvestor.BoardSystem
 
         public bool TryPopBoardItemVisual(
             BoardItemTypeSOBase boardItemTypeSO,
-            out BoardItemVisualBase boardItemVisual)
+            out BoardItemWrapperBase boardItemWrapper)
         {
-            boardItemVisual = default;
+            boardItemWrapper = default;
             
             if (!_GameObjectPools.TryGetValue(boardItemTypeSO.GetID(), out GameObjectPool pool))
             {
@@ -36,9 +36,9 @@ namespace Pinvestor.BoardSystem
             
             GOPoolObject poolObject = pool.TryPopPoolObject();
 
-            boardItemVisual = poolObject.GetComponent<BoardItemVisualBase>();
+            boardItemWrapper = poolObject.GetComponent<BoardItemWrapperBase>();
 
-            boardItemVisual.gameObject.SetActive(true);
+            boardItemWrapper.gameObject.SetActive(true);
 
             return true;
         }
@@ -59,9 +59,9 @@ namespace Pinvestor.BoardSystem
 
             foreach (GOPoolingInfo poolingInfo in _poolInfos)
             {
-                BoardItemVisualBase boardItemVisual = poolingInfo.PoolObjectSample.GetComponent<BoardItemVisualBase>();
+                BoardItemWrapperBase boardItemWrapper = poolingInfo.PoolObjectSample.GetComponent<BoardItemWrapperBase>();
 
-                BoardItemTypeSO boardItemTypeSO = boardItemVisual.GetBoardItemTypeSO();
+                BoardItemTypeSO boardItemTypeSO = boardItemWrapper.GetBoardItemTypeSO();
 
                 _gameObjectPools.Add(boardItemTypeSO.GetID(), _poolController.RegisterPool(poolingInfo));
             }

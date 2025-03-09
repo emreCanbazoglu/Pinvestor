@@ -1,3 +1,4 @@
+using AbilitySystem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -5,6 +6,8 @@ namespace Pinvestor.CardSystem
 {
     public class CardPlayer : MonoBehaviour
     {
+        [field: SerializeField] public AbilitySystemCharacter AbilitySystemCharacter { get; private set; } = null;
+        
         public Deck Deck { get; private set; } = null;
         private bool _isInitialized = false;
 

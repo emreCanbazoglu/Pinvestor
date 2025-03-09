@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemVisualSpriteRendererUpdater : MonoBehaviour
     {
-        [SerializeField] private BoardItemVisualBase _boardItemVisual = null;
+        [FormerlySerializedAs("_boardItemVisual")] [SerializeField] private BoardItemWrapperBase boardItemWrapper = null;
 
         [SerializeField] private SpriteRenderer[] _spriteRenderers = new SpriteRenderer[]{};
 
@@ -18,7 +19,7 @@ namespace Pinvestor.BoardSystem.Base
             {
                 Color color = spriteRenderer.color;
 
-                color.a = _boardItemVisual.BoardItem.IsPlaceholder ? _placeholderAlpha : _defaultAlpha;
+                color.a = boardItemWrapper.BoardItem.IsPlaceholder ? _placeholderAlpha : _defaultAlpha;
 
                 spriteRenderer.color = color;
             }
@@ -36,12 +37,12 @@ namespace Pinvestor.BoardSystem.Base
 
         private void RegisterToBoardItemVisual()
         {
-            _boardItemVisual.OnInited += OnInited;
+            boardItemWrapper.OnInited += OnInited;
         }
 
         private void UnregisterFromBoardItemVisual()
         {
-            _boardItemVisual.OnInited -= OnInited;
+            boardItemWrapper.OnInited -= OnInited;
         }
 
         private void OnInited()

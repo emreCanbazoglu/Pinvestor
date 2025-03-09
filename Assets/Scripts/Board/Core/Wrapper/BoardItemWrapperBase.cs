@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
-
-    public abstract class BoardItemVisualBase : MonoBehaviour
+    public abstract class BoardItemWrapperBase : MonoBehaviour
     {
         [field: SerializeField] public Transform VisualContainer { get; private set; } = null;
         

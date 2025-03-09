@@ -18,7 +18,7 @@ namespace Pinvestor.BoardSystem.Base
             return pieces;
         }
 
-        protected override BoardItemVisualBase CreateVisual()
+        protected override BoardItemWrapperBase CreateWrapper()
         {
             return null;
         }
