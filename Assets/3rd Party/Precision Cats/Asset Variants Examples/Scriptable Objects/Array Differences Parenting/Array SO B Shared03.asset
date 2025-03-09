@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a53af1e48c8e1468ac5e14252da688, type: 3}
+  m_Name: Array SO B Shared03
+  m_EditorClassIdentifier: 
+  text: 'This is to demonstrate that when 2 assets have an array in common with very
+    few elements that share the same value, then when you set the parent of one to
+    the other, each differing element will get their own override automatically created.
+
+
+    The
+    shared value can also be the array size.
+
+    Note the setting skipArrayDotArraySubProperty
+    if you want to be able to override all elements with a single override, but not
+    override the array size.
+
+
+    It might be best to manually create an override
+    for the array as a whole in such a case as this.'
+  randomize: 0
+  array:
+  - 3.41
+  - 1.41
+  - -2.11
+  - 1.1
+  - 1.49
+  - 1.12
+  - 1.37
+  - -2.12
+  - 1.82
+  - -2.52
+  - -6.32
+  - -6.15
+  - 0.67
+  - 0.64
+  - -0.45
+  - -7.17
+  - -6.13
+  - -6.21
+  - 6.39
+  - 12.04
+  text2: 

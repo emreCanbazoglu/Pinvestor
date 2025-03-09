@@ -1,0 +1,184 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7436767753769719783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Middle
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: MiddleColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1400
+  notes: 
+  wrapType: 1
+  mode: 1
+  indented: 1
+  color: {r: 1, g: 0.996807, b: 0.7924528, a: 1}
+  indentation: 0
+  leftPadding: 4
+  rightPadding: 4
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &-5310523699857791599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Root
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: RootColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1200
+  notes: 
+  wrapType: 0
+  mode: 1
+  indented: 1
+  color: {r: 1, g: 0.70980394, b: 0.81018305, a: 1}
+  indentation: 0
+  leftPadding: 5
+  rightPadding: 5
+  preChildrenSpacing: 3
+  postChildrenSpacing: 3
+  debugTypes: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e618f1a134e71b14c983fa487c9d6efb, type: 3}
+  m_Name: Color Wraps 2 - Sunset
+  m_EditorClassIdentifier: 
+  parent: {fileID: 11400000, guid: bbdea76001e99bf42b541e7e4df6d701, type: 2}
+  children:
+  - {fileID: 2739368361683392456}
+  - {fileID: 8681347410163207707}
+  - {fileID: 8893324429005728798}
+  - {fileID: 8835978686606446621}
+  - {fileID: -7436767753769719783}
+  - {fileID: -5310523699857791599}
+--- !u!114 &2739368361683392456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Inner
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: InnerColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1800
+  notes: 
+  wrapType: 1
+  mode: 2
+  indented: 1
+  color: {r: 0.47058824, g: 0.16094115, b: 0.34156853, a: 1}
+  indentation: 0
+  leftPadding: 6
+  rightPadding: 2
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &8681347410163207707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Middle
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: MiddleColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1400
+  notes: 
+  wrapType: 1
+  mode: 2
+  indented: 1
+  color: {r: 1, g: 0.6737686, b: 0.314, a: 1}
+  indentation: 0
+  leftPadding: 4
+  rightPadding: 4
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &8835978686606446621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Inner
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: InnerColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1800
+  notes: 
+  wrapType: 1
+  mode: 1
+  indented: 1
+  color: {r: 1, g: 0.87941176, b: 0.754, a: 1}
+  indentation: 0
+  leftPadding: 6
+  rightPadding: 2
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &8893324429005728798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Root
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: RootColorWrapEditor.Priority2
+  systemActive: 1
+  systemPriority: 1200
+  notes: 
+  wrapType: 0
+  mode: 2
+  indented: 1
+  color: {r: 0.2493976, g: 0.17500001, b: 0.5, a: 1}
+  indentation: 0
+  leftPadding: 5
+  rightPadding: 5
+  preChildrenSpacing: 3
+  postChildrenSpacing: 3
+  debugTypes: 0

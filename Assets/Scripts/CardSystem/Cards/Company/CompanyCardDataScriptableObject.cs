@@ -1,3 +1,4 @@
+using AttributeSystem.Authoring;
 using Pinvestor.CompanySystem;
 using UnityEngine;
 
@@ -8,10 +9,13 @@ namespace Pinvestor.CardSystem
         fileName = "CardData.Company.asset")]
     public class CompanyCardDataScriptableObject : CardDataScriptableObject
     {
+        
         [field: SerializeField] public ECompanyCategory CompanyCategory { get; private set; } 
             = ECompanyCategory.None;
-        
         [field: SerializeField] public string CompanyName { get; private set; } = string.Empty;
+        
+        [field: SerializeField] public AttributeSetScriptableObject AttributeSet { get; private set; }
+            = null;
         
         public override ECardType CardType => ECardType.Company;
         

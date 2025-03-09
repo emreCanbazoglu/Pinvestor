@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74e0d3e65beab04aaa88fc0883d7f21, type: 3}
+  m_Name: ERSettings.Default
+  m_EditorClassIdentifier: 
+  disabled: 0
+  inspectedTypeFilter:
+    useBlacklist: 1
+    blacklist: []
+    inheritedBlacklist: []
+    useWhitelist: 0
+    whitelist: []
+    inheritedWhitelist: []
+  neverUseDefaultMargins: 1
+  alignPrefabBars: 1
+  defaultPreChildrenSpacing: 2
+  defaultPostChildrenSpacing: 2
+  subAssets:
+    disabled: 0
+    defaultSpacing: 2
+    defaultSingleTargetUsesFoldout: 0
+    lineColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+    lineThickness: 2
+    linePadding: 2
+    indented: 1
+  defaultOnlyIMGUI: 0

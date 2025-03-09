@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68dea6ed9a81578458194678c06134be, type: 3}
+  m_Name: New Odin Group Mismatch 2 SOB
+  m_EditorClassIdentifier: 
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: odinSerialized
+      Entry: 7
+      Data: 0|OdinGroupMismatchSOB+Class, Assembly-CSharp
+    - Name: a
+      Entry: 6
+      Data: 
+    - Name: b
+      Entry: 6
+      Data: 
+    - Name: c
+      Entry: 6
+      Data: 
+    - Name: d
+      Entry: 6
+      Data: 
+    - Name: e
+      Entry: 6
+      Data: 
+    - Name: f
+      Entry: 6
+      Data: 
+    - Name: g
+      Entry: 6
+      Data: 
+    - Name: h
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

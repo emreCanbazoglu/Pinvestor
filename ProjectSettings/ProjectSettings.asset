@@ -816,7 +816,20 @@ PlayerSettings:
   webGLWebAssemblyBigInt: 0
   webGLCloseOnQuit: 0
   webWasm2023: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: ASSET_VARIANTS
+    EmbeddedLinux: ASSET_VARIANTS
+    GameCoreXboxOne: ASSET_VARIANTS
+    Nintendo Switch: ASSET_VARIANTS
+    PS4: ASSET_VARIANTS
+    PS5: ASSET_VARIANTS
+    QNX: ASSET_VARIANTS
+    ReservedCFE: ASSET_VARIANTS
+    Standalone: ASSET_VARIANTS
+    VisionOS: ASSET_VARIANTS
+    WebGL: ASSET_VARIANTS
+    XboxOne: ASSET_VARIANTS
+    tvOS: ASSET_VARIANTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

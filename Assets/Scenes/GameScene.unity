@@ -223,6 +223,85 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1526526339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1526526343}
+  - component: {fileID: 1526526342}
+  - component: {fileID: 1526526341}
+  - component: {fileID: 1526526340}
+  m_Layer: 0
+  m_Name: P_Company
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1526526340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526526339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22372256c460ce147a7df48a7514f360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attributeSystemEvents: []
+  _attributeSet: {fileID: 0}
+  _attributeValues: []
+  _initializeOnAwake: 0
+--- !u!114 &1526526341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526526339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fffe556c80c6749af45dd3d5c823b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AttributeSystem>k__BackingField: {fileID: 1526526340}
+  _castableAbilities: []
+  _initializationAbilities: []
+  _initialTags: []
+--- !u!114 &1526526342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526526339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f09856110f674525ab916e019dfcff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AbilitySystemCharacter>k__BackingField: {fileID: 1526526341}
+--- !u!4 &1526526343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526526339}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1576671300
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,6 +351,7 @@ MonoBehaviour:
   _gamePlayer: {fileID: 214124729}
   _serializedDeckDataProvider: {fileID: 1576671301}
   _boardSize: {x: 5, y: 5}
+  _selectedCompanyCardIndex: 0
 --- !u!4 &1576671303
 Transform:
   m_ObjectHideFlags: 0
@@ -352,3 +432,4 @@ SceneRoots:
   - {fileID: 649339911}
   - {fileID: 2041318488155657256}
   - {fileID: 1576671303}
+  - {fileID: 1526526343}

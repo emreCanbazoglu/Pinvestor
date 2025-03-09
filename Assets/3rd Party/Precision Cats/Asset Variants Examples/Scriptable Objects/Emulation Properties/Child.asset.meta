@@ -1,0 +1,9 @@
+fileFormatVersion: 2
+guid: e25d5f93fc301df4db68b884f1cd3a4f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"3b7b5fcc59dcb66489a5b634651e7374\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"hashSetEmulation.{\\\"D\\\"}\",\"dictionaryEmulation.{\\\"Some
+    String\\\"}\",\"hashSetEmulation.{\\\"Okie Dokie\\\"}\",\"hashSetEmulation.{\\\"Thing3\\\"}\",\"hashSetEmulation.{\\\"DD\\\"}\",\"dictionaryEmulation.{\\\"B\\\"}.replaced\",\"dictionaryEmulation.{\\\"OriginalValue\\\"}\",\"dictionaryEmulation.{\\\"OriginalValue2.0\\\"}\",\"hashSetEmulation.{\\\"34\\\"}\",\"hashSetEmulation.{\\\"234\\\"}\",\"objectHashSetEmulation.{1b3f091023f7b8942a6b6def278d63b6.Main}\",\"objectHashSetEmulation.{d4842481dc3581f479b380f7f1b3dde5.Main}\",\"objectHashSetEmulation.{d31962f463ba5c048930aa90ee1efaa8.Main}\",\"objectHashSetEmulation.{00438b686364b3e47abfcb45f7ec5a15.Main}\",\"objectHashSetEmulation.{eb15a33cb3867ce42b5e124607b19bfa.Main}\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

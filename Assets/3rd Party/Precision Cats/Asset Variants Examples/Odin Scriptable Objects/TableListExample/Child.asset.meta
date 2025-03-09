@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 8e2e606e5b1bfc6439cb68ad194a8cdc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"76192d35407e33d4b91abf2d97b9aba4\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"TableListWithIndexLabels.Array.data[0].Description\",\"TableListWithIndexLabels.Array.data[1].Icon\",\"TableListWithIndexLabels.Array.data[1].Description\",\"AlwaysExpandedTable.Array.data[0].Icon\",\"AlwaysExpandedTable.Array.data[1].Description\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

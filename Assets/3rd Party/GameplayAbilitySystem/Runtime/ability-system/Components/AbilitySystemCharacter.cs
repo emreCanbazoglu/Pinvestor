@@ -13,8 +13,7 @@ namespace AbilitySystem
 {
     public class AbilitySystemCharacter : MonoBehaviour, IResetable
     {
-        [SerializeField]
-        protected AttributeSystemComponent _attributeSystem;
+        [field: SerializeField] public AttributeSystemComponent AttributeSystem { get; set; }
 
         [SerializeField] private AbstractAbilityScriptableObject[] _castableAbilities
             = Array.Empty<AbstractAbilityScriptableObject>();
@@ -22,7 +21,6 @@ namespace AbilitySystem
         [SerializeField] private AbstractAbilityScriptableObject[] _initializationAbilities
             = Array.Empty<AbstractAbilityScriptableObject>();
         
-        public AttributeSystemComponent AttributeSystem { get { return _attributeSystem; } set { _attributeSystem = value; } }
         public List<GameplayEffectContainer> AppliedGameplayEffects = new List<GameplayEffectContainer>();
         public List<AbstractAbilitySpec> GrantedAbilities = new List<AbstractAbilitySpec>();
 

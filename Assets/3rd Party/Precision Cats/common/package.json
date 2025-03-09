@@ -1,0 +1,11 @@
+{
+    "name":"precision-cats-common",
+    "displayName": "PCs/Common",
+    "version": "1.0.0",
+    "unity": "",
+    "unityRelease": "",
+    "description":"",
+    "keywords":[],
+    "samples" : [],
+    "dependencies":{}
+}

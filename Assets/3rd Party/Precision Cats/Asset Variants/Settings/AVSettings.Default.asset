@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6427e328dafb1a45b6d5d3644fc4e1f, type: 3}
+  m_Name: AVSettings.Default
+  m_EditorClassIdentifier: 
+  scriptableObjectOnly: 0
+  materialOnly: 0
+  disableMaterialVariants: 0
+  typeFilter:
+    useBlacklist: 1
+    blacklist: []
+    inheritedBlacklist: []
+    useWhitelist: 0
+    whitelist: []
+    inheritedWhitelist: []
+  boldOverriddenIMGUI: 1
+  boldOverriddenUIToolkit: 1
+  boldOverriddenMaterial: 1
+  overrideIndicatorStyle:
+    overriddenColor: {r: 0, g: 0.65, b: 1, a: 0.75}
+    childrenOverriddenColor: {r: 0.3, g: 0.56, b: 0.7, a: 0.6}
+    notOverriddenColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+    mixedColor: {r: 1, g: 0.65, b: 0, a: 0.75}
+    useThinBarsUIToolkit: 1
+    useThinBarsForUITCompositeChildren: 1
+    useThinBarsOdin: 1
+    thinBarsNotOverriddenInvisible: 1
+    thinBarWidth: 2
+    thinBarMargins:
+      left: -3
+      right: 1
+      top: 0
+      bottom: 0
+    width: 10
+    rawViewWidth: 12
+    margins:
+      left: 2
+      right: 2
+      top: 1
+      bottom: 1
+    collectionSizeWidth: 10
+    odinCollectionSizeXShift: -80
+    materialChannelsFirstSpacing: 10
+    materialChannelsSpacing: 2
+    materialTilingOffsetXOffset: -8
+  parentLabelWidth: 45
+  rawViewButtonSpacing: 5
+  rawViewButtonWidth: 70
+  rawViewButtonLabel: Raw View
+  childrenFoldoutWidth: 60
+  removeChildButtonWidth: 20
+  rawViewWindowLeftPadding: 16
+  disabledRawViewPopup: 0
+  createParentOverrideIfChildrenAreInvisible: 1
+  missingSourceImplicitCreationType: 1
+  implicitOverrideCreationInterval: 0.15
+  considerWholeAllInvisibleChildren: 0
+  considerWhole:
+    serializedPropertyTypes: 030000001100000005000000
+    types:
+    - UnityEvent
+    arrayElementTypes: []
+  considerSeparate:
+    serializedPropertyTypes: 
+    types: []
+    arrayElementTypes: []
+  skipArrayDotArraySubProperty: 1
+  logUnnecessary: 1
+  logPropertyCopies: 0
+  debugTypes: 0
+  immediatelyPropagateToOpenDescendants: 1
+  disableRenamingOverrides: 0
+  formerlySerializedAsBaseAssetTypes:
+  - UnityEngine.ScriptableObject
+  propertyTypesNeedToMatch: 0
+  directInheritanceRequired: 0
+  onlySaveUserDataOnLeave: 0
+  disableOdinRawPropertyResolver: 0
+  disable_ASSET_VARIANTS_DO_ODIN_PROPERTIES: 0

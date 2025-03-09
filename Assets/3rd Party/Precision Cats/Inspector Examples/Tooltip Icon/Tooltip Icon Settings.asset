@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac42599ad9e7844f8e1b27d463877a1, type: 3}
+  m_Name: Tooltip Icon Settings
+  m_EditorClassIdentifier: Assembly-CSharp:PrecisionCats:TooltipIconSettings
+  disabled: 1
+  side: 1
+  lightTexture: {fileID: 2800000, guid: dee07bd6a49f5684aafe578f02a628c9, type: 3}
+  darkTexture: {fileID: 2800000, guid: 8d3b074d24500f44f860116c27923d01, type: 3}
+  subtract: 0
+  spacing: 1
+  yOffset: 4
+  size: {x: 10, y: 10}

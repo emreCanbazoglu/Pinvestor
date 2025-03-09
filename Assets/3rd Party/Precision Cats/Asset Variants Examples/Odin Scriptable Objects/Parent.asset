@@ -1,0 +1,436 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4090596d9219e3e4ab07796a446b0eec, type: 3}
+  m_Name: Parent
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: SerializeFieldProperty
+      Entry: 4
+      Data: 0
+    - Name: OdinSerializeProperty
+      Entry: 4
+      Data: 0
+    - Name: NameProperty
+      Entry: 6
+      Data: 
+    - Name: odinSerializedRect
+      Entry: 7
+      Data: UnityEngine.Rect, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 5
+    - Name: 
+      Entry: 4
+      Data: 6
+    - Name: 
+      Entry: 4
+      Data: 7
+    - Name: 
+      Entry: 4
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stringStack
+      Entry: 7
+      Data: 0|System.Collections.Generic.Stack`1[[System.String, mscorlib]], System
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 1
+      Data: a
+    - Name: 
+      Entry: 1
+      Data: b
+    - Name: 
+      Entry: 1
+      Data: c
+    - Name: 
+      Entry: 1
+      Data: d
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: intQueue
+      Entry: 7
+      Data: 1|System.Collections.Generic.Queue`1[[System.Int32, mscorlib]], System
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stringStringDictionary
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.String,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 3|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stringIntDictionary
+      Entry: 7
+      Data: 4|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 9
+      Data: 3
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: 43e54
+    - Name: $v
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: y236345
+    - Name: $v
+      Entry: 3
+      Data: 523
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: y236345123412
+    - Name: $v
+      Entry: 3
+      Data: 4342
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stringArrayArray
+      Entry: 7
+      Data: 5|System.String[][], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: string2DArray
+      Entry: 7
+      Data: 6|System.String[,], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 6
+    - Name: ranks
+      Entry: 1
+      Data: 3|2
+    - Name: 
+      Entry: 1
+      Data: 32
+    - Name: 
+      Entry: 1
+      Data: 3
+    - Name: 
+      Entry: 1
+      Data: 23123
+    - Name: 
+      Entry: 1
+      Data: 5
+    - Name: 
+      Entry: 1
+      Data: 5
+    - Name: 
+      Entry: 1
+      Data: 3323
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: stringHashSet
+      Entry: 7
+      Data: 7|System.Collections.Generic.HashSet`1[[System.String, mscorlib]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: floatHashSet
+      Entry: 7
+      Data: 8|System.Collections.Generic.HashSet`1[[System.Single, mscorlib]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: readonlyList
+      Entry: 7
+      Data: 9|System.Collections.Generic.List`1[[System.String, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 1
+      Data: a
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: odinSerializedRegularClass
+      Entry: 7
+      Data: 10|ExampleOdinScriptableObject+RegularClass, Assembly-CSharp
+    - Name: boxGroupAFloat
+      Entry: 4
+      Data: 0
+    - Name: odinSerializedString
+      Entry: 1
+      Data: text
+    - Name: privateOdinSerializedString
+      Entry: 1
+      Data: secret
+    - Name: regularFloat
+      Entry: 4
+      Data: 2
+    - Name: intHashSet
+      Entry: 7
+      Data: 11|System.Collections.Generic.HashSet`1[[System.Int32, mscorlib]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 65
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: hideLabel
+      Entry: 6
+      Data: 
+    - Name: boxGroupAString
+      Entry: 6
+      Data: 
+    - Name: stuff
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: classHashSet
+      Entry: 7
+      Data: 12|System.Collections.Generic.HashSet`1[[ExampleOdinScriptableObject+HashSetChild,
+        Assembly-CSharp]], System.Core
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 13|ExampleOdinScriptableObject+HashSetChild, Assembly-CSharp
+    - Name: text
+      Entry: 1
+      Data: abc
+    - Name: boolean
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OdinSerializedProperty1
+      Entry: 7
+      Data: 14|ExampleOdinScriptableObject+MyCustomReferenceType, Assembly-CSharp
+    - Name: A
+      Entry: 3
+      Data: 0
+    - Name: B
+      Entry: 3
+      Data: 0
+    - Name: C
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OdinSerializedProperty2Null
+      Entry: 6
+      Data: 
+    - Name: OdinSerializedProperty3
+      Entry: 7
+      Data: 15|ExampleOdinScriptableObject+MyCustomReferenceType, Assembly-CSharp
+    - Name: A
+      Entry: 3
+      Data: 0
+    - Name: B
+      Entry: 3
+      Data: 0
+    - Name: C
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OdinSerializedProperty4
+      Entry: 7
+      Data: 16|ExampleOdinScriptableObject+MyCustomReferenceType, Assembly-CSharp
+    - Name: A
+      Entry: 3
+      Data: 0
+    - Name: B
+      Entry: 3
+      Data: 0
+    - Name: C
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: class1
+      Entry: 7
+      Data: 17|ExampleOdinScriptableObject+Class1, Assembly-CSharp
+    - Name: class2
+      Entry: 7
+      Data: 18|ExampleOdinScriptableObject+Class1+Class2, Assembly-CSharp
+    - Name: class3
+      Entry: 7
+      Data: 19|ExampleOdinScriptableObject+Class1+Class2+Class3, Assembly-CSharp
+    - Name: class4
+      Entry: 7
+      Data: 20|ExampleOdinScriptableObject+Class1+Class2+Class3+Class4, Assembly-CSharp
+    - Name: text
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  MyVectorWithContextMenu: {x: 30, y: 30, z: 30}
+  unitySerializedRect:
+    serializedVersion: 2
+    x: 1
+    y: 2
+    width: 3
+    height: 4
+  rectInt:
+    x: 9
+    y: 10
+    width: 11
+    height: 12
+  ScenePath: 
+  displayAsStringColor: {r: 0.08003677, g: 0.043325428, b: 0.0062868865, a: 1}
+  regularClass:
+    boxGroupAFloat: 0
+    odinSerializedString: text
+    regularFloat: 2
+    hideLabel: My label is hidden
+    boxGroupAString: Some text
+    stuff: Stuff
+  Prefab: {fileID: 0}
+  Icon: {fileID: 0}
+  MinionName: 
+  Health: 0
+  Damage: 0
+  GreaterThanZero: 0
+  MyInt: 0
+  delayedPropertyString: txt
+  SomeEnumField: 0
+  WideMultilineTextField: 

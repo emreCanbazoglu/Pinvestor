@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40c35484bd1dd64bbef4a39996d5972, type: 3}
+  m_Name: Parent
+  m_EditorClassIdentifier: 
+  SingleObject: {fileID: 0}
+  AssetList: []
+  subClass:
+    AssetList: []
+  Object: {fileID: 0}
+  AutoPopulatedWhenInspected:
+  - {fileID: 11400000, guid: 08379ccefc05200459f90a1c0711a340, type: 2}
+  - {fileID: 11400000, guid: f40311fc86c893f47a728b387e8f764b, type: 2}
+  - {fileID: 11400000, guid: 5bc2ffb3be5ed9541bdd7dffa0921182, type: 2}
+  - {fileID: 11400000, guid: 93c4f2dab563b104d9961ca2f3905f39, type: 2}
+  - {fileID: 11400000, guid: b52fb955dbf43b544a7eb618bcb30e71, type: 2}
+  - {fileID: 11400000, guid: 3dc0b44d3e2be2345ad434434dc88779, type: 2}
+  - {fileID: 11400000, guid: 07a952661ac934a44b316003f1300242, type: 2}
+  - {fileID: 11400000, guid: a2aa482ec89ee6240b6452ca74509c6e, type: 2}
+  - {fileID: 11400000, guid: 63fc069d691d382429b8bf681d83e6a2, type: 2}
+  - {fileID: 11400000, guid: 159f3f16694d88d468949026cdd24c93, type: 2}
+  AllPrefabsWithLayerName: []
+  PrefabsStartingWithRock: []
+  GameObjectsWithTag: []
+  MyRigidbodyPrefabs: []

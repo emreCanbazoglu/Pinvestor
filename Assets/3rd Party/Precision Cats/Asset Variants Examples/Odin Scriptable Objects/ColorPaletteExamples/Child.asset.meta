@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 9c6f3dfec8eaa8d4c93830a2c10cd057
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"c87589f9bc403e344908328f59691983\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"ColorArray.Array.size\",\"ColorArray.Array.data[0]\",\"ColorArray.Array.data[1]\",\"MyColor\",\"UnderwaterColor\",\"ColorOptions\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

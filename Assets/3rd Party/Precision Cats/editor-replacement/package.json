@@ -1,0 +1,14 @@
+{
+    "name":"editor-replacement",
+    "displayName": "PCs/Editor Replacement",
+    "version": "1.0.0",
+    "unity": "",
+    "unityRelease": "",
+    "description":"",
+    "keywords":[],
+    "samples" : [],
+    "dependencies":
+    {
+        "editor-prefs-priority": "1.0.0"
+    }
+}

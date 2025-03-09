@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e033158ab7624324483a5819c42a13d5, type: 3}
+  m_Name: Child
+  m_EditorClassIdentifier: 
+  hashSetEmulation: KeywordA;DD;D;Some Text;A;B;C;Something;Value;234;ABC;1234;Okie
+    Dokie;Thing3
+  dictionaryEmulation:
+  - original: OriginalValue2.0
+    replaced: ReplacedValue
+  - original: Some String
+    replaced: ReplacedValue
+  - original: A
+    replaced: B
+  - original: B
+    replaced: CDEF
+  objectHashSetEmulation:
+  - {fileID: 100000, guid: d31962f463ba5c048930aa90ee1efaa8, type: 3}
+  - {fileID: 11500000, guid: e033158ab7624324483a5819c42a13d5, type: 3}
+  - {fileID: 4900000, guid: 9774a831e84b5184d8082c838a9193d2, type: 3}
+  - {fileID: 11400000, guid: 1b3f091023f7b8942a6b6def278d63b6, type: 2}
+  - {fileID: 8300000, guid: 69e330a2f6218a84492e44810a3bdc71, type: 3}
+  - {fileID: 100000, guid: d4842481dc3581f479b380f7f1b3dde5, type: 3}
+  - {fileID: 102900000, guid: 00438b686364b3e47abfcb45f7ec5a15, type: 3}

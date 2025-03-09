@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1767899213021703781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08782905aed25f04a947e3a6b4e5158d, type: 3}
+  m_Name: SOB 4
+  m_EditorClassIdentifier: 
+  deleteChildren: 0
+  createChildType: 
+  createChild: 0
+  text2: 
+  number2: 2.6
+  array2:
+  - text2: 
+    number2: 0.99
+    count2: 0
+  - text2: 
+    number2: 0
+    count2: 0
+  count2: 89
+  classA2:
+    text2: 
+    number2: 0
+    count2: 105
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b612185b9230774389fbbacc4883a5f, type: 3}
+  m_Name: SOA
+  m_EditorClassIdentifier: 
+  deleteChildren: 0
+  createChildType: SOB
+  createChild: 0
+  text: 
+  number: 0
+  count: 0
+--- !u!114 &1498841951662608603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08782905aed25f04a947e3a6b4e5158d, type: 3}
+  m_Name: SOB 1
+  m_EditorClassIdentifier: 
+  deleteChildren: 0
+  createChildType: SOA
+  createChild: 0
+  text2: 
+  number2: 0
+  array2:
+  - text2: 
+    number2: 0.99
+    count2: 0
+  - text2: 
+    number2: 0
+    count2: 0
+  count2: 0
+  classA2:
+    text2: 
+    number2: 0
+    count2: 105
+--- !u!114 &5388237577733181885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08782905aed25f04a947e3a6b4e5158d, type: 3}
+  m_Name: SOB 3
+  m_EditorClassIdentifier: 
+  deleteChildren: 0
+  createChildType: 
+  createChild: 0
+  text2: fiowhdifohawda
+  number2: 2.6
+  array2:
+  - text2: 
+    number2: 0.99
+    count2: 303
+  - text2: 
+    number2: 0
+    count2: 0
+  count2: 89
+  classA2:
+    text2: 
+    number2: 0
+    count2: 105
+--- !u!114 &7362509610475170106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b612185b9230774389fbbacc4883a5f, type: 3}
+  m_Name: SOA 2
+  m_EditorClassIdentifier: 
+  deleteChildren: 0
+  createChildType: 
+  createChild: 0
+  text: 
+  number: 0
+  count: 0

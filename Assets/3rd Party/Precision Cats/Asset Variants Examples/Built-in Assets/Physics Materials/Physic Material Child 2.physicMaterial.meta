@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 8c77efffc11ea524099373a7a74200bf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"6827432f8825f6f44bf48a8dc7c96495\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"staticFriction\",\"bounciness\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

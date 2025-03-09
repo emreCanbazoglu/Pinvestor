@@ -1,0 +1,232 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42f41b519b6ce4643b96b44bd0b2114c, type: 3}
+  m_Name: Parent Example Scriptable Object
+  m_EditorClassIdentifier: 
+  potionResult:
+    name: Stuff
+    amount: 1
+    unit: 3
+  drawLabels:
+    a: 0
+    b: 0
+    c: 0
+    vector2: {x: 0, y: 0}
+    boolean: 0
+  minMaxDrawer: {x: 0, y: 1.8497108}
+  class1:
+    class2Array:
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    class2:
+      unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    ingredientA:
+      name: 
+      amount: 1
+      unit: 0
+    ingredientB:
+      name: 
+      amount: 1
+      unit: 0
+  defaultScriptableObjectDrawer: {fileID: 0}
+  nonExtendedScriptableObjectDrawer: {fileID: 0}
+  bool4:
+    x: 1
+    y: 0
+    z: 1
+    w: 0
+  bool3:
+    x: 0
+    y: 0
+    z: 0
+  suggestionRangeVector4: {x: 7.105032, y: 2.6566644, z: 0, w: 8.640778}
+  matrix4x4:
+    e00: 23
+    e01: 123
+    e02: 3
+    e03: 23
+    e10: 6123
+    e11: 45
+    e12: 3446
+    e13: 5
+    e20: 2134
+    e21: 4
+    e22: 43223
+    e23: 6
+    e30: 2314
+    e31: 34
+    e32: 6
+    e33: 532
+  rangeFloat: 0
+  suggestionRangeFloat: 0
+  potionIngredients:
+  - name: Sugar
+    amount: 1
+    unit: 0
+  - name: Stack of bowls
+    amount: 5
+    unit: 2
+  readOnlyRandomSeed: -1266139427
+  boolean: 1
+  integer: 73
+  longInt: 9223372036854775807
+  unsignedInt: 1107
+  vector2: {x: 0, y: 0}
+  vector3: {x: 0, y: 2.92, z: 0}
+  vector4: {x: 0, y: 0, z: 0, w: 0}
+  vector2Int: {x: 0, y: 0}
+  vector3Int: {x: -155, y: 0, z: 0}
+  keyCodeEnum: 270
+  quaternion: {x: -0.43406272, y: -0.018230565, z: 0.03779586, w: -0.8999048}
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bounds:
+    m_Center: {x: -4.11, y: 1.23, z: 1.95}
+    m_Extent: {x: -4.71, y: -6.6, z: 79.23}
+  boundsInt:
+    m_Position: {x: -148, y: 0, z: 122}
+    m_Size: {x: 0, y: 180, z: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 20
+  assertRangeDrawer0To100: 0
+  color32:
+    serializedVersion: 2
+    rgba: 1862258054
+  color: {r: 1, g: 0.63, b: 0, a: 1}
+  negativeColorDrawer: {r: 0.4811321, g: 0, b: 0.20849061, a: 0.54509807}
+  gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 0.4901961, g: 1, b: 0.97128373, a: 1}
+    key2: {r: 1, g: 1, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 21147
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  text: 
+  textArea: The quick brown fox jumps over the lazy dog
+  character: 70
+  texture: {fileID: 0}
+  callUnityEvent: 0
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11400000, guid: 2bae86c77ae046a43a36221fb761718c, type: 2}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: TestMethod1
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  rect:
+    serializedVersion: 2
+    x: 3
+    y: 6
+    width: 43
+    height: 9
+  rectInt:
+    x: 10
+    y: 20
+    width: 100
+    height: 300
+  listOfClass1:
+  - class2Array:
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    - unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    class2:
+      unityObject1: {fileID: 0}
+      unityObject2: {fileID: 0}
+    ingredientA:
+      name: 
+      amount: 1
+      unit: 0
+    ingredientB:
+      name: 
+      amount: 1
+      unit: 0
+  readonlyExtendedScriptableObjectDrawer: {fileID: 11400000, guid: 3a3bc68510a979b4daf2473a56c88c52, type: 2}
+  unityObject: {fileID: 0}
+  privateSerializeField: 0
+  dontDrawLabels:
+    a: 0
+    b: 0
+    c: 0
+    vector2: {x: 0, y: 0}
+    boolean: 1
+  dontDrawLabelsArray:
+  - a: 0
+    b: 13.35
+    c: 0
+    vector2: {x: 0, y: 27.97}
+    boolean: 0
+  - a: 0
+    b: 0
+    c: 5.34
+    vector2: {x: 3.22, y: 3.32}
+    boolean: 1
+  - a: 0
+    b: 0
+    c: 0
+    vector2: {x: 0, y: 0}
+    boolean: 0
+  formerlySerializedAs1: Empty string
+  clampFrom: 0
+  clampTo: 1.43
+  clamped: 1
+  floatField: 0
+  doubleField: 0
+  hiddenChildrenClass:
+    r: 0
+    g: 0

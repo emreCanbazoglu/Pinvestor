@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 684281c7c776cba499f913c3436214bc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"0d83deebce8bc474cad367eada5a7494\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"DefaultEnumBitmask\",\"SomeEnumField\",\"WideEnumField\",\"EnumFieldWide\",\"BitmaskEnumField\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

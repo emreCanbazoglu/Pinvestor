@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 3a28069abc903af42af34340f10da07e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"1b6ab4d179784394387bf39409a1021c\",\"type\":0,\"localId\":0},{\"guid\":\"3b00334e09a68a04894c686e9f791f04\",\"type\":0,\"localId\":0},{\"guid\":\"8e4cddbfab7f4ea4385aac46a295c87e\",\"type\":0,\"localId\":0},{\"guid\":\"676a89cf85440124197f9884bede05e8\",\"type\":0,\"localId\":0},{\"guid\":\"cefe596e187919446bbfc98fd036b783\",\"type\":0,\"localId\":0},{\"guid\":\"108444120a2828f42bc38d87ad66d210\",\"type\":0,\"localId\":0},{\"guid\":\"c5abec53eb1e26b4da89d241e89c6953\",\"type\":0,\"localId\":0},{\"guid\":\"0b4aea5316d22244f843e4d679bfca92\",\"type\":0,\"localId\":0}],\"overrides\":[]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

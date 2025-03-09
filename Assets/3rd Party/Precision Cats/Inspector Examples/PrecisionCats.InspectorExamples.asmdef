@@ -1,0 +1,19 @@
+{
+    "name": "PrecisionCats.InspectorExamples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ae1b0af90b1c16b41a2f8db4cd8341a6",
+        "GUID:f0411ea8b9ce4e649bb221fa95467161",
+        "GUID:05550b54f1ffe694b92b8d3cbf32d1d0",
+        "GUID:9240dc93610484641a36a9392aec45f3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

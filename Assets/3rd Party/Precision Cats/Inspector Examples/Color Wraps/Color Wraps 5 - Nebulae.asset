@@ -1,0 +1,184 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6465390879892000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Root
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: RootColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1200
+  notes: 
+  wrapType: 0
+  mode: 1
+  indented: 1
+  color: {r: 0.7490196, g: 0.8238243, b: 1, a: 1}
+  indentation: 0
+  leftPadding: 5
+  rightPadding: 5
+  preChildrenSpacing: 3
+  postChildrenSpacing: 3
+  debugTypes: 0
+--- !u!114 &-6093903509560190209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Inner
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: InnerColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1800
+  notes: 
+  wrapType: 1
+  mode: 1
+  indented: 1
+  color: {r: 0.7490196, g: 1, b: 1, a: 1}
+  indentation: 0
+  leftPadding: 6
+  rightPadding: 2
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &-4642703174699627547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Middle
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: MiddleColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1400
+  notes: 
+  wrapType: 1
+  mode: 2
+  indented: 1
+  color: {r: 0.74041, g: 0.5582353, b: 0.85882354, a: 1}
+  indentation: 0
+  leftPadding: 4
+  rightPadding: 4
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &-1132183268722517127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Inner
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: InnerColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1800
+  notes: 
+  wrapType: 1
+  mode: 2
+  indented: 1
+  color: {r: 0.1025641, g: 0, b: 0.25, a: 1}
+  indentation: 0
+  leftPadding: 6
+  rightPadding: 2
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e618f1a134e71b14c983fa487c9d6efb, type: 3}
+  m_Name: Color Wraps 5 - Nebulae
+  m_EditorClassIdentifier: 
+  parent: {fileID: 11400000, guid: bbdea76001e99bf42b541e7e4df6d701, type: 2}
+  children:
+  - {fileID: -1132183268722517127}
+  - {fileID: -4642703174699627547}
+  - {fileID: 8550130829310649365}
+  - {fileID: -6093903509560190209}
+  - {fileID: 8498548675634589551}
+  - {fileID: -6465390879892000000}
+--- !u!114 &8498548675634589551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Light Middle
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: MiddleColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1400
+  notes: 
+  wrapType: 1
+  mode: 1
+  indented: 1
+  color: {r: 0.39999998, g: 0.6976378, b: 1, a: 1}
+  indentation: 0
+  leftPadding: 4
+  rightPadding: 4
+  preChildrenSpacing: 2
+  postChildrenSpacing: 2
+  debugTypes: 0
+--- !u!114 &8550130829310649365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b0099b170b2d1a49b07446dfd47cd62, type: 3}
+  m_Name: Dark Root
+  m_EditorClassIdentifier: 
+  valid: 1
+  systemKey: RootColorWrapEditor.Priority5
+  systemActive: 1
+  systemPriority: 1200
+  notes: 
+  wrapType: 0
+  mode: 2
+  indented: 1
+  color: {r: 0.14150202, g: 0.21642886, b: 0.509, a: 1}
+  indentation: 0
+  leftPadding: 5
+  rightPadding: 5
+  preChildrenSpacing: 3
+  postChildrenSpacing: 3
+  debugTypes: 0

@@ -28,6 +28,8 @@ namespace AttributeSystem.Components
 
         [SerializeField] private List<AttributeValue> _attributeValues 
             = new List<AttributeValue>();
+        
+        [SerializeField] private bool _initializeOnAwake = true;
 
         private bool _attributeDictStale;
         public Dictionary<AttributeScriptableObject, int> AttributeIndexCache { get; private set; } 
@@ -392,10 +394,18 @@ namespace AttributeSystem.Components
 
         private void Awake()
         {
+            if (_initializeOnAwake)
+                Initialize();
+        }
+
+        public void Initialize(
+            AttributeSetScriptableObject attributeSet)
+        {
+            _attributeSet = attributeSet;
             Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             InitializeAttributeDefinitions();
             InitializeAttributeValues();

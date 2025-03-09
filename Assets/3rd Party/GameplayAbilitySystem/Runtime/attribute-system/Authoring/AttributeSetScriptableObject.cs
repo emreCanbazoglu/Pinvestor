@@ -11,8 +11,6 @@ namespace AttributeSystem.Authoring
         [field: SerializeField] public bool IsPrimaryAttribute { get; private set; }
         [field: SerializeField] public float Multiplier { get; private set; }
         [field: SerializeField] public AttributeBaseValueModifierScriptableObject BaseValueModifier { get; private set; }
-        //[field: SerializeField] public bool UseLevelProviderForAttributeSet { get; private set; } = false;
-        //[field: SerializeField] public AttributeLevelProviderScriptableObject LevelProvider { get; private set; }
         [field: SerializeField] public bool UseModifierObjectProviderForAttributeSet { get; private set; } = false;
 
         [field: SerializeField] public AttributeModifierObjectProviderScriptableObject ModifierObjectProvider { get; private set; }

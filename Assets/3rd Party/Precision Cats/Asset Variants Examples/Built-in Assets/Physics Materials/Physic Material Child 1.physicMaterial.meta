@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: d01be4a66e91932499da6fb2180c6eee
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 13400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"6827432f8825f6f44bf48a8dc7c96495\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"staticFriction\",\"bounciness\",\"frictionCombine\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

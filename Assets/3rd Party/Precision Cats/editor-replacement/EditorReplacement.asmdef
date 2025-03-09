@@ -1,0 +1,21 @@
+{
+    "name": "EditorReplacement",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ae1b0af90b1c16b41a2f8db4cd8341a6",
+        "GUID:f0411ea8b9ce4e649bb221fa95467161"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "EDITOR_REPLACEMENT"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

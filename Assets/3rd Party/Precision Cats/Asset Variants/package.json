@@ -1,0 +1,15 @@
+{
+    "name":"asset-variants",
+    "displayName": "PCs/Asset Variants",
+    "version": "1.0.0",
+    "unity": "",
+    "unityRelease": "",
+    "description":"",
+    "keywords":[],
+    "samples" : [],
+    "dependencies":
+    {
+        "editor-replacement": "1.0.0",
+        "property-drawer-replacement": "1.0.0"
+    }
+}

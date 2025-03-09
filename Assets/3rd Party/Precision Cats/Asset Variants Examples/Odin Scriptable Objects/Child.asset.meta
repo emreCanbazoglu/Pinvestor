@@ -1,0 +1,8 @@
+fileFormatVersion: 2
+guid: 4e84071884c9d8e45bb9466b4b426aba
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"d18d81a7f9b03fc43924c2ba7a19a175\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"clamped\",\"gradient\",\"stringArrayArray.$0.$0\",\"stringHashSet\",\"SerializeFieldProperty\",\"#HorizontalGroup.string2DArray\",\"odinSerializedRegularClass.privateOdinSerializedString\",\"regularClass.boxGroupAString\",\"selectedTab\",\"exampleString1\",\"exampleString2\",\"intQueue.Array.size\",\"intQueue.Array.data[4]\",\"stringStack.Array.size\",\"stringStack.Array.data[4]\",\"odinSerializedRect.y\",\"odinSerializedRect.x\",\"odinSerializedRect.height\",\"unitySerializedRect.y\",\"unitySerializedRect.height\",\"unitySerializedRect.x\",\"rectInt.y\",\"rectInt.height\",\"ScenePath\",\"stringIntDictionary\",\"stringIntDictionary.{\\\"awefahawef32341\\\"}\",\"readonlyList.Array.data[0]\",\"regularClass.stuff\",\"stringArrayArray.Array.data[0].Array.size\",\"stringArrayArray.Array.size\",\"string2DArray\",\"odinSerializedRegularClass.boxGroupAFloat\"]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 
