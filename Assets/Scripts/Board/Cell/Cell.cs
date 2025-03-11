@@ -6,6 +6,7 @@ namespace Pinvestor.BoardSystem.Base
 {
     public class Cell
     {
+        public Board Board { get; private set; }
         public int Col { get; private set; }
         public int Row { get; private set; }
         public Vector2Int Position { get; private set; }
@@ -14,10 +15,12 @@ namespace Pinvestor.BoardSystem.Base
         public CellLayer MainLayer { get; private set; }
         
         public Cell(
+            Board board,
             int col,
             int row,
             List<CellLayer> layers)
         {
+            Board = board;
             Col = col;
             Row = row;
             Position = new Vector2Int(col, row);
@@ -42,50 +45,6 @@ namespace Pinvestor.BoardSystem.Base
                 }
 
                 return true;
-            }
-
-            return false;
-        }
-        
-        public bool IsDropBlocked()
-        {
-            for (int i = Layers.Count - 1; i >= 0; i--)
-            {
-                CellLayer cellLayer = Layers[i];
-                            
-                bool hasItem = cellLayer.IsFull();
-
-                if (!hasItem)
-                {
-                    continue;
-                }
-
-                if (cellLayer.BlocksDrop)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        
-        public bool IsMatchBlocked()
-        {
-            for (int i = Layers.Count - 1; i >= 0; i--)
-            {
-                CellLayer cellLayer = Layers[i];
-                            
-                bool hasItem = cellLayer.IsFull();
-
-                if (!hasItem)
-                {
-                    continue;
-                }
-
-                if (cellLayer.BlocksMatch)
-                {
-                    return true;
-                }
             }
 
             return false;
@@ -140,7 +99,7 @@ namespace Pinvestor.BoardSystem.Base
         
         #region LinkedCells
 
-        /*
+        
         private bool _linkedCellsInited;
         private Cell _linkedCellUp;
         private Cell _linkedCellDown;
@@ -167,7 +126,8 @@ namespace Pinvestor.BoardSystem.Base
             return isLinkedCell;
         }
 
-        public bool TryGetLinkedCell(PuzzleLevelEditor.BoardExtensions.ENeighbor neighbor, out Cell cell)
+        public bool TryGetLinkedCell(
+            ENeighbor neighbor, out Cell cell)
         {
             InitLinkedCells();
 
@@ -175,28 +135,28 @@ namespace Pinvestor.BoardSystem.Base
 
             switch (neighbor)
             {
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Down:
+                case ENeighbor.Down:
                     cell = _linkedCellDown;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Up:
+                case ENeighbor.Up:
                     cell = _linkedCellUp;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Down_Left:
+                case ENeighbor.Down_Left:
                     cell = _linkedCellBottomLeft;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Down_Right:
+                case ENeighbor.Down_Right:
                     cell = _linkedCellBottomRight;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Up_Left:
+                case ENeighbor.Up_Left:
                     cell = _linkedCellUpperLeft;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Up_Right:
+                case ENeighbor.Up_Right:
                     cell = _linkedCellUpperRight;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Left:
+                case ENeighbor.Left:
                     cell = _linkedCellLeft;
                     break;
-                case PuzzleLevelEditor.BoardExtensions.ENeighbor.Right:
+                case ENeighbor.Right:
                     cell = _linkedCellRight;
                     break;
             }
@@ -209,20 +169,18 @@ namespace Pinvestor.BoardSystem.Base
             if(_linkedCellsInited)
                 return;
 
-            Board board = BoardManager.Instance.Board;
-            
-            board.TryGetCellAt(Position + Vector2Int.up, out _linkedCellUp);
-            board.TryGetCellAt(Position + Vector2Int.down, out _linkedCellDown);
-            board.TryGetCellAt(Position + Vector2.left, out _linkedCellLeft);
-            board.TryGetCellAt(Position + Vector2.right, out _linkedCellRight);
-            board.TryGetCellAt(Position + Vector2Int.up + Vector2.right, out _linkedCellUpperRight);
-            board.TryGetCellAt(Position + Vector2Int.up + Vector2.left, out _linkedCellUpperLeft);
-            board.TryGetCellAt(Position + Vector2.left + Vector2.down, out _linkedCellBottomLeft);
-            board.TryGetCellAt(Position + Vector2.right + Vector2.down, out _linkedCellBottomRight);
+            Board.TryGetCellAt(Position + Vector2Int.up, out _linkedCellUp);
+            Board.TryGetCellAt(Position + Vector2Int.down, out _linkedCellDown);
+            Board.TryGetCellAt(Position + Vector2Int.left, out _linkedCellLeft);
+            Board.TryGetCellAt(Position + Vector2Int.right, out _linkedCellRight);
+            Board.TryGetCellAt(Position + Vector2Int.up + Vector2Int.right, out _linkedCellUpperRight);
+            Board.TryGetCellAt(Position + Vector2Int.up + Vector2Int.left, out _linkedCellUpperLeft);
+            Board.TryGetCellAt(Position + Vector2Int.left + Vector2Int.down, out _linkedCellBottomLeft);
+            Board.TryGetCellAt(Position + Vector2Int.right + Vector2Int.down, out _linkedCellBottomRight);
 
             _linkedCellsInited = true;
         }
-        */
+        
         #endregion
     }
 }

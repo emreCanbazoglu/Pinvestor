@@ -22,7 +22,7 @@ namespace Pinvestor.Game
         
         private async UniTask ChooseCompanyCard()
         {
-            Player.Deck.TryGetDeckPile<ChooseCompanyPile>(
+            Player.Deck.TryGetDeckPile<CompanySelectionPile>(
                 out var chooseCompanyPile);
 
             await chooseCompanyPile.FillSlots();

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace Pinvestor.CardSystem
 {
-    public class ChooseCompanyPile : DeckPile
+    public class CompanySelectionPile : DeckPile
     {
-        public ChooseCompanyPile(Deck deck, DeckPileData deckPileData) 
+        public CompanySelectionPile(Deck deck, DeckPileData deckPileData) 
             : base(deck, deckPileData)
         {
         }

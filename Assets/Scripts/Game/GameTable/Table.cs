@@ -15,17 +15,19 @@ namespace Pinvestor.Game
         public Table(
             BoardData boardData,
             GamePlayer.GamePlayer gamePlayer,
-            IDeckDataProvider deckDataProvider)
+            IDeckDataProvider deckDataProvider,
+            CellLayerInfoSO[] cellLayerInfoColl)
         {
             GamePlayer = gamePlayer;
             
-            CreateBoard(boardData);
+            CreateBoard(boardData, cellLayerInfoColl);
             
             GamePlayer.Initialize(deckDataProvider).Forget();
         }
 
         private void CreateBoard(
-            BoardData boardData)
+            BoardData boardData,
+            CellLayerInfoSO[] cellLayerInfoColl)
         {
             Board = new Board(
                 BoardItemSOContainer.Instance,
@@ -33,9 +35,10 @@ namespace Pinvestor.Game
                 new IBoardItemCreator[]
                 {
                     new BoardItemCreator_Default()
-                });
+                },
+                cellLayerInfoColl);
             
-            Board.Init(boardData);
+            Board.Init(boardData, createCells: true);
         }
 
         public async UniTask WaitUntilInitialized()

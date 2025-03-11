@@ -8,9 +8,6 @@ namespace Pinvestor.BoardSystem.Base
 
         public bool IsMainLayer { get; private set; }
 
-        public bool BlocksDrop { get; private set; }
-        
-        public bool BlocksMatch { get; private set; }
 
         private readonly HashSet<BoardItemTypeSO> _validBoardItemTypes = new();
 
@@ -19,10 +16,6 @@ namespace Pinvestor.BoardSystem.Base
         public CellLayer(CellLayerInfoSO cellLayerInfoSO)
         {
             IsMainLayer = cellLayerInfoSO.IsMainLayer;
-
-            BlocksDrop = cellLayerInfoSO.BlocksDrop;
-            
-            BlocksMatch = cellLayerInfoSO.BlocksMatch;
             
             foreach (BoardItemTypeSO itemType in cellLayerInfoSO.ValidBoardItemTypes)
             {

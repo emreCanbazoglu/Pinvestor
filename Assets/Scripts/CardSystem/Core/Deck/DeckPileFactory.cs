@@ -33,7 +33,8 @@ namespace Pinvestor.CardSystem
             
             var deckPileType = pileMap.DeckPileTypeReference.Type;
             
-            return (DeckPile)Activator.CreateInstance(deckPileType, deck, deckPileData);
+            return (DeckPile)Activator.CreateInstance(
+                deckPileType, deck, deckPileData);
         }
         
         private bool TryGetPileMap(

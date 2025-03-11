@@ -7,10 +7,10 @@ namespace Pinvestor.BoardSystem.Base
 {
     public class Board : IDisposable
     {
-        private Dictionary<Vector2, Cell> _cells 
-            = new Dictionary<Vector2, Cell>();
+        private Dictionary<Vector2Int, Cell> _cells 
+            = new Dictionary<Vector2Int, Cell>();
         
-        public IReadOnlyDictionary<Vector2, Cell> Cells => _cells;
+        public IReadOnlyDictionary<Vector2Int, Cell> Cells => _cells;
 
         public HashSet<BoardItemBase> BoardItems = new HashSet<BoardItemBase>();
         
@@ -23,15 +23,18 @@ namespace Pinvestor.BoardSystem.Base
         private BoardItemSOContainer _boardItemSOContainer;
         private BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
         private IBoardItemCreator[] _boardItemCreators;
+        private CellLayerInfoSO[] _cellLayerInfoColl;
 
         public Board(
             BoardItemSOContainer boardItemSOContainer,
             BoardItemWrapperPoolManager boardItemWrapperPoolManager,
-            IBoardItemCreator[] boardItemCreators)
+            IBoardItemCreator[] boardItemCreators,
+            CellLayerInfoSO[] cellLayerInfoColl)
         {
             _boardItemSOContainer = boardItemSOContainer;
             _boardItemWrapperPoolManager = boardItemWrapperPoolManager;
             _boardItemCreators = boardItemCreators;
+            _cellLayerInfoColl = cellLayerInfoColl;
         }
         
         public void Init(
@@ -64,8 +67,6 @@ namespace Pinvestor.BoardSystem.Base
             }
         }
 
-        
-
         public void AddBoardItemToBoard(BoardItemBase boardItem)
         {
             BoardItems.Add(boardItem);
@@ -94,7 +95,7 @@ namespace Pinvestor.BoardSystem.Base
             if (addToCell)
             {
                 TryGetCellAt(
-                    new Vector2(
+                    new Vector2Int(
                         boardItemData.Col,
                         boardItemData.Row),
                     out Cell cell);
@@ -152,7 +153,7 @@ namespace Pinvestor.BoardSystem.Base
         
         private void CreateCells(BoardData boardData)
         {
-            _cells = new Dictionary<Vector2, Cell>();
+            _cells = new Dictionary<Vector2Int, Cell>();
             
             _boardItemSOContainer.TryGetBoardItemInfoSO(
                 EGenericBoardItemType.Tile, out BoardItemInfoSO info);
@@ -167,6 +168,7 @@ namespace Pinvestor.BoardSystem.Base
                 List<CellLayer> layers = CreateLayers();
                 
                 Cell cell = new Cell(
+                    this,
                     boardItemData.Col,
                     boardItemData.Row,
                     layers);
@@ -181,7 +183,10 @@ namespace Pinvestor.BoardSystem.Base
                     continue;
                 }
 
-                if (Cells.ContainsKey(new Vector2(boardItemData.Col, boardItemData.Row)))
+                if (Cells.ContainsKey(
+                        new Vector2Int(
+                            boardItemData.Col,
+                            boardItemData.Row)))
                 {
                     continue;
                 }
@@ -189,6 +194,7 @@ namespace Pinvestor.BoardSystem.Base
                 List<CellLayer> layers = CreateLayers();
                 
                 Cell cell = new Cell(
+                    this,
                     boardItemData.Col,
                     boardItemData.Row,
                     layers);
@@ -199,11 +205,9 @@ namespace Pinvestor.BoardSystem.Base
 
         private List<CellLayer> CreateLayers()
         {
-            CellLayerInfoSO[] cellLayerInfoColl = Array.Empty<CellLayerInfoSO>(); //= GameSOContainer.Instance.GameSO.GetCellInfo().CellLayerInfoColl;
-
             List<CellLayer> layers = new List<CellLayer>();
             
-            foreach (CellLayerInfoSO info in cellLayerInfoColl)
+            foreach (CellLayerInfoSO info in _cellLayerInfoColl)
             {
                 CellLayer layer = new CellLayer(info);
                 
@@ -229,10 +233,10 @@ namespace Pinvestor.BoardSystem.Base
         }
         
         public bool TryGetCellAt(
-            Vector2 position,
+            Vector2Int coordinates,
             out Cell cell)
         {
-            return Cells.TryGetValue(position, out cell);
+            return Cells.TryGetValue(coordinates, out cell);
         }
 
         public void Dispose()
