@@ -1,11 +1,15 @@
+using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Pinvestor.CardSystem
 {
     public class CompanySelectionPile : DeckPile
     {
+        public Action OnSlotsFilled { get; set; }
+        public Action OnSlotsReset { get; set; }
+        
         public CompanySelectionPile(Deck deck, DeckPileData deckPileData) 
             : base(deck, deckPileData)
         {
@@ -26,6 +30,8 @@ namespace Pinvestor.CardSystem
                 
                 ids[i] = cardData.ReferenceCardId;
             }
+            
+            OnSlotsFilled?.Invoke();
         }
         
         private void ResetSlots()
@@ -38,9 +44,11 @@ namespace Pinvestor.CardSystem
                 Deck.TryRemoveCard(
                     slot.Card);
             }
+            
+            OnSlotsReset?.Invoke();
         }
         
-        public UniTask<CardData> DrawCard(
+        private UniTask<CardData> DrawCard(
             int slotIndex,
             params string[] excludeCardIds)
         {

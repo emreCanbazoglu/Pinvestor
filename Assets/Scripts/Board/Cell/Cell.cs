@@ -7,8 +7,6 @@ namespace Pinvestor.BoardSystem.Base
     public class Cell
     {
         public Board Board { get; private set; }
-        public int Col { get; private set; }
-        public int Row { get; private set; }
         public Vector2Int Position { get; private set; }
         public List<CellLayer> Layers { get; private set; }
         
@@ -21,8 +19,6 @@ namespace Pinvestor.BoardSystem.Base
             List<CellLayer> layers)
         {
             Board = board;
-            Col = col;
-            Row = row;
             Position = new Vector2Int(col, row);
             Layers = layers;
 

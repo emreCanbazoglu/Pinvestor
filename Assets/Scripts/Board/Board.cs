@@ -22,18 +22,18 @@ namespace Pinvestor.BoardSystem.Base
 
         private BoardItemSOContainer _boardItemSOContainer;
         private BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
-        private IBoardItemCreator[] _boardItemCreators;
+        private BoardItemFactory _boardItemFactory;
         private CellLayerInfoSO[] _cellLayerInfoColl;
 
         public Board(
             BoardItemSOContainer boardItemSOContainer,
             BoardItemWrapperPoolManager boardItemWrapperPoolManager,
-            IBoardItemCreator[] boardItemCreators,
+            BoardItemFactory boardItemFactory,
             CellLayerInfoSO[] cellLayerInfoColl)
         {
             _boardItemSOContainer = boardItemSOContainer;
             _boardItemWrapperPoolManager = boardItemWrapperPoolManager;
-            _boardItemCreators = boardItemCreators;
+            _boardItemFactory = boardItemFactory;
             _cellLayerInfoColl = cellLayerInfoColl;
         }
         
@@ -43,6 +43,8 @@ namespace Pinvestor.BoardSystem.Base
             bool createCells = false)
         {
             Dimensions = boardData.Dimensions;
+            
+            Debug.Log("Board Init: " + Dimensions);
             
             if (!isReloading)
             {
@@ -72,57 +74,6 @@ namespace Pinvestor.BoardSystem.Base
             BoardItems.Add(boardItem);
             
             OnBoardItemAdded?.Invoke(boardItem);
-        }
-        
-        public bool TryCreateNewBoardItem(
-            BoardItemDataBase boardItemData, 
-            out BoardItemBase boardItem,
-            bool addToCell = true,
-            bool addToBoard = true,
-            bool isPlaceholder = false)
-        {
-            boardItem = null;
-            
-            BoardItemSOContainer.Instance.TryGetBoardItemInfoSO(
-                boardItemData.GetBoardItemType().GetID(),
-                out BoardItemInfoSO genericInfoSO);
-
-            if (genericInfoSO is not BoardItemInfoSO infoSO)
-            {
-                return false;
-            }
-
-            if (addToCell)
-            {
-                TryGetCellAt(
-                    new Vector2Int(
-                        boardItemData.Col,
-                        boardItemData.Row),
-                    out Cell cell);
-
-                if (cell == null || !cell.CanAddBoardItem((BoardItemTypeSO) infoSO.BoardItemTypeSO))
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                boardItemData.Col = -1;
-                boardItemData.Row = -1;
-            }
-            
-            boardItem = (BoardItemBase) Activator.CreateInstance(infoSO.BoardItemTypeRef);
-
-            boardItem.Init(infoSO, boardItemData, isPlaceholder);
-
-            boardItem.CreateItem();
-
-            if (addToBoard)
-            {
-                AddBoardItemToBoard(boardItem);
-            }
-
-            return true;
         }
 
         private void ResetBoardOffset(BoardData boardData)
@@ -157,50 +108,33 @@ namespace Pinvestor.BoardSystem.Base
             
             _boardItemSOContainer.TryGetBoardItemInfoSO(
                 EGenericBoardItemType.Tile, out BoardItemInfoSO info);
-            
-            foreach (BoardItemDataBase boardItemData in boardData.BoardItems)
-            {
-                if (boardItemData.GetBoardItemType().GetID().Equals(info.BoardItemTypeSO.GetID()))
-                {
-                    continue;
-                }
-                
-                List<CellLayer> layers = CreateLayers();
-                
-                Cell cell = new Cell(
-                    this,
-                    boardItemData.Col,
-                    boardItemData.Row,
-                    layers);
-                
-                _cells.TryAdd(cell.Position, cell);
-            }
-            
-            foreach (BoardItemDataBase boardItemData in boardData.BoardItems)
-            {
-                if (!boardItemData.GetBoardItemType().GetID().Equals(info.BoardItemTypeSO.GetID()))
-                {
-                    continue;
-                }
 
-                if (Cells.ContainsKey(
-                        new Vector2Int(
-                            boardItemData.Col,
-                            boardItemData.Row)))
+            Vector2Int dimensions = boardData.Dimensions;
+
+            for (int x = 0; x < dimensions.x; x++)
+            {
+                for (int y = 0; y < dimensions.y; y++)
                 {
-                    continue;
+                    List<CellLayer> layers = CreateLayers();
+                
+                    Cell cell = new Cell(
+                        this,
+                        x,
+                        y,
+                        layers);
+                
+                    _cells.TryAdd(cell.Position, cell);
                 }
-                
-                List<CellLayer> layers = CreateLayers();
-                
-                Cell cell = new Cell(
-                    this,
-                    boardItemData.Col,
-                    boardItemData.Row,
-                    layers);
-                
-                _cells.TryAdd(cell.Position, cell);
             }
+            
+            /*foreach (BoardItemDataBase boardItemData in boardData.BoardItems)
+            {
+                if (boardItemData.GetBoardItemType()
+                    .GetID().Equals(
+                        info.BoardItemTypeSO.GetID()))
+                {
+                }
+            }*/
         }
 
         private List<CellLayer> CreateLayers()
@@ -219,16 +153,33 @@ namespace Pinvestor.BoardSystem.Base
         
         private void CreateItems(BoardData boardData)
         {
-            List<BoardItemDataBase> boardItems = boardData.BoardItems.ToList();
+            List<BoardItemDataBase> boardItemData = boardData.BoardItems.ToList();
             
-            foreach (IBoardItemCreator itemCreator in _boardItemCreators)
+            foreach (var data in boardItemData)
             {
-                itemCreator.CreateItems(
-                    this,
-                    boardItems,
-                    out List<BoardItemDataBase> filteredBoardItems);
+                TryGetCellAt(
+                    new Vector2Int(
+                        data.Col,
+                        data.Row),
+                    out Cell cell);
 
-                boardItems = filteredBoardItems;
+                if (cell == null 
+                    || !cell.CanAddBoardItem(
+                            data.GetBoardItemType() as BoardItemTypeSO))
+                    continue;
+                
+                var boardItem
+                    = _boardItemFactory.CreateBoardItem(
+                        data);
+
+                if (boardItem == null)
+                {
+                    Debug.LogError("Couldn't create board item: " + data.GetBoardItemType().GetID());
+                    
+                    continue;
+                }
+
+                AddBoardItemToBoard(boardItem);
             }
         }
         

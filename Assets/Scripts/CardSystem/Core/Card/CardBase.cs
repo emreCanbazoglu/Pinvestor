@@ -94,10 +94,11 @@ namespace Pinvestor.CardSystem
         {
             CastedCardDataSo = cardDataSo;
             
-             SetPlayCardAbilitySpec(
-                CastedCardDataSo.CardAbilityScriptableObject
-                    .CreateSpec(
-                    owner.AbilitySystemCharacter) as PlayCardAbilitySpec);
+            if(CastedCardDataSo.CardAbilityScriptableObject != null)
+                SetPlayCardAbilitySpec(
+                    CastedCardDataSo.CardAbilityScriptableObject
+                        .CreateSpec(
+                        owner.AbilitySystemCharacter) as PlayCardAbilitySpec);
         }
     }
 }

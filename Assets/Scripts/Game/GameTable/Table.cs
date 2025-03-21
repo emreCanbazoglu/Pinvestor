@@ -32,10 +32,7 @@ namespace Pinvestor.Game
             Board = new Board(
                 BoardItemSOContainer.Instance,
                 BoardItemWrapperPoolManager.Instance,
-                new IBoardItemCreator[]
-                {
-                    new BoardItemCreator_Default()
-                },
+                BoardItemFactory.Instance,
                 cellLayerInfoColl);
             
             Board.Init(boardData, createCells: true);

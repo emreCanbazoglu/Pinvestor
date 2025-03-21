@@ -106,7 +106,7 @@ namespace Pinvestor.BoardSystem.Base
             else
             {
                 // TODO: might need update for multiple pieces
-                maxRow = boardItemWrapper.BoardItem.Pieces.Max(val => val.Cell.Row);
+                maxRow = boardItemWrapper.BoardItem.Pieces.Max(val => val.Cell.Position.y);
             }
             
             foreach (SortingOrderInfo sortingOrderInfo in _sortingOrderInfoColl)

@@ -35,12 +35,7 @@ namespace Pinvestor.BoardSystem.Base
         
             return itemData;
         }
-
-        public static List<BoardItemInfoSO> GetBoardItemDataMap()
-        {
-            return BoardItemSOContainer.Instance.GetBoardItemInfoCollection();
-        }
-
+        
         public static BoardItemDataBase CreateBoardItemData(BoardItemDataBase itemData)
         {
             BoardItemDataBase newItemData 
@@ -50,6 +45,11 @@ namespace Pinvestor.BoardSystem.Base
                 baseBoardItemData.SetID(itemData.GetItemID());
 
             return newItemData;
+        }
+
+        public static List<BoardItemInfoSO> GetBoardItemDataMap()
+        {
+            return BoardItemSOContainer.Instance.GetBoardItemInfoCollection();
         }
     }
 }

@@ -6,6 +6,8 @@ namespace Pinvestor.BoardSystem.Authoring
 {
     public class BoardWrapper : MonoBehaviour
     {
+        [SerializeField] private Vector3 _centerPosition = Vector3.zero;
+        
         [SerializeField] private GameObject _cellPrefab = null;
         [SerializeField] private Transform _cellParent = null;
 
@@ -27,6 +29,8 @@ namespace Pinvestor.BoardSystem.Authoring
 
         private void CreateCells()
         {
+            Debug.Log("Create Cells: " + Board.Cells.Count);
+            
             foreach (var kvp in Board.Cells)
             {
                 Vector2Int coordinates = kvp.Key;
@@ -41,7 +45,10 @@ namespace Pinvestor.BoardSystem.Authoring
                 
                 CellWrapper cellWrapper = cellGO.GetComponent<CellWrapper>();
 
-                Vector3 cellPosition = GetCellPosition(coordinates);
+                Vector3 cellPosition 
+                    = GetCellPosition(
+                        Board.Dimensions,
+                        coordinates);
                 
                 cellWrapper.VisualParent.position = cellPosition;
                     
@@ -75,12 +82,24 @@ namespace Pinvestor.BoardSystem.Authoring
         }
         
         private Vector3 GetCellPosition(
+            Vector2Int dimensions,
             Vector2Int coordinates)
         {
-            return new Vector3(
-                coordinates.x * _cellSize.x + _cellVisualOffset.x,
-                coordinates.y * _cellSize.y + _cellVisualOffset.y,
-                0);
+            Vector3 leftBottomPosition
+                = _centerPosition
+                  - new Vector3(
+                      dimensions.x * _cellSize.x / 2,
+                      dimensions.y * _cellSize.y / 2,
+                      0);
+
+            Vector3 cellPosition
+                = leftBottomPosition
+                  + new Vector3(
+                      coordinates.x * _cellSize.x + _cellSize.x / 2,
+                      coordinates.y * _cellSize.y + _cellSize.y / 2,
+                      0);
+            
+            return cellPosition;
         }
     }
 }
