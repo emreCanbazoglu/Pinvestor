@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: CardData.Company.NeuralNexus
   m_EditorClassIdentifier: 
   UniqueId: 67cfbd4a43e2647a499dc3595f0110f0
+  <CardAbilityScriptableObject>k__BackingField: {fileID: 0}
+  <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 1
   <CompanyName>k__BackingField: Neural Nexus
   <AttributeSet>k__BackingField: {fileID: 11400000, guid: 34655eb35c1bf4d0a908c520d1f085ce, type: 2}

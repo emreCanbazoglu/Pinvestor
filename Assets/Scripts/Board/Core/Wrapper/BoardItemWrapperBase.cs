@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
+    public abstract class BoardItemWrapperBase<T> : BoardItemWrapperBase where T : BoardItemBase
+    {
+        public new T BoardItem => base.BoardItem as T;
+    }
+    
     public abstract class BoardItemWrapperBase : MonoBehaviour
     {
         [field: SerializeField] public Transform VisualContainer { get; private set; } = null;
@@ -15,7 +20,7 @@ namespace Pinvestor.BoardSystem.Base
 
         public bool IsInited { get; private set; } = false;
 
-        protected virtual void InitCore()
+        protected virtual void WrapCore()
         {
             
         }
@@ -30,11 +35,11 @@ namespace Pinvestor.BoardSystem.Base
             return _boardItemTypeSO;
         }
 
-        public void Init(BoardItemBase boardItem)
+        public void Wrap(BoardItemBase boardItem)
         {
             BoardItem = boardItem;
 
-            InitCore();
+            WrapCore();
 
             IsInited = true;
             

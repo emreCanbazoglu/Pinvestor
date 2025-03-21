@@ -53,8 +53,20 @@ namespace Pinvestor.BoardSystem.Base
         }
 
         protected abstract List<BoardItemPieceBase> CreatePieces(bool isPlaceholder = false);
-        
-        protected abstract BoardItemWrapperBase CreateWrapper();
+
+        public BoardItemWrapperBase CreateWrapper()
+        {
+            if(!BoardItemWrapperFactory.Instance
+               .TryGetWrapper(_boardItemTypeSO, 
+                   out BoardItemWrapperBase wrapperPrefab))
+                return null;
+
+            var wrapper = GameObject.Instantiate(wrapperPrefab);
+            
+            wrapper.Wrap(this);
+            
+            return wrapper;
+        }
         
         protected virtual void InitCore(BoardItemDataBase data)
         {

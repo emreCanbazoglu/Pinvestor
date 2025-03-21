@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: CardData.Company.ByteForge
   m_EditorClassIdentifier: 
   UniqueId: c4a806c58af324bbd919d4d97f5a40b2
+  <CardAbilityScriptableObject>k__BackingField: {fileID: 0}
+  <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 1
   <CompanyName>k__BackingField: ByteForge
   <AttributeSet>k__BackingField: {fileID: 11400000, guid: 1df8f68c2e2764a8fa2dbeef5746b5c3, type: 2}

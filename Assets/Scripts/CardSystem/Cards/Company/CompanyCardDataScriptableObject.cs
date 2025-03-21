@@ -17,6 +17,8 @@ namespace Pinvestor.CardSystem
         [field: SerializeField] public AttributeSetScriptableObject AttributeSet { get; private set; }
             = null;
         
+        [field: SerializeField] public GameObject VisualPrefab { get; private set; } = null;
+        
         public override ECardType CardType => ECardType.Company;
         
         public override CardBase CreateCard(

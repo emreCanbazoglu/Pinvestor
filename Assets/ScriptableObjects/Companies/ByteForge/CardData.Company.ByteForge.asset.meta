@@ -3,6 +3,6 @@ guid: c4a806c58af324bbd919d4d97f5a40b2
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
-  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"a1d044d8e1ac44cf58a3291ec23ad82e\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"UniqueId\",\"<CompanyName>k__BackingField\",\"<AttributeSet>k__BackingField\"]}"}]}'
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"a1d044d8e1ac44cf58a3291ec23ad82e\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"UniqueId\",\"<CompanyName>k__BackingField\",\"<AttributeSet>k__BackingField\",\"<CardWrapperPrefab>k__BackingField\"]}"}]}'
   assetBundleName: 
   assetBundleVariant: 

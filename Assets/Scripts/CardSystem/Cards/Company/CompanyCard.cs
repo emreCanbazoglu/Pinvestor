@@ -1,3 +1,5 @@
+using Pinvestor.CardSystem.Authoring;
+
 namespace Pinvestor.CardSystem
 {
     public class CompanyCard : CardBase<CompanyCardDataScriptableObject>

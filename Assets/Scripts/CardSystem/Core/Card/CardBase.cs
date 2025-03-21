@@ -1,4 +1,6 @@
 using Pinvestor.AbilitySystem.Abilities;
+using Pinvestor.CardSystem.Authoring;
+using UnityEngine;
 
 namespace Pinvestor.CardSystem
 {
@@ -99,6 +101,16 @@ namespace Pinvestor.CardSystem
                     CastedCardDataSo.CardAbilityScriptableObject
                         .CreateSpec(
                         owner.AbilitySystemCharacter) as PlayCardAbilitySpec);
+        }
+
+        public CardWrapperBase CreateWrapper()
+        {
+            var cardWrapper
+                = GameObject.Instantiate(
+                    CardDataScriptableObject.CardWrapperPrefab);
+            
+            cardWrapper.WrapCard(this);
+            return cardWrapper;
         }
     }
 }

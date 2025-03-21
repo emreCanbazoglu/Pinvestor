@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
+using Pinvestor.CardSystem.Authoring;
 using UnityEngine;
 
 namespace Pinvestor.Game
@@ -15,6 +16,7 @@ namespace Pinvestor.Game
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
         
         [SerializeField] private BoardWrapper _boardWrapper = null;
+        [SerializeField] private CompanySelectionPileWrapper _companySelectionPileWrapper = null;
         
         [SerializeField] private CellLayerInfoSO[] _cellLayerInfoColl 
             = Array.Empty<CellLayerInfoSO>();
@@ -47,6 +49,11 @@ namespace Pinvestor.Game
             await _table.WaitUntilInitialized();
             
             _boardWrapper.WrapBoard(_table.Board);
+            _companySelectionPileWrapper.WrapPile(
+                _table.GamePlayer.CardPlayer.Deck
+                    .TryGetDeckPile(EDeckPile.CompanySelection, out var pile)
+                        ? pile as CompanySelectionPile
+                        : null);
             
             Debug.Log("Table initialized");
 

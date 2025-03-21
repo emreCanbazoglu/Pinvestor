@@ -5,7 +5,7 @@ namespace Pinvestor.BoardSystem.Base
 {
     public abstract class BoardItemVisualSortingLayerUpdaterBase : MonoBehaviour
     {
-        [FormerlySerializedAs("_boardItemVisual")] [SerializeField] private BoardItemWrapperBase boardItemWrapper = null;
+        [SerializeField] private BoardItemWrapperBase boardItemWrapper = null;
         
         private const string UI_LAYER = "UI";
 
