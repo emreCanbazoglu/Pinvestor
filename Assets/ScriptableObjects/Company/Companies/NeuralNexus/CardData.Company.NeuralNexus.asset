@@ -16,5 +16,6 @@ MonoBehaviour:
   <CardAbilityScriptableObject>k__BackingField: {fileID: 0}
   <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 1
-  <CompanyName>k__BackingField: Neural Nexus
+  <CompanyId>k__BackingField: {fileID: 11400000, guid: a8887db10680e48f08aa3a00cdae3022, type: 2}
   <AttributeSet>k__BackingField: {fileID: 11400000, guid: 34655eb35c1bf4d0a908c520d1f085ce, type: 2}
+  <VisualPrefab>k__BackingField: {fileID: 0}

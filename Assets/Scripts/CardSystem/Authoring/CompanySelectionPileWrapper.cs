@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using MEC;
+using Cysharp.Threading.Tasks;
 using MMFramework;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
@@ -11,6 +10,8 @@ namespace Pinvestor.CardSystem.Authoring
 {
     public class CompanySelectionPileWrapper : MonoBehaviour
     {
+        [SerializeField] private CompanySelectionInputController _inputController = null;
+        
         [SerializeField] private Transform[] _slots
             = Array.Empty<Transform>();
         
@@ -40,10 +41,22 @@ namespace Pinvestor.CardSystem.Authoring
 
         private void OnSlotsFilled()
         {
-            CreatePileCards().RunCoroutine();
+            SelectCompanyAsync().Forget();
         }
 
-        private IEnumerator<float> CreatePileCards()
+        private async UniTask SelectCompanyAsync()
+        {
+            await CreatePileCardsAsync();
+            
+            _inputController.Activate();
+            
+            var placedCompany
+                = await _inputController.WaitUntilCompanyPlacementAsync();
+            
+            _inputController.Deactivate();
+        }
+
+        private UniTask CreatePileCardsAsync()
         {
             var companyCards
                 = Pile.GetCardsInSlots().Cast<CompanyCard>();
@@ -66,19 +79,23 @@ namespace Pinvestor.CardSystem.Authoring
                 var cardWrapper
                     = card.CreateWrapper() as CompanyCardWrapper;
                 
-                CompanyCardMap.Add(
-                    boardItemWrapper, cardWrapper);
+                cardWrapper.transform.SetParent(
+                    boardItemWrapper.transform);
+                
+                cardWrapper.transform.localPosition = Vector3.zero;
                 
                 boardItemWrapper.transform.SetParent(
                     _slots[slotIndex]);
                 
                 boardItemWrapper.transform.localPosition = Vector3.zero;
                 
+                CompanyCardMap.Add(
+                    boardItemWrapper, cardWrapper);
+                
                 slotIndex++;
             }
             
-            yield break;
-            
+            return UniTask.CompletedTask;
         }
     }
 }

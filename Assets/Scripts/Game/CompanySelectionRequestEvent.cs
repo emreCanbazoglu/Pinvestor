@@ -17,6 +17,5 @@ namespace Pinvestor.Game
             CompanyCards = companyCards;
             OnCompanyCardSelected = onCompanyCardSelected;
         }
-        
     }
 }

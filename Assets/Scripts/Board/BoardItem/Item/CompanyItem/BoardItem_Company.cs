@@ -33,7 +33,6 @@ namespace Pinvestor.BoardSystem.Base
 
             return pieces;
         }
-
     }
     
     public class BoardItemPiece_Company : BoardItemPieceBase

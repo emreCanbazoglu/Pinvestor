@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Pinvestor.CardSystem;
 using UnityEngine;
@@ -8,6 +7,8 @@ namespace Pinvestor.Game
     public class Turn
     {
         public CardPlayer Player { get; private set; }
+        
+        private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
         
         public Turn(
             CardPlayer player)
@@ -27,33 +28,23 @@ namespace Pinvestor.Game
 
             await chooseCompanyPile.FillSlots();
 
-            var companyCardOptions
-                = chooseCompanyPile.GetCardsInSlots();
+            _companyPlacedEventBinding
+                = new EventBinding<CompanyPlacedEvent>(
+                    OnCompanyPlaced);
             
-            List<CompanyCard> companyCards
-                = new List<CompanyCard>();
-            
-            foreach (var companyCardOption in companyCardOptions)
-            {
-                companyCards.Add(
-                    companyCardOption as CompanyCard);
-            }
-            
-            Debug.Log("Company cards: " + companyCards.Count);
-            
-            var companySelectionRequestEvent
-                = new CompanySelectionRequestEvent(
-                    companyCards,
-                    OnCompanyCardSelected);
-            
-            EventBus<CompanySelectionRequestEvent>
-                .Raise(companySelectionRequestEvent);
+            EventBus<CompanyPlacedEvent>
+                .Register(
+                    _companyPlacedEventBinding);
         }
-        
-        private void OnCompanyCardSelected(
-            CompanyCard companyCard)
+
+        private void OnCompanyPlaced(
+            CompanyPlacedEvent e)
         {
-            Debug.Log("Company card selected: " + companyCard.CastedCardDataSo.CompanyName);
+            EventBus<CompanyPlacedEvent>
+                .Deregister(
+                    _companyPlacedEventBinding);
+            
+            Debug.Log("Company placed: " + e.Company.Company.CompanyId.CompanyId);
         }
     }
 }

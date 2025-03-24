@@ -12,7 +12,7 @@ namespace Pinvestor.CardSystem
         
         [field: SerializeField] public ECompanyCategory CompanyCategory { get; private set; } 
             = ECompanyCategory.None;
-        [field: SerializeField] public string CompanyName { get; private set; } = string.Empty;
+        [field: SerializeField] public CompanyIdScriptableObject CompanyId { get; private set; } = null;
         
         [field: SerializeField] public AttributeSetScriptableObject AttributeSet { get; private set; }
             = null;

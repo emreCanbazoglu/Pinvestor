@@ -16,5 +16,6 @@ MonoBehaviour:
   <CardAbilityScriptableObject>k__BackingField: {fileID: 0}
   <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 1
-  <CompanyName>k__BackingField: Cloud Sprite
+  <CompanyId>k__BackingField: {fileID: 11400000, guid: eb149cfa3de4f4d38967cd014478bbfa, type: 2}
   <AttributeSet>k__BackingField: {fileID: 11400000, guid: 0a35c1dc042c4496f90365ff4b1b7cd0, type: 2}
+  <VisualPrefab>k__BackingField: {fileID: 0}
