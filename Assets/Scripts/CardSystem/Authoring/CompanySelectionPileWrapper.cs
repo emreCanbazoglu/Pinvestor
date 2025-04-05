@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using MMFramework;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.UI;
 using UnityEngine;
 
 namespace Pinvestor.CardSystem.Authoring
@@ -48,6 +49,12 @@ namespace Pinvestor.CardSystem.Authoring
         {
             await CreatePileCardsAsync();
             
+            EventBus<InitializeCompanySelectionUIEvent>
+                .Raise(new InitializeCompanySelectionUIEvent(this));
+            
+            EventBus<ShowCompanySelectionUIEvent>
+                .Raise(new ShowCompanySelectionUIEvent());
+            
             _inputController.Activate();
             
             var placedCompany
@@ -78,11 +85,6 @@ namespace Pinvestor.CardSystem.Authoring
                 
                 var cardWrapper
                     = card.CreateWrapper() as CompanyCardWrapper;
-                
-                cardWrapper.transform.SetParent(
-                    boardItemWrapper.transform);
-                
-                cardWrapper.transform.localPosition = Vector3.zero;
                 
                 boardItemWrapper.transform.SetParent(
                     _slots[slotIndex]);

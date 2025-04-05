@@ -5,6 +5,7 @@ using MEC;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.Game.InputSystem;
+using Pinvestor.UI;
 using UnityEngine;
 
 namespace Pinvestor.CardSystem.Authoring
@@ -23,6 +24,7 @@ namespace Pinvestor.CardSystem.Authoring
         private bool _canCheckHoveredCompany = false;
         
         private BoardItemWrapper_Company _hoveredCompany = null;
+        private BoardItemWrapper_Company _selectedCompany = null;
         
         private BoardItemWrapper_Company _placedCompany = null;
         
@@ -79,17 +81,33 @@ namespace Pinvestor.CardSystem.Authoring
         {
             if(GameInputManager.Instance.IsInputBlocked)
                 return;
-
+            
+            if(_hoveredCompany == null)
+                return;
+            
             _canCheckHoveredCompany = false;
-
+            
+            _selectedCompany = _hoveredCompany;
+            _hoveredCompany = null;
+            
+            EventBus<HideCompanySelectionUIEvent>.Raise(
+                new HideCompanySelectionUIEvent());
         }
         
         private void OnFingerUp(Input_WI_OnFingerUp input)
         {
-            _canCheckHoveredCompany = true;
-            
             if(GameInputManager.Instance.IsInputBlocked)
                 return;
+            
+            if(_selectedCompany == null)
+                return;
+
+            _selectedCompany = null;
+            
+            EventBus<ShowCompanySelectionUIEvent>.Raise(
+                new ShowCompanySelectionUIEvent());
+            
+            _canCheckHoveredCompany = true;
         }
         
         private void OnPress(Input_WI_OnPress input)
