@@ -1,10 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
     public class BoardItemPieceBase : IDisposable
     {
         public BoardItemBase ParentItem { get; protected set; }
+        public Vector2Int LocalCoords { get; private set; }
 
         public Cell Cell { get; private set; }
         

@@ -1,4 +1,5 @@
 using AbilitySystem;
+using DG.Tweening;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CompanySystem;
 using UnityEngine;
@@ -8,8 +9,13 @@ namespace Pinvestor.BoardSystem.Authoring
     public class BoardItemWrapper_Company : BoardItemWrapperBase<BoardItem_Company>
     {
         [field: SerializeField] public AbilitySystemCharacter AbilitySystemCharacter { get; private set; } = null;
+
+        [SerializeField] private float _releaseSpeed = 1f;
+        [SerializeField] private Ease _releaseEase = Ease.OutBack;
         
         public Company Company { get; private set; }
+        
+        public Transform SloTransform { get; private set; }
         
         protected override void WrapCore()
         {
@@ -43,9 +49,39 @@ namespace Pinvestor.BoardSystem.Authoring
             Company.transform.localPosition = Vector3.zero;
         }
         
+        public void SetSlotTransform(Transform slotTransform)
+        {
+            SloTransform = slotTransform;
+            
+            transform.SetParent(slotTransform);
+            transform.localPosition = Vector3.zero;
+        }
+        
         public void SetHovered(bool isHovered)
         {
             Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetHovered: " + isHovered);
+        }
+        
+        public void SetSelected(bool isSelected)
+        {
+            Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetSelected: " + isSelected);
+        }
+
+        public void Released()
+        {
+            if (SloTransform == null)
+                return;
+
+            transform
+                .DOMove(SloTransform.position, _releaseSpeed)
+                .SetSpeedBased()
+                .SetEase(_releaseEase)
+                .OnComplete(() =>
+                {
+                    transform.SetParent(SloTransform);
+                    transform.localPosition = Vector3.zero;
+                });
+            
         }
     }
 }

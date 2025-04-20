@@ -5,6 +5,20 @@ using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
+    public class CanPlaceBoardItemResult
+    {
+        public bool CanPlace { get; private set; }
+        public Vector2Int[] TargetCellIndices { get; private set; }
+
+        public CanPlaceBoardItemResult(
+            bool canPlace,
+            Vector2Int[] targetCellIndices)
+        {
+            CanPlace = canPlace;
+            TargetCellIndices = targetCellIndices;
+        }
+    }
+    
     public class Board : IDisposable
     {
         private Dictionary<Vector2Int, Cell> _cells 
@@ -188,6 +202,21 @@ namespace Pinvestor.BoardSystem.Base
             out Cell cell)
         {
             return Cells.TryGetValue(coordinates, out cell);
+        }
+        
+        public CanPlaceBoardItemResult CanPlaceBoardItem(
+            BoardItemBase boardItem,
+            Vector2Int selectedCellIndex)
+        {
+            var targetCellIndices
+                = new Vector2Int[boardItem.Pieces.Count];
+            
+            foreach (var piece in boardItem.Pieces)
+            {
+                Vector2Int targetCellIndex = piece.Cell
+                
+            }
+            
         }
 
         public void Dispose()

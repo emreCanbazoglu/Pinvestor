@@ -234,8 +234,8 @@ Camera:
   m_GameObject: {fileID: 174715133}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.4745098, g: 0.19215688, b: 0.3481428, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1245,10 +1245,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1576671303}
-  - component: {fileID: 1576671302}
+  - component: {fileID: 1576671304}
   - component: {fileID: 1576671301}
   m_Layer: 0
-  m_Name: Main
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1270,26 +1270,6 @@ MonoBehaviour:
   _pileDatas:
   - <DeckPileType>k__BackingField: 1
     <SlotCapacity>k__BackingField: 3
---- !u!114 &1576671302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576671300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e5c6633e6574fb0b0cdba46bcc0962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gamePlayer: {fileID: 214124729}
-  _serializedDeckDataProvider: {fileID: 1576671301}
-  _boardSize: {x: 12, y: 6}
-  _boardWrapper: {fileID: 880588637}
-  _companySelectionPileWrapper: {fileID: 972483898}
-  _cellLayerInfoColl:
-  - {fileID: 11400000, guid: 46155f8f8228c4d9090198b5d0d6b142, type: 2}
-  _selectedCompanyCardIndex: 0
 --- !u!4 &1576671303
 Transform:
   m_ObjectHideFlags: 0
@@ -1298,13 +1278,33 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1576671300}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2070000103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1576671304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576671300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ca1bbb48df31485e8339c925e4e65de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <GameFsm>k__BackingField: {fileID: 0}
+  <BoardWrapper>k__BackingField: {fileID: 880588637}
+  <CompanySelectionPileWrapper>k__BackingField: {fileID: 972483898}
+  _gamePlayer: {fileID: 214124729}
+  _serializedDeckDataProvider: {fileID: 1576671301}
+  _boardSize: {x: 5, y: 5}
+  _cellLayerInfoColl:
+  - {fileID: 11400000, guid: 46155f8f8228c4d9090198b5d0d6b142, type: 2}
 --- !u!1 &1700786565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1558,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1576671303}
   - {fileID: 1286781340}
   - {fileID: 969584382}
   - {fileID: 1700786566}
@@ -1779,7 +1780,6 @@ SceneRoots:
   - {fileID: 935635453}
   - {fileID: 2041318488155657256}
   - {fileID: 880588638}
-  - {fileID: 1576671303}
   - {fileID: 174715137}
   - {fileID: 210439096}
   - {fileID: 1355565234}

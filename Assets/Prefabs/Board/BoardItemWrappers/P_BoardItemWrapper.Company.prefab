@@ -86,6 +86,8 @@ MonoBehaviour:
   <VisualContainer>k__BackingField: {fileID: 8713297105373486917}
   _boardItemTypeSO: {fileID: 11400000, guid: 3cdbd1107665045d188a0aa9f76d6e18, type: 2}
   <AbilitySystemCharacter>k__BackingField: {fileID: -7247790588511113972}
+  _releaseSpeed: 20
+  _releaseEase: 27
 --- !u!114 &-7247790588511113972
 MonoBehaviour:
   m_ObjectHideFlags: 0

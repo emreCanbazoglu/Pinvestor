@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using MEC;
 using Pinvestor.BoardSystem.Authoring;
-using Pinvestor.BoardSystem.Base;
 using Pinvestor.Game.InputSystem;
 using Pinvestor.UI;
 using UnityEngine;
@@ -90,6 +89,8 @@ namespace Pinvestor.CardSystem.Authoring
             _selectedCompany = _hoveredCompany;
             _hoveredCompany = null;
             
+            _selectedCompany.SetSelected(true);
+            
             EventBus<HideCompanySelectionUIEvent>.Raise(
                 new HideCompanySelectionUIEvent());
         }
@@ -102,6 +103,9 @@ namespace Pinvestor.CardSystem.Authoring
             if(_selectedCompany == null)
                 return;
 
+            _selectedCompany.SetSelected(false);
+            _selectedCompany.Released();
+            
             _selectedCompany = null;
             
             EventBus<ShowCompanySelectionUIEvent>.Raise(
@@ -114,6 +118,18 @@ namespace Pinvestor.CardSystem.Authoring
         {
             if(GameInputManager.Instance.IsInputBlocked)
                 return;
+            
+            if(_selectedCompany == null)
+                return;
+            
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
+                new Vector3(
+                    input.FingerPos.x,
+                    input.FingerPos.y));
+            
+            worldPosition.z = _selectedCompany.transform.position.z;
+            
+            _selectedCompany.transform.position = worldPosition;
         }
         
         private void SetHoveredCompany(
@@ -158,6 +174,17 @@ namespace Pinvestor.CardSystem.Authoring
             await UniTask.WaitUntil(() => _placedCompany != null);
             
             return _placedCompany;
+        }
+
+        private void TryHighlightPlacement(
+            Vector2Int cellIndex)
+        {
+            
+        }
+        
+        private void CancelHighlightPlacement()
+        {
+            
         }
     }
 }

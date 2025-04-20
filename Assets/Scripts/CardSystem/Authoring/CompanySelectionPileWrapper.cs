@@ -86,10 +86,7 @@ namespace Pinvestor.CardSystem.Authoring
                 var cardWrapper
                     = card.CreateWrapper() as CompanyCardWrapper;
                 
-                boardItemWrapper.transform.SetParent(
-                    _slots[slotIndex]);
-                
-                boardItemWrapper.transform.localPosition = Vector3.zero;
+                boardItemWrapper.SetSlotTransform(_slots[slotIndex]);
                 
                 CompanyCardMap.Add(
                     boardItemWrapper, cardWrapper);
