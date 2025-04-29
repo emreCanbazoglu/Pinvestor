@@ -6,6 +6,8 @@ namespace Pinvestor.BoardSystem.Authoring
 {
     public class BoardWrapper : MonoBehaviour
     {
+        [field: SerializeField] public BoardHighlighter Highlighter { get; private set; } = null;
+        
         [SerializeField] private Vector3 _centerPosition = Vector3.zero;
         
         [SerializeField] private GameObject _cellPrefab = null;
@@ -16,6 +18,8 @@ namespace Pinvestor.BoardSystem.Authoring
         
         public Board Board { get; private set; }
         
+        public Bounds Bounds { get; private set; }
+        
         public Dictionary<Cell, CellWrapper> CellWrappers { get; private set; }
             = new Dictionary<Cell, CellWrapper>();
         
@@ -25,6 +29,8 @@ namespace Pinvestor.BoardSystem.Authoring
             Board = board;
 
             CreateCells();
+            
+            CalculateBounds();
         }
 
         private void CreateCells()
@@ -56,6 +62,16 @@ namespace Pinvestor.BoardSystem.Authoring
                 
                 CellWrappers.Add(cell, cellWrapper);
             }
+        }
+        
+        private void CalculateBounds()
+        {
+            Bounds = new Bounds(
+                _centerPosition,
+                new Vector3(
+                    Board.Dimensions.x * _cellSize.x,
+                    Board.Dimensions.y * _cellSize.y,
+                    0));
         }
         
         public bool TryGetCellWrapper(
@@ -100,6 +116,55 @@ namespace Pinvestor.BoardSystem.Authoring
                       0);
             
             return cellPosition;
+        }
+
+        public bool TryGetCellAt(
+            Vector3 worldPosition,
+            out Cell cell)
+        {
+            cell = null;
+            
+            float xDist = worldPosition.x - Bounds.min.x;
+
+            if (xDist < 0)
+                return false;
+
+            int xIndex = (int)(xDist / _cellSize.x);
+
+            if (xIndex < 0 || xIndex >= Board.Dimensions.x)
+                return false;
+
+            float yDist = worldPosition.y - Bounds.min.y;
+
+            if (yDist < 0)
+                return false;
+
+            int yIndex = (int)(yDist / _cellSize.y);
+
+            if (yIndex < 0 || yIndex >= Board.Dimensions.y)
+                return false;
+
+            return Board.TryGetCellAt(
+                new Vector2Int(xIndex, yIndex),
+                out cell);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(Board == null)
+                return;
+            
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(
+                Bounds.center,
+                Bounds.size);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(
+                _centerPosition,
+                new Vector3(
+                    Board.Dimensions.x * _cellSize.x,
+                    Board.Dimensions.y * _cellSize.y));
         }
     }
 }

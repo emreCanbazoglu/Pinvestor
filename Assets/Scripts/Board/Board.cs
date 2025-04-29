@@ -17,6 +17,11 @@ namespace Pinvestor.BoardSystem.Base
             CanPlace = canPlace;
             TargetCellIndices = targetCellIndices;
         }
+        
+        public static CanPlaceBoardItemResult Failure()
+        {
+            return new CanPlaceBoardItemResult(false, null);
+        }
     }
     
     public class Board : IDisposable
@@ -26,18 +31,18 @@ namespace Pinvestor.BoardSystem.Base
         
         public IReadOnlyDictionary<Vector2Int, Cell> Cells => _cells;
 
-        public HashSet<BoardItemBase> BoardItems = new HashSet<BoardItemBase>();
+        public readonly HashSet<BoardItemBase> BoardItems 
+            = new HashSet<BoardItemBase>();
         
         public Vector2Int Dimensions { get; private set; }
+
+        private readonly BoardItemSOContainer _boardItemSOContainer;
+        private readonly BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
+        private readonly BoardItemFactory _boardItemFactory;
+        private readonly CellLayerInfoSO[] _cellLayerInfoColl;
         
         public Action<BoardItemBase> OnBoardItemAdded { get; set; }
         public Action<BoardItemBase> OnBoardItemRemoved { get; set; }
-        
-
-        private BoardItemSOContainer _boardItemSOContainer;
-        private BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
-        private BoardItemFactory _boardItemFactory;
-        private CellLayerInfoSO[] _cellLayerInfoColl;
 
         public Board(
             BoardItemSOContainer boardItemSOContainer,
@@ -89,6 +94,7 @@ namespace Pinvestor.BoardSystem.Base
             
             OnBoardItemAdded?.Invoke(boardItem);
         }
+        
 
         private void ResetBoardOffset(BoardData boardData)
         {
@@ -211,12 +217,26 @@ namespace Pinvestor.BoardSystem.Base
             var targetCellIndices
                 = new Vector2Int[boardItem.Pieces.Count];
             
+            int index = 0;
+            
             foreach (var piece in boardItem.Pieces)
             {
-                Vector2Int targetCellIndex = piece.Cell
-                
+                Vector2Int targetCellIndex 
+                    = selectedCellIndex + piece.LocalCoords;
+
+                if (targetCellIndex.x < 0 || targetCellIndex.x >= Dimensions.x ||
+                    targetCellIndex.y < 0 || targetCellIndex.y >= Dimensions.y)
+                    return CanPlaceBoardItemResult.Failure();
+
+                if (!Cells[targetCellIndex].CanAddBoardItem(
+                        boardItem.GetBoardItemType()))
+                    return CanPlaceBoardItemResult.Failure();
+
+                targetCellIndices[index] = targetCellIndex;
+                index++;
             }
-            
+
+            return new CanPlaceBoardItemResult(true, targetCellIndices);
         }
 
         public void Dispose()
