@@ -83,18 +83,14 @@ namespace Pinvestor.BoardSystem.Base
             bool canRemove = BoardItems.Remove(boardItem);
 
             if (canRemove)
-            {
                 OnBoardItemRemoved?.Invoke(boardItem);
-            }
         }
 
         public void AddBoardItemToBoard(BoardItemBase boardItem)
         {
-            BoardItems.Add(boardItem);
-            
-            OnBoardItemAdded?.Invoke(boardItem);
+            if(BoardItems.Add(boardItem))
+                OnBoardItemAdded?.Invoke(boardItem);
         }
-        
 
         private void ResetBoardOffset(BoardData boardData)
         {
@@ -214,6 +210,13 @@ namespace Pinvestor.BoardSystem.Base
             BoardItemBase boardItem,
             Vector2Int selectedCellIndex)
         {
+            if (!boardItem.TryGetPropertySpec(
+                    out BoardItemPropertySpec_PlacableBase placableSpec))
+                return CanPlaceBoardItemResult.Failure();
+            
+            if (!placableSpec.CanPlace())
+                return CanPlaceBoardItemResult.Failure();
+            
             var targetCellIndices
                 = new Vector2Int[boardItem.Pieces.Count];
             
@@ -237,6 +240,35 @@ namespace Pinvestor.BoardSystem.Base
             }
 
             return new CanPlaceBoardItemResult(true, targetCellIndices);
+        }
+        
+        public bool TryPlaceBoardItem(
+            BoardItemBase boardItem,
+            Vector2Int selectedCellIndex,
+            bool force = false,
+            Action onPlaced = null)
+        {
+            if (!force)
+            {
+                var canPlaceResult = CanPlaceBoardItem(
+                    boardItem,
+                    selectedCellIndex);
+
+                if (!canPlaceResult.CanPlace)
+                    return false;
+            }
+
+            boardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_PlacableBase placableSpec);
+            
+            Cell cell = Cells[selectedCellIndex];
+
+            placableSpec.TryPlace(
+                cell, force: true, onPlaced: onPlaced);
+            
+            AddBoardItemToBoard(boardItem);
+
+            return true;
         }
 
         public void Dispose()

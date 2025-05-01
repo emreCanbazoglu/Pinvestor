@@ -15,7 +15,7 @@ namespace Pinvestor.BoardSystem.Authoring
         
         public Company Company { get; private set; }
         
-        public Transform SloTransform { get; private set; }
+        public Transform SlotTransform { get; private set; }
         
         protected override void WrapCore()
         {
@@ -51,7 +51,7 @@ namespace Pinvestor.BoardSystem.Authoring
         
         public void SetSlotTransform(Transform slotTransform)
         {
-            SloTransform = slotTransform;
+            SlotTransform = slotTransform;
             
             transform.SetParent(slotTransform);
             transform.localPosition = Vector3.zero;
@@ -67,18 +67,18 @@ namespace Pinvestor.BoardSystem.Authoring
             Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetSelected: " + isSelected);
         }
 
-        public void Released()
+        public void ReleaseToSlot()
         {
-            if (SloTransform == null)
+            if (SlotTransform == null)
                 return;
 
             transform
-                .DOMove(SloTransform.position, _releaseSpeed)
+                .DOMove(SlotTransform.position, _releaseSpeed)
                 .SetSpeedBased()
                 .SetEase(_releaseEase)
                 .OnComplete(() =>
                 {
-                    transform.SetParent(SloTransform);
+                    transform.SetParent(SlotTransform);
                     transform.localPosition = Vector3.zero;
                 });
             

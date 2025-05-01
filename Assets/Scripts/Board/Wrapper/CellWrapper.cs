@@ -7,6 +7,8 @@ namespace Pinvestor.BoardSystem.Authoring
     {
         [field: SerializeField] public Transform VisualParent { get; private set; } = null;
         
+        [field: SerializeField] public Transform PlacementPivot { get; private set; } = null;
+        
         [SerializeField] private SpriteRenderer _spriteRenderer = null;
         
         private Color _defaultColor;

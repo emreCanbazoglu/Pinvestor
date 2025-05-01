@@ -59,10 +59,12 @@ namespace Pinvestor.BoardSystem.Base
             return false;
         }
 
-        public bool TryAddBoardItemPiece(BoardItemPieceBase boardItemPiece)
+        public bool TryAddBoardItemPiece(
+            BoardItemPieceBase boardItemPiece, 
+            bool force = false)
         {
-            //TODO: Optimize
-            if (!CanAddBoardItem(boardItemPiece.ParentItem.GetBoardItemType()))
+            if (!force
+                 && !CanAddBoardItem(boardItemPiece.ParentItem.GetBoardItemType()))
             {
                 return false;
             }

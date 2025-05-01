@@ -22,25 +22,14 @@ namespace Pinvestor.UI
     public class ShowCompanySelectionUIEvent : IEvent { }
     public class HideCompanySelectionUIEvent : IEvent { }
     
-    public class HighlightCardEvent : IEvent
+    public class CompanyCardSelectedEvent : IEvent
     {
-        public CompanyCardWrapper Card { get; }
+        public CompanyCardWrapper CompanyCard { get; }
 
-        public HighlightCardEvent(
-            CompanyCardWrapper card)
+        public CompanyCardSelectedEvent(
+            CompanyCardWrapper companyCard)
         {
-            Card = card;
-        }
-    }
-    
-    public class UnhighlightCardEvent : IEvent
-    {
-        public CompanyCardWrapper Card { get; }
-
-        public UnhighlightCardEvent(
-            CompanyCardWrapper card)
-        {
-            Card = card;
+            CompanyCard = companyCard;
         }
     }
     
@@ -65,9 +54,6 @@ namespace Pinvestor.UI
         private EventBinding<ShowCompanySelectionUIEvent> _showEventBinding;
         private EventBinding<HideCompanySelectionUIEvent> _hideEventBinding;
         
-        private EventBinding<HighlightCardEvent> _highlightCardEventBinding;
-        private EventBinding<UnhighlightCardEvent> _unhighlightCardEventBinding;
-
         private readonly Dictionary<CompanyCardWrapper, List<EventTrigger.Entry>>
             _cardEventTriggerEntryMap
                 = new Dictionary<CompanyCardWrapper, List<EventTrigger.Entry>>();
@@ -94,17 +80,6 @@ namespace Pinvestor.UI
             EventBus<ShowCompanySelectionUIEvent>.Register(_showEventBinding);
             EventBus<HideCompanySelectionUIEvent>.Register(_hideEventBinding);
             
-            _highlightCardEventBinding
-                = new EventBinding<HighlightCardEvent>(
-                    OnHighlightCardEvent);
-            
-            _unhighlightCardEventBinding
-                = new EventBinding<UnhighlightCardEvent>(
-                    OnUnhighlightCardEvent);
-            
-            EventBus<HighlightCardEvent>.Register(_highlightCardEventBinding);
-            EventBus<UnhighlightCardEvent>.Register(_unhighlightCardEventBinding);
-            
             base.AwakeCustomActions();
         }
         
@@ -113,9 +88,6 @@ namespace Pinvestor.UI
             EventBus<InitializeCompanySelectionUIEvent>.Deregister(_initializeEventBinding);
             EventBus<ShowCompanySelectionUIEvent>.Deregister(_showEventBinding);
             EventBus<HideCompanySelectionUIEvent>.Deregister(_hideEventBinding);
-            
-            EventBus<HighlightCardEvent>.Deregister(_highlightCardEventBinding);
-            EventBus<UnhighlightCardEvent>.Deregister(_unhighlightCardEventBinding);
             
             ClearCardEventTriggers();
             
@@ -236,20 +208,20 @@ namespace Pinvestor.UI
             CompanyCardWrapper card,
             PointerEventData eventData)
         {
-
+            HighlightCard(card);
         }
         
         private void OnCardPointerExit(
             CompanyCardWrapper card,
             PointerEventData eventData)
         {
-
+            UnhighlightCardEvent(
+                card);
         }
         
-        private void OnHighlightCardEvent(
-            HighlightCardEvent e)
+        private void HighlightCard(
+            CompanyCardWrapper card)
         {
-            var card = e.Card;
             var tween = _cardTweenMap.GetValueOrDefault(card);
 
             tween?.Kill();
@@ -262,10 +234,9 @@ namespace Pinvestor.UI
             _cardTweenMap[card] = tween;
         }
         
-        private void OnUnhighlightCardEvent(
-            UnhighlightCardEvent e)
+        private void UnhighlightCardEvent(
+            CompanyCardWrapper card)
         {
-            var card = e.Card;
             var tween = _cardTweenMap.GetValueOrDefault(card);
 
             tween?.Kill();

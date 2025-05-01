@@ -109,16 +109,32 @@ namespace Pinvestor.CardSystem.Authoring
                 return;
 
             _selectedCompany.SetSelected(false);
-            _selectedCompany.Released();
-            
-            _selectedCompany = null;
-            
-            EventBus<ShowCompanySelectionUIEvent>.Raise(
-                new ShowCompanySelectionUIEvent());
-            
-            _canCheckHoveredCompany = true;
             
             CancelHighlightPlacement();
+
+            if (_currentPlacementResult.CanPlace)
+                GameManager.Instance.BoardWrapper.Board
+                    .TryPlaceBoardItem(_selectedCompany.BoardItem,
+                        _currentPlacementResult.TargetCellIndices[0],
+                        force: true,
+                        onCompanyBoardItemPlaced);
+            else
+            {
+                _selectedCompany.ReleaseToSlot();
+                _selectedCompany = null;
+                
+                EventBus<ShowCompanySelectionUIEvent>.Raise(
+                    new ShowCompanySelectionUIEvent());
+                
+                _canCheckHoveredCompany = true;
+            }
+            
+            void onCompanyBoardItemPlaced()
+            {
+                _placedCompany = _selectedCompany;
+                
+                _selectedCompany = null;
+            }
         }
         
         private void OnPress(Input_WI_OnPress input)
@@ -138,14 +154,7 @@ namespace Pinvestor.CardSystem.Authoring
             
             _selectedCompany.transform.position = worldPosition;
 
-            if (!GameManager.Instance.BoardWrapper
-                    .TryGetCellAt(worldPosition, out var cell))
-            {
-                CancelHighlightPlacement();
-                return;
-            }
-            
-            TryHighlightPlacement(cell);
+            CheckPlacement(worldPosition);
         }
         
         private void SetHoveredCompany(
@@ -157,11 +166,6 @@ namespace Pinvestor.CardSystem.Authoring
             if (_hoveredCompany != null)
             {
                 _hoveredCompany.SetHovered(false);
-                
-                EventBus<UnhighlightCardEvent>
-                    .Raise(
-                        new UnhighlightCardEvent(
-                            _pileWrapper.CompanyCardMap.Forward[_hoveredCompany]));
             }
 
             _hoveredCompany = company;
@@ -169,11 +173,6 @@ namespace Pinvestor.CardSystem.Authoring
             if (_hoveredCompany != null)
             {
                 _hoveredCompany.SetHovered(true);
-                
-                EventBus<HighlightCardEvent>
-                    .Raise(
-                        new HighlightCardEvent(
-                            _pileWrapper.CompanyCardMap.Forward[_hoveredCompany]));
             }
         }
 
@@ -206,15 +205,30 @@ namespace Pinvestor.CardSystem.Authoring
             return _placedCompany;
         }
 
-        private void TryHighlightPlacement(
-            Cell cell)
+        private void CheckPlacement(
+            Vector3 worldPosition)
         {
             CancelHighlightPlacement();
+
+            if (!GameManager.Instance.BoardWrapper
+                    .TryGetCellAt(worldPosition, out var cell))
+            {
+                _currentPlacementResult
+                    = CanPlaceBoardItemResult.Failure();
+                
+                return;
+            }
             
             _currentPlacementResult
                 = GameManager.Instance.BoardWrapper.Board
                     .CanPlaceBoardItem(_selectedCompany.BoardItem, cell.Position);
+            
+            TryHighlightPlacement();
+            
+        }
 
+        private void TryHighlightPlacement()
+        {
             if (_currentPlacementResult.CanPlace)
             {
                 GameManager.Instance.BoardWrapper.Highlighter

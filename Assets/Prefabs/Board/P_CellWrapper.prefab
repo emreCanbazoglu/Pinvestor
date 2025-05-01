@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <VisualParent>k__BackingField: {fileID: 5223895683081342490}
+  <PlacementPivot>k__BackingField: {fileID: 5223895683081342490}
   _spriteRenderer: {fileID: 7221680980292413347}
 --- !u!1001 &4663236577894492542
 PrefabInstance:

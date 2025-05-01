@@ -38,9 +38,10 @@ namespace Pinvestor.BoardSystem.Base
             return _validBoardItemTypes.Contains(boardItemTypeSO);
         }
         
-        public bool TryRegisterBoardItemPiece(BoardItemPieceBase boardItemPiece)
+        public bool TryRegisterBoardItemPiece(BoardItemPieceBase boardItemPiece, bool force = false)
         {
-            if (!CanRegisterBoardItem(boardItemPiece.ParentItem.GetBoardItemType()))
+            if (!force 
+                && !CanRegisterBoardItem(boardItemPiece.ParentItem.GetBoardItemType()))
             {
                 return false;
             }

@@ -11,6 +11,8 @@ namespace Pinvestor.BoardSystem.Base
     
     public abstract class BoardItemBase : IBoardItem, IDisposable
     {
+        public BoardItemWrapperBase Wrapper { get; private set; }
+        
         public List<BoardItemPieceBase> Pieces { get; protected set; }
 
         public Dictionary<Type, BoardItemPropertySpecBase> BoardItemPropertySpecs { get; private set; } = new();
@@ -64,6 +66,8 @@ namespace Pinvestor.BoardSystem.Base
             var wrapper = GameObject.Instantiate(wrapperPrefab);
             
             wrapper.Wrap(this);
+            
+            Wrapper = wrapper;
             
             return wrapper;
         }
@@ -167,11 +171,6 @@ namespace Pinvestor.BoardSystem.Base
 
             BoardItemPropertySpecs.Add(propertySpec.GetType(), propertySpec);
             BoardItemPropertySpecs.TryAdd(propertySpec.GetType().BaseType, propertySpec);
-        }
-
-        public void RemoveFromCell()
-        {
-            DisposePieces();
         }
 
         private void InitSpecs(BoardItemInfoSO infoSO)

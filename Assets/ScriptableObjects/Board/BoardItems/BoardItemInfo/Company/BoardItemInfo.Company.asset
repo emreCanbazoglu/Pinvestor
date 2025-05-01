@@ -17,4 +17,5 @@ MonoBehaviour:
     _classRef: Pinvestor.BoardSystem.Base.BoardItemData_Company, Assembly-CSharp
   BoardItemTypeRef:
     _classRef: Pinvestor.BoardSystem.Base.BoardItem_Company, Assembly-CSharp
-  BoardItemPropertySOs: []
+  BoardItemPropertySOs:
+  - {fileID: 11400000, guid: a18511d3838b74a5ebf55b45c8756783, type: 2}
