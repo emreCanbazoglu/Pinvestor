@@ -57,22 +57,21 @@ namespace Pinvestor.BoardSystem.Authoring
             transform.localPosition = Vector3.zero;
         }
         
-        public void SetHovered(bool isHovered)
-        {
-            Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetHovered: " + isHovered);
-        }
-        
         public void SetSelected(bool isSelected)
         {
             Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetSelected: " + isSelected);
+            
+            gameObject.SetActive(true);
         }
 
         public void ReleaseToSlot()
         {
             if (SlotTransform == null)
                 return;
+            
+            gameObject.SetActive(false);
 
-            transform
+            /*transform
                 .DOMove(SlotTransform.position, _releaseSpeed)
                 .SetSpeedBased()
                 .SetEase(_releaseEase)
@@ -80,8 +79,7 @@ namespace Pinvestor.BoardSystem.Authoring
                 {
                     transform.SetParent(SlotTransform);
                     transform.localPosition = Vector3.zero;
-                });
-            
+                });*/
         }
     }
 }

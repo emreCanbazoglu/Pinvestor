@@ -174,7 +174,6 @@ GameObject:
   - component: {fileID: 8266452848336650611}
   - component: {fileID: 6133370475278887731}
   - component: {fileID: 3957859393792016209}
-  - component: {fileID: 4003993628167901}
   m_Layer: 0
   m_Name: CompanySelectionPileWrapper
   m_TagString: Untagged
@@ -228,18 +227,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pileWrapper: {fileID: 6133370475278887731}
---- !u!114 &4003993628167901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7001869100012057113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa8062a448dd17943bfca0c2e7d58b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7699109477443544683
 GameObject:
   m_ObjectHideFlags: 0

@@ -170,11 +170,25 @@ namespace Pinvestor.UI
 
                 card.Widget.ButtonEventTrigger
                     .triggers.Add(onPointerExitEntry);
+                
+                EventTrigger.Entry onClickEntry
+                    = new EventTrigger.Entry
+                    {
+                        eventID = EventTriggerType.PointerClick
+                    };
+                
+                onClickEntry.callback.AddListener(
+                    (data) => OnCardClick(card, (PointerEventData)data));
+                
+                card.Widget.ButtonEventTrigger
+                    .triggers.Add(onClickEntry);
 
                 _cardEventTriggerEntryMap[card]
                     .Add(onPointerEnterEntry);
                 _cardEventTriggerEntryMap[card]
                     .Add(onPointerExitEntry);
+                _cardEventTriggerEntryMap[card]
+                    .Add(onClickEntry);
                 
                 var tween = card.transform
                     .DOScale(1f, _showUIDuration)
@@ -217,6 +231,17 @@ namespace Pinvestor.UI
         {
             UnhighlightCardEvent(
                 card);
+        }
+        
+        private void OnCardClick(
+            CompanyCardWrapper card, 
+            PointerEventData eventData)
+        {
+            if(eventData.button != PointerEventData.InputButton.Left)
+                return;
+            
+            EventBus<CompanyCardSelectedEvent>
+                .Raise(new CompanyCardSelectedEvent(card));
         }
         
         private void HighlightCard(
