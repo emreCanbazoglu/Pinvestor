@@ -87,6 +87,7 @@ namespace Pinvestor.CardSystem.Authoring
                     = card.CreateWrapper() as CompanyCardWrapper;
                 
                 boardItemWrapper.SetSlotTransform(_slots[slotIndex]);
+                boardItemWrapper.ReleaseToSlot();
                 
                 CompanyCardMap.Add(
                     boardItemWrapper, cardWrapper);

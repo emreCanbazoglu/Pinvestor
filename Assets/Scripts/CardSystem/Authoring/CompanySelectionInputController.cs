@@ -8,102 +8,99 @@ using Pinvestor.Game;
 using Pinvestor.Game.InputSystem;
 using Pinvestor.UI;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using PlayerInput = Pinvestor.InputSystem.PlayerInput;
 
 namespace Pinvestor.CardSystem.Authoring
 {
-    public class CompanySelectionInputController : MonoBehaviour,
-        IInputReceiver
+    public class CompanySelectionInputController : MonoBehaviour, PlayerInput.ICoreActions
     {
         [SerializeField] private CompanySelectionPileWrapper _pileWrapper = null;
+
+        private PlayerInput _playerInput;
         
-        public List<InputTransmitter> AttachedInputTransmitterList { get; set; }
-        public Dictionary<Type, InputTransmitter.EventDelegate> Delegates { get; set; }
-        public Dictionary<Delegate, InputTransmitter.EventDelegate> DelegateLookUp { get; set; }
-        
-        private CoroutineHandle _checkHoveredCompanyCoroutineHandle;
-        
-        private bool _canCheckHoveredCompany = false;
-        
-        private BoardItemWrapper_Company _hoveredCompany = null;
         private BoardItemWrapper_Company _selectedCompany = null;
-        
         private BoardItemWrapper_Company _placedCompany = null;
         
         private CanPlaceBoardItemResult _currentPlacementResult
             = new CanPlaceBoardItemResult(false, null);
         
+        private EventBinding<CompanyCardSelectedEvent> _companySelectedBinding;
+        
+        private CoroutineHandle _moveSelectedCompanyCoroutineHandle;
+        
         public void Activate()
         {
-            RegisterToInput();
+            _companySelectedBinding
+                = new EventBinding<CompanyCardSelectedEvent>(
+                    OnCompanyCardSelected);
+            
+            EventBus<CompanyCardSelectedEvent>.Register(_companySelectedBinding);
 
-            _checkHoveredCompanyCoroutineHandle
-                = CheckHoveredCompany()
-                    .CancelWith(gameObject)
-                    .RunCoroutine();
+            _playerInput = new PlayerInput();
+            _playerInput.Core.SetCallbacks(this);
         }
         
         public void Deactivate()
         {
-            UnregisterFromInput();
+            EventBus<CompanyCardSelectedEvent>.Deregister(_companySelectedBinding);
         }
-
-        private IEnumerator<float> CheckHoveredCompany()
+        
+        private void OnCompanyCardSelected(
+            CompanyCardSelectedEvent e)
         {
-            _canCheckHoveredCompany = true;
-            
-            while (true)
+            if (_selectedCompany != null)
             {
-                while (!_canCheckHoveredCompany
-                       || GameInputManager.Instance.IsInputBlocked)
-                    yield return Timing.WaitForOneFrame;
-
-                TrySelectCompany(
-                    Input.mousePosition,
-                    out BoardItemWrapper_Company company);
-                
-                SetHoveredCompany(company);
-                
-                yield return Timing.WaitForOneFrame;
+                Debug.LogError(
+                    "Company already selected: " + _selectedCompany.Company.CompanyId.CompanyId);
             }
-        }
 
-        public void RegisterToInput()
-        {
-            this.AddInputListener<Input_WI_OnFingerDown>(OnFingerDown);
-            this.AddInputListener<Input_WI_OnFingerUp>(OnFingerUp);
-            this.AddInputListener<Input_WI_OnPress>(OnPress);
-        }
-        
-        public void UnregisterFromInput()
-        {
-            this.RemoveInputListener<Input_WI_OnFingerDown>(OnFingerDown);
-            this.RemoveInputListener<Input_WI_OnFingerUp>(OnFingerUp);
-            this.RemoveInputListener<Input_WI_OnPress>(OnPress);
-        }
-        
-        private void OnFingerDown(Input_WI_OnFingerDown input)
-        {
-            if(GameInputManager.Instance.IsInputBlocked)
+            if (!_pileWrapper.CompanyCardMap.Reverse
+                    .TryGetValue(e.CompanyCard, out var companyBoardItem))
+            {
+                Debug.LogError(
+                    "Company card not found in map: " + e.CompanyCard);
                 return;
+            }
             
-            if(_hoveredCompany == null)
-                return;
-            
-            _canCheckHoveredCompany = false;
-            
-            _selectedCompany = _hoveredCompany;
-            _hoveredCompany = null;
-            
+            EventBus<HideCompanySelectionUIEvent>
+                .Raise(new HideCompanySelectionUIEvent());
+
+            _selectedCompany = companyBoardItem;
             _selectedCompany.SetSelected(true);
             
-            EventBus<HideCompanySelectionUIEvent>.Raise(
-                new HideCompanySelectionUIEvent());
+            RegisterToInput();
+
+            _moveSelectedCompanyCoroutineHandle
+                = MoveSelectedCompanyRoutine()
+                    .CancelWith(gameObject)
+                    .RunCoroutine();
+        }
+
+        private void RegisterToInput()
+        {
+            _playerInput.Core.ApprovePlacement.performed += OnApprovePlacement;
+            _playerInput.Core.CancelPlacement.performed += OnCancelPlacement;
+            
+            _playerInput.Core.Enable();
         }
         
-        private void OnFingerUp(Input_WI_OnFingerUp input)
+        private void UnregisterFromInput()
+        {
+            _playerInput.Core.ApprovePlacement.performed -= OnApprovePlacement;
+            _playerInput.Core.CancelPlacement.performed -= OnCancelPlacement;
+            
+            _playerInput.Core.Disable();
+        }
+        
+        public void OnApprovePlacement(InputAction.CallbackContext ctx)
         {
             if(GameInputManager.Instance.IsInputBlocked)
                 return;
+            
+            UnregisterFromInput();
+
+            Timing.KillCoroutines(_moveSelectedCompanyCoroutineHandle);
             
             if(_selectedCompany == null)
                 return;
@@ -120,13 +117,7 @@ namespace Pinvestor.CardSystem.Authoring
                         onCompanyBoardItemPlaced);
             else
             {
-                _selectedCompany.ReleaseToSlot();
-                _selectedCompany = null;
-                
-                EventBus<ShowCompanySelectionUIEvent>.Raise(
-                    new ShowCompanySelectionUIEvent());
-                
-                _canCheckHoveredCompany = true;
+                OnCancelPlacement(ctx);
             }
             
             void onCompanyBoardItemPlaced()
@@ -137,65 +128,48 @@ namespace Pinvestor.CardSystem.Authoring
             }
         }
         
-        private void OnPress(Input_WI_OnPress input)
+        public void OnCancelPlacement(InputAction.CallbackContext ctx)
         {
             if(GameInputManager.Instance.IsInputBlocked)
                 return;
             
-            if(_selectedCompany == null)
-                return;
-            
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
-                new Vector3(
-                    input.FingerPos.x,
-                    input.FingerPos.y));
-            
-            worldPosition.z = _selectedCompany.transform.position.z;
-            
-            _selectedCompany.transform.position = worldPosition;
+            UnregisterFromInput();
 
-            CheckPlacement(worldPosition);
-        }
-        
-        private void SetHoveredCompany(
-            BoardItemWrapper_Company company)
-        {
-            if(_hoveredCompany == company)
+            Timing.KillCoroutines(_moveSelectedCompanyCoroutineHandle);
+            
+            if (_selectedCompany == null)
                 return;
 
-            if (_hoveredCompany != null)
-            {
-                _hoveredCompany.SetHovered(false);
-            }
-
-            _hoveredCompany = company;
-
-            if (_hoveredCompany != null)
-            {
-                _hoveredCompany.SetHovered(true);
-            }
+            _selectedCompany.SetSelected(false);
+            
+            CancelHighlightPlacement();
+            
+            _selectedCompany.ReleaseToSlot();
+            _selectedCompany = null;
+            
+            EventBus<ShowCompanySelectionUIEvent>
+                .Raise(new ShowCompanySelectionUIEvent());
         }
 
-        private bool TrySelectCompany(
-            Vector2 touchPosition,
-            out BoardItemWrapper_Company company)
+        private IEnumerator<float> MoveSelectedCompanyRoutine()
         {
-            company = null;
+            while (_selectedCompany != null)
+            {
+                Vector2 inputPosition = Input.mousePosition;
 
-            var ray
-                = Camera.main.ScreenPointToRay(
-                    touchPosition);
-            
-            if (!Physics.Raycast(ray, out var hit))
-                return false;
-            
-            if (!hit.collider.TryGetComponent(
-                    out IComponentProvider<BoardItemWrapper_Company> companyWrapperProvider))
-                return false;
-            
-            company = companyWrapperProvider.GetComponent();
-            
-            return true;
+                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
+                    new Vector3(
+                        inputPosition.x,
+                        inputPosition.y));
+
+                worldPosition.z = _selectedCompany.transform.position.z;
+
+                _selectedCompany.transform.position = worldPosition;
+
+                CheckPlacement(worldPosition);
+                
+                yield return Timing.WaitForOneFrame;
+            }
         }
 
         public async UniTask<BoardItemWrapper_Company> WaitUntilCompanyPlacementAsync()
