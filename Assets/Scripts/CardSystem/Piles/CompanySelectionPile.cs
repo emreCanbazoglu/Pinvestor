@@ -34,7 +34,7 @@ namespace Pinvestor.CardSystem
             OnSlotsFilled?.Invoke();
         }
         
-        private void ResetSlots()
+        public void ResetSlots()
         {
             foreach (var slot in Slots)
             {

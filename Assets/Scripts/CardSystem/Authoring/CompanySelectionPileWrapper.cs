@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using MMFramework;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Game;
 using Pinvestor.UI;
 using UnityEngine;
 
@@ -61,6 +62,11 @@ namespace Pinvestor.CardSystem.Authoring
                 = await _inputController.WaitUntilCompanyPlacementAsync();
             
             _inputController.Deactivate();
+
+            DestroyWrappers(placedCompany);
+            
+            EventBus<CompanyPlacedEvent>
+                .Raise(new CompanyPlacedEvent(placedCompany));
         }
 
         private UniTask CreatePileCardsAsync()
@@ -96,6 +102,23 @@ namespace Pinvestor.CardSystem.Authoring
             }
             
             return UniTask.CompletedTask;
+        }
+
+        private void DestroyWrappers(
+            BoardItemWrapper_Company placedCompany)
+        {
+            foreach (var pair in CompanyCardMap)
+            {
+                var boardItemWrapper = pair.Key;
+                
+                if(boardItemWrapper != placedCompany)
+                    boardItemWrapper.DestroyWrapper();
+                
+                var cardWrapper = pair.Value;
+                cardWrapper.DestroyWrapper();
+            }
+
+            CompanyCardMap.Clear();
         }
     }
 }

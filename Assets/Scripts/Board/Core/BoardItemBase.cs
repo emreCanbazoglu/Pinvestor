@@ -68,8 +68,15 @@ namespace Pinvestor.BoardSystem.Base
             wrapper.Wrap(this);
             
             Wrapper = wrapper;
+            Wrapper.OnDisposed += OnWrapperDisposed;
             
             return wrapper;
+        }
+        
+        private void OnWrapperDisposed()
+        {
+            Wrapper.OnDisposed -= OnWrapperDisposed;
+            Wrapper = null;
         }
         
         protected virtual void InitCore(BoardItemDataBase data)
@@ -96,6 +103,9 @@ namespace Pinvestor.BoardSystem.Base
             DisposePieces();
 
             DisposeCore();
+            
+            if (Wrapper != null)
+                Wrapper.OnDisposed -= OnWrapperDisposed;
             
             OnDisposed?.Invoke(this);
         }

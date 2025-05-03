@@ -26,6 +26,8 @@ namespace Pinvestor.BoardSystem
         }
 
         public Action OnStabilityUpdated { get; set; }
+        
+        public Action<Cell> OnPlaced { get; set; }
 
         protected BoardItemPropertySpec_PlacableBase(
             BoardItemPropertySOBase propertySO,
@@ -79,9 +81,21 @@ namespace Pinvestor.BoardSystem
                 Debug.Log($"Placed {BoardItem.GetBoardItemType().GetID()} at {cell.Position}");
                 
                 onPlaced?.Invoke();
+                
+                OnPlaced?.Invoke(cell);
             }
         }
+        
+        public bool TryRemove(
+            Action onRemoved = null)
+        {
+            //TODO: Implement remove logic
 
-        protected abstract void PlaceCore(Cell cell, Action onPlaced = null);
+            return false;
+        }
+        
+
+        protected virtual void PlaceCore(Cell cell, Action onPlaced = null) { }
+        protected virtual void RemoveCore(Action onRemoved = null) { }
     }
 }

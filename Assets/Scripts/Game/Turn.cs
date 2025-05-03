@@ -10,6 +10,8 @@ namespace Pinvestor.Game
         
         private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
         
+        private bool _isCompanyPlaced;
+        
         public Turn(
             CardPlayer player)
         {
@@ -18,7 +20,11 @@ namespace Pinvestor.Game
         
         public async UniTask StartAsync()
         {
+            _isCompanyPlaced = false;
+            
             await ChooseCompanyCard();
+            
+            await UniTask.WaitUntil(() => _isCompanyPlaced);
         }
         
         private async UniTask ChooseCompanyCard()
@@ -45,6 +51,13 @@ namespace Pinvestor.Game
                     _companyPlacedEventBinding);
             
             Debug.Log("Company placed: " + e.Company.Company.CompanyId.CompanyId);
+            
+            Player.Deck.TryGetDeckPile<CompanySelectionPile>(
+                out var chooseCompanyPile);
+
+            chooseCompanyPile.ResetSlots();
+            
+            _isCompanyPlaced = true;
         }
     }
 }

@@ -2,6 +2,7 @@ using AbilitySystem;
 using DG.Tweening;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CompanySystem;
+using Pinvestor.Game;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Authoring
@@ -24,11 +25,39 @@ namespace Pinvestor.BoardSystem.Authoring
             CreateCompany();
             
             gameObject.name 
-                = "BoardItemWrapper_" + BoardItem.CompanyCardDataSo.CompanyId;
+                = "BoardItemWrapper_" + BoardItem.CompanyCardDataSo.CompanyId.CompanyId;
+            
+            BoardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_PlacableCompany placableCompanySpec);
+
+            placableCompanySpec.OnPlaced += OnCompanyPlaced;
             
             base.WrapCore();
         }
         
+        protected override void DisposeCore()
+        {
+            BoardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_PlacableCompany placableCompanySpec);
+
+            placableCompanySpec.OnPlaced -= OnCompanyPlaced;
+            
+            base.DisposeCore();
+        }
+
+        private void OnCompanyPlaced(Cell cell)
+        {
+            if (cell == null)
+                return;
+
+            var parentCellWrapper 
+                = GameManager.Instance.BoardWrapper
+                    .CellWrappers[cell];
+            
+            transform.SetParent(parentCellWrapper.transform);
+        }
+
+
         private void InitializeAttributeSystem()
         {
             AbilitySystemCharacter.AttributeSystem

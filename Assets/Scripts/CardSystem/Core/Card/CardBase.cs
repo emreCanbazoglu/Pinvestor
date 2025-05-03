@@ -1,16 +1,17 @@
+using System;
 using Pinvestor.AbilitySystem.Abilities;
 using Pinvestor.CardSystem.Authoring;
 using UnityEngine;
 
 namespace Pinvestor.CardSystem
 {
-    public abstract class CardBase
+    public abstract class CardBase : IDisposable
     {
         public CardPlayer Owner { get; private set; }
         public CardData CardData { get; private set; }
         public abstract CardDataScriptableObject CardDataScriptableObject { get; }
         
-        private PlayCardAbilitySpec _playCardAbilitySpec;
+        protected PlayCardAbilitySpec PlayCardAbilitySpec { get; private set; }
         
         protected CardBase(
             CardPlayer owner,
@@ -23,7 +24,7 @@ namespace Pinvestor.CardSystem
         protected void SetPlayCardAbilitySpec(
             PlayCardAbilitySpec playCardAbilitySpec)
         {
-            _playCardAbilitySpec = playCardAbilitySpec;
+            PlayCardAbilitySpec = playCardAbilitySpec;
         }
         
         public bool CanPlayCard(
@@ -34,13 +35,13 @@ namespace Pinvestor.CardSystem
             
             SetTargetCardPlayer(target);
             
-            return _playCardAbilitySpec.CanActivateAbility();
+            return PlayCardAbilitySpec.CanActivateAbility();
         }
         
         private void SetTargetCardPlayer(
             CardPlayer target)
         {
-            _playCardAbilitySpec.TargetCardPlayer = target;
+            PlayCardAbilitySpec.TargetCardPlayer = target;
         }
         
         public void SetCardRemovedFromSlot()
@@ -80,11 +81,14 @@ namespace Pinvestor.CardSystem
         {
             CardData.SetDeckPile(deckPile);
         }
+
+        public abstract void Dispose();
     }
     
     public abstract class CardBase<TCardDataScriptableObject> : CardBase
         where TCardDataScriptableObject : CardDataScriptableObject
     {
+        public CardWrapperBase CardWrapper { get; private set; }
         public TCardDataScriptableObject CastedCardDataSo { get; private set; }
         
         public sealed override CardDataScriptableObject CardDataScriptableObject => CastedCardDataSo;
@@ -110,7 +114,33 @@ namespace Pinvestor.CardSystem
                     CardDataScriptableObject.CardWrapperPrefab);
             
             cardWrapper.WrapCard(this);
+            
+            CardWrapper = cardWrapper;
+            CardWrapper.OnDisposed += OnWrapperDisposed;
+            
             return cardWrapper;
+        }
+        
+        private void OnWrapperDisposed()
+        {
+            CardWrapper.OnDisposed -= OnWrapperDisposed;
+            CardWrapper = null;
+        }
+
+        public sealed override void Dispose()
+        {
+            if (CardWrapper != null)
+            {
+                CardWrapper.OnDisposed -= OnWrapperDisposed;
+                CardWrapper = null;
+            }
+            
+            DisposeCore();
+        }
+
+        protected virtual void DisposeCore()
+        {
+            
         }
     }
 }

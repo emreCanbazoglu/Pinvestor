@@ -43,7 +43,18 @@ namespace Pinvestor.CardSystem.Authoring
         
         public void Deactivate()
         {
-            EventBus<CompanyCardSelectedEvent>.Deregister(_companySelectedBinding);
+            UnregisterFromInput();
+            CancelHighlightPlacement();
+            Timing.KillCoroutines(
+                _moveSelectedCompanyCoroutineHandle);
+            
+            _selectedCompany?.SetSelected(false);
+            _selectedCompany = null;
+            
+            _placedCompany = null;
+            
+            EventBus<CompanyCardSelectedEvent>
+                .Deregister(_companySelectedBinding);
         }
         
         private void OnCompanyCardSelected(

@@ -11,7 +11,7 @@ namespace Pinvestor.CardSystem.Authoring
 
         protected override void WrapCardCore()
         {
-            gameObject.name = "CompanyCardWrapper_" + CompanyCard.CastedCardDataSo.CompanyId;
+            gameObject.name = "CompanyCardWrapper_" + CompanyCard.CastedCardDataSo.CompanyId.CompanyId;
         }
     }
 }

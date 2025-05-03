@@ -23,15 +23,9 @@ namespace Pinvestor.Game
         
         public Table Table { get; private set; }
         
-        private EventBinding<CompanySelectionRequestEvent> _companySelectionRequestEventBinding;
-
-        private CompanySelectionRequestEvent _companySelectionRequestEvent;
-        
         private void Awake()
         {
-            _companySelectionRequestEventBinding
-                = new EventBinding<CompanySelectionRequestEvent>(OnCompanySelectionRequest);
-            
+
             InitializeAsync().Forget();
         }
         
@@ -67,21 +61,11 @@ namespace Pinvestor.Game
             Debug.Log("Playing...");
             
             Turn turn = new Turn(Table.GamePlayer.CardPlayer);
-            
-            EventBus<CompanySelectionRequestEvent>
-                .Register(_companySelectionRequestEventBinding);
-            
-            await turn.StartAsync();
-        }
-        
-        private void OnCompanySelectionRequest(
-            CompanySelectionRequestEvent e)
-        {
-            _companySelectionRequestEvent = e;
-            
-            EventBus<CompanySelectionRequestEvent>
-                .Deregister(_companySelectionRequestEventBinding);
-            
+
+            while (true)
+            {
+                await turn.StartAsync();
+            }
         }
     }
 }

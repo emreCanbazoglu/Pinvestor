@@ -16,19 +16,10 @@ namespace Pinvestor.BoardSystem.Base
         
         public BoardItemBase BoardItem { get; private set; }
         
-        public Action OnInited { get; set; }
-
         public bool IsInited { get; private set; } = false;
 
-        protected virtual void WrapCore()
-        {
-            
-        }
-        
-        protected virtual void DisposeCore()
-        {
-            
-        }
+        public Action OnInited { get; set; }
+        public Action OnDisposed { get; set; }
         
         public BoardItemTypeSO GetBoardItemTypeSO()
         {
@@ -38,12 +29,24 @@ namespace Pinvestor.BoardSystem.Base
         public void Wrap(BoardItemBase boardItem)
         {
             BoardItem = boardItem;
-
+            
             WrapCore();
 
             IsInited = true;
             
             OnInited?.Invoke();
+        }
+        
+        protected virtual void WrapCore()
+        {
+            
+        }
+        
+        public void DestroyWrapper()
+        {
+            Dispose();
+            
+            Destroy(gameObject);
         }
 
         private void Dispose()
@@ -51,16 +54,15 @@ namespace Pinvestor.BoardSystem.Base
             IsInited = false;
             
             DisposeCore();
+            
+            BoardItem = null;
+            
+            OnDisposed?.Invoke();
         }
-
-        private void OnDisable()
+        
+        protected virtual void DisposeCore()
         {
-            //Dispose();
-        }
-
-        private void OnDestroy()
-        {
-            Dispose();
+            
         }
     }
 }
