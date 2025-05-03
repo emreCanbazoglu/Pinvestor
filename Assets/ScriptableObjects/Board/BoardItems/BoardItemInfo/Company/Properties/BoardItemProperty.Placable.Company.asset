@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de8a213c664b42bdaa94bcb1a484808a, type: 3}
   m_Name: BoardItemProperty.Placable.Company
   m_EditorClassIdentifier: 
+  <PlacementDuration>k__BackingField: 0.2
+  <PlacementEase>k__BackingField: 27
