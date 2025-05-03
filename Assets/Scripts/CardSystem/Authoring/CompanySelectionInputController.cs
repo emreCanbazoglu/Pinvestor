@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using MEC;
@@ -13,7 +12,8 @@ using PlayerInput = Pinvestor.InputSystem.PlayerInput;
 
 namespace Pinvestor.CardSystem.Authoring
 {
-    public class CompanySelectionInputController : MonoBehaviour, PlayerInput.ICoreActions
+    public class CompanySelectionInputController : MonoBehaviour, 
+        PlayerInput.ICoreActions
     {
         [SerializeField] private CompanySelectionPileWrapper _pileWrapper = null;
 
@@ -21,9 +21,9 @@ namespace Pinvestor.CardSystem.Authoring
         
         private BoardItemWrapper_Company _selectedCompany = null;
         private BoardItemWrapper_Company _placedCompany = null;
-        
+
         private CanPlaceBoardItemResult _currentPlacementResult
-            = new CanPlaceBoardItemResult(false, null);
+            = CanPlaceBoardItemResult.Failure();
         
         private EventBinding<CompanyCardSelectedEvent> _companySelectedBinding;
         

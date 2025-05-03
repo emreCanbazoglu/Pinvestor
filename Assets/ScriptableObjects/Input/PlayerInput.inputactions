@@ -7,12 +7,12 @@
             "actions": [
                 {
                     "name": "ApprovePlacement",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "903bd8e3-08dc-45b8-8fb4-859b1fb2508f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "CancelPlacement",
@@ -55,6 +55,65 @@
                     "processors": "",
                     "groups": "",
                     "action": "CancelPlacement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "BallShooter",
+            "id": "c54f6bed-c0f6-46bd-ab1e-5ec1be7950de",
+            "actions": [
+                {
+                    "name": "Aim",
+                    "type": "Value",
+                    "id": "3cce624b-8f74-4f72-92c3-e60aadc46eb2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "01b27438-39e4-48fb-8b29-8d0caafd5f1b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5a108dec-9563-40c1-9014-2909dff640dd",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1b4eb52a-74d4-4ea8-8460-67b447b84ada",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a2b059aa-fa32-4f39-8d7a-73329a40d3c8",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

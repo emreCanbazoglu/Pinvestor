@@ -95,12 +95,12 @@ namespace Pinvestor.InputSystem
             ""actions"": [
                 {
                     ""name"": ""ApprovePlacement"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""903bd8e3-08dc-45b8-8fb4-859b1fb2508f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""CancelPlacement"",
@@ -147,6 +147,65 @@ namespace Pinvestor.InputSystem
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""BallShooter"",
+            ""id"": ""c54f6bed-c0f6-46bd-ab1e-5ec1be7950de"",
+            ""actions"": [
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Value"",
+                    ""id"": ""3cce624b-8f74-4f72-92c3-e60aadc46eb2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""01b27438-39e4-48fb-8b29-8d0caafd5f1b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""5a108dec-9563-40c1-9014-2909dff640dd"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b4eb52a-74d4-4ea8-8460-67b447b84ada"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2b059aa-fa32-4f39-8d7a-73329a40d3c8"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -155,11 +214,16 @@ namespace Pinvestor.InputSystem
             m_Core = asset.FindActionMap("Core", throwIfNotFound: true);
             m_Core_ApprovePlacement = m_Core.FindAction("ApprovePlacement", throwIfNotFound: true);
             m_Core_CancelPlacement = m_Core.FindAction("CancelPlacement", throwIfNotFound: true);
+            // BallShooter
+            m_BallShooter = asset.FindActionMap("BallShooter", throwIfNotFound: true);
+            m_BallShooter_Aim = m_BallShooter.FindAction("Aim", throwIfNotFound: true);
+            m_BallShooter_Shoot = m_BallShooter.FindAction("Shoot", throwIfNotFound: true);
         }
 
         ~@PlayerInput()
         {
             UnityEngine.Debug.Assert(!m_Core.enabled, "This will cause a leak and performance issues, PlayerInput.Core.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_BallShooter.enabled, "This will cause a leak and performance issues, PlayerInput.BallShooter.Disable() has not been called.");
         }
 
         /// <summary>
@@ -338,6 +402,113 @@ namespace Pinvestor.InputSystem
         /// Provides a new <see cref="CoreActions" /> instance referencing this action map.
         /// </summary>
         public CoreActions @Core => new CoreActions(this);
+
+        // BallShooter
+        private readonly InputActionMap m_BallShooter;
+        private List<IBallShooterActions> m_BallShooterActionsCallbackInterfaces = new List<IBallShooterActions>();
+        private readonly InputAction m_BallShooter_Aim;
+        private readonly InputAction m_BallShooter_Shoot;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "BallShooter".
+        /// </summary>
+        public struct BallShooterActions
+        {
+            private @PlayerInput m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public BallShooterActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "BallShooter/Aim".
+            /// </summary>
+            public InputAction @Aim => m_Wrapper.m_BallShooter_Aim;
+            /// <summary>
+            /// Provides access to the underlying input action "BallShooter/Shoot".
+            /// </summary>
+            public InputAction @Shoot => m_Wrapper.m_BallShooter_Shoot;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_BallShooter; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="BallShooterActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(BallShooterActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="BallShooterActions" />
+            public void AddCallbacks(IBallShooterActions instance)
+            {
+                if (instance == null || m_Wrapper.m_BallShooterActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_BallShooterActionsCallbackInterfaces.Add(instance);
+                @Aim.started += instance.OnAim;
+                @Aim.performed += instance.OnAim;
+                @Aim.canceled += instance.OnAim;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="BallShooterActions" />
+            private void UnregisterCallbacks(IBallShooterActions instance)
+            {
+                @Aim.started -= instance.OnAim;
+                @Aim.performed -= instance.OnAim;
+                @Aim.canceled -= instance.OnAim;
+                @Shoot.started -= instance.OnShoot;
+                @Shoot.performed -= instance.OnShoot;
+                @Shoot.canceled -= instance.OnShoot;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="BallShooterActions.UnregisterCallbacks(IBallShooterActions)" />.
+            /// </summary>
+            /// <seealso cref="BallShooterActions.UnregisterCallbacks(IBallShooterActions)" />
+            public void RemoveCallbacks(IBallShooterActions instance)
+            {
+                if (m_Wrapper.m_BallShooterActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="BallShooterActions.AddCallbacks(IBallShooterActions)" />
+            /// <seealso cref="BallShooterActions.RemoveCallbacks(IBallShooterActions)" />
+            /// <seealso cref="BallShooterActions.UnregisterCallbacks(IBallShooterActions)" />
+            public void SetCallbacks(IBallShooterActions instance)
+            {
+                foreach (var item in m_Wrapper.m_BallShooterActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_BallShooterActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="BallShooterActions" /> instance referencing this action map.
+        /// </summary>
+        public BallShooterActions @BallShooter => new BallShooterActions(this);
         /// <summary>
         /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Core" which allows adding and removing callbacks.
         /// </summary>
@@ -359,6 +530,28 @@ namespace Pinvestor.InputSystem
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnCancelPlacement(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "BallShooter" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="BallShooterActions.AddCallbacks(IBallShooterActions)" />
+        /// <seealso cref="BallShooterActions.RemoveCallbacks(IBallShooterActions)" />
+        public interface IBallShooterActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Aim" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnAim(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Shoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnShoot(InputAction.CallbackContext context);
         }
     }
 }
