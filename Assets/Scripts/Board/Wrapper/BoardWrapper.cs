@@ -15,10 +15,15 @@ namespace Pinvestor.BoardSystem.Authoring
 
         [SerializeField] private Vector2 _cellSize = Vector2.one;
         [SerializeField] private Vector2 _cellVisualOffset = Vector2.zero;
+
+        [SerializeField] private Transform _boardEnterTransform = null;
         
         public Board Board { get; private set; }
         
         public Bounds Bounds { get; private set; }
+        private BoxCollider[] _colliders;
+
+        public BoxCollider BoardEnterCollider => _colliders[3];
         
         public Dictionary<Cell, CellWrapper> CellWrappers { get; private set; }
             = new Dictionary<Cell, CellWrapper>();
@@ -31,6 +36,8 @@ namespace Pinvestor.BoardSystem.Authoring
             CreateCells();
             
             CalculateBounds();
+            
+            CreateBoardCollider();
         }
 
         private void CreateCells()
@@ -72,6 +79,68 @@ namespace Pinvestor.BoardSystem.Authoring
                     Board.Dimensions.x * _cellSize.x,
                     Board.Dimensions.y * _cellSize.y,
                     0));
+        }
+        
+        private void CreateBoardCollider()
+        {
+            //Create bounding box colliders for left, top, right and bottom
+            _colliders = new BoxCollider[4];
+            
+            //Create left collider
+            _colliders[0] = gameObject.AddComponent<BoxCollider>();
+            _colliders[0].size = new Vector3(
+                _cellSize.x,
+                Bounds.size.y,
+                1);
+            
+            _colliders[0].center = new Vector3(
+                Bounds.min.x - _cellSize.x / 2,
+                Bounds.center.y,
+                Bounds.center.z);
+            
+            _colliders[0].isTrigger = true;
+            
+            //Create top collider
+            _colliders[1] = gameObject.AddComponent<BoxCollider>();
+            _colliders[1].size = new Vector3(
+                Bounds.size.x,
+                _cellSize.y,
+                1);
+            
+            _colliders[1].center = new Vector3(
+                Bounds.center.x,
+                Bounds.max.y + _cellSize.y / 2,
+                Bounds.center.z);
+            
+            _colliders[1].isTrigger = true;
+            
+            //Create right collider
+            _colliders[2] = gameObject.AddComponent<BoxCollider>();
+            _colliders[2].size = new Vector3(
+                _cellSize.x,
+                Bounds.size.y,
+                1);
+
+            _colliders[2].center = new Vector3(
+                Bounds.max.x + _cellSize.x / 2,
+                Bounds.center.y,
+                Bounds.center.z);
+            
+            _colliders[2].isTrigger = true;
+            
+            //Create bottom collider
+            _colliders[3] = _boardEnterTransform.gameObject.AddComponent<BoxCollider>();
+            _colliders[3].size = new Vector3(
+                Bounds.size.x,
+                _cellSize.y,
+                1);
+            
+            _colliders[3].center = new Vector3(
+                Bounds.center.x,
+                Bounds.min.y - _cellSize.y / 2,
+                Bounds.center.z);
+            
+            _colliders[3].isTrigger = true;
         }
         
         public bool TryGetCellWrapper(

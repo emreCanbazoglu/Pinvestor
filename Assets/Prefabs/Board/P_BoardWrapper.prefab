@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 956218029872036993}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cells
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,6 +31,78 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6430209256887887091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1130009702938643405
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8727672757116298405}
+  - component: {fileID: 7863591592126461287}
+  - component: {fileID: 3903921690671112273}
+  m_Layer: 7
+  m_Name: BallEntrance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8727672757116298405
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130009702938643405}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6430209256887887091}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &7863591592126461287
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130009702938643405}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &3903921690671112273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1130009702938643405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0f2524c10c4828ac69a60978072f64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1466656558241961152
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +114,9 @@ GameObject:
   - component: {fileID: 6430209256887887091}
   - component: {fileID: 6648424959973300314}
   - component: {fileID: 7546333506805415093}
-  m_Layer: 0
+  - component: {fileID: 8131047616890122118}
+  - component: {fileID: 7464171651054995247}
+  m_Layer: 7
   m_Name: P_BoardWrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,6 +138,7 @@ Transform:
   m_Children:
   - {fileID: 956218029872036993}
   - {fileID: 8266452848336650611}
+  - {fileID: 8727672757116298405}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6648424959973300314
@@ -84,6 +159,7 @@ MonoBehaviour:
   _cellParent: {fileID: 956218029872036993}
   _cellSize: {x: 1, y: 1}
   _cellVisualOffset: {x: 0, y: 0}
+  _boardEnterTransform: {fileID: 8727672757116298405}
 --- !u!114 &7546333506805415093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +174,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _boardWrapper: {fileID: 6648424959973300314}
   _highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &8131047616890122118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466656558241961152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397142acfaba4353bf73bc66e3f22d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &7464171651054995247
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1466656558241961152}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3822212157923733376
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8489382279464923809}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slot1.03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +253,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3541493953872743459}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +289,7 @@ GameObject:
   - component: {fileID: 8266452848336650611}
   - component: {fileID: 6133370475278887731}
   - component: {fileID: 3957859393792016209}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CompanySelectionPileWrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +351,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6307712992819985204}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slot1.02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +382,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1846446924472063221}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slot1.01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

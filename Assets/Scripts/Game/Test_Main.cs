@@ -69,7 +69,7 @@ namespace Pinvestor.Game
         {
             Debug.Log("Playing...");
             
-            Turn turn = new Turn(_table.GamePlayer.CardPlayer);
+            Turn turn = new Turn(_table.GamePlayer.CardPlayer, null);
             
             EventBus<CompanySelectionRequestEvent>
                 .Register(_companySelectionRequestEventBinding);

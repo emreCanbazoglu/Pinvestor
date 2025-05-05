@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Pinvestor.Game.BallShooter
+namespace Pinvestor.Game.BallSystem
 {
     public class BallShooter : MonoBehaviour
     {
@@ -9,11 +10,47 @@ namespace Pinvestor.Game.BallShooter
 
         [SerializeField] private Transform _shootPoint = null;
         [SerializeField] private float _shootSpeed = 10f;
+
+        [SerializeField] private float _aimCenterAngle = 90f;
+        [SerializeField] private float _aimArc = 150f;
+        [SerializeField] private float _angleStep = 5f;
         
         [SerializeField] private Ball _ballPrefab = null;
         
+        [SerializeField] private float _previewLength = 10f;
+
+        private float _coef = 1.0f;
+        
+        private BallMover _ballMover = null;
+        
         private Ball _currentBall = null;
         
+        private Vector2 _aimDirection;
+        private List<Vector3> _trajectoryPoints
+            = new List<Vector3>();
+
+        private bool _waitingForShootInput;
+        
+        private void Awake()
+        {
+            _ballMover = new BallMover();
+        }
+
+        private void Update()
+        {
+            CheckInput();
+        }
+
+        private void CheckInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Q))
+                _coef++;
+            if (Input.GetKeyDown(KeyCode.E))
+                _coef--;
+            
+            _coef = Mathf.Clamp(_coef, 1f, 10f);
+        }
+
         public async UniTask ShootBallAsync()
         {
             _currentBall = CreateBall();
@@ -21,9 +58,38 @@ namespace Pinvestor.Game.BallShooter
             _inputController.OnAimInput += OnAimInput;
             _inputController.OnShootInput += OnShootInput;
             
+            _waitingForShootInput = true;
+            
+            _inputController.Activate();
+            
+            DrawTrajectoryPreviewAsync()
+                .Forget();
+            
+            await UniTask.WaitUntil(() => !_waitingForShootInput);
+            
+            _inputController.Deactivate();
+            
             await UniTask.WaitUntil(() => !_currentBall.IsActive);
         }
+        
+        private async UniTask DrawTrajectoryPreviewAsync()
+        {
+            while (_waitingForShootInput)
+            {
+                CalculateTrajectory(_aimDirection);
+                DrawTrajectoryPreview();
 
+                await UniTask.Yield();
+            }
+
+            while (_currentBall.IsActive)
+            {
+                DrawTrajectoryPreview();
+                
+                await UniTask.Yield();
+            }
+        }
+        
         private Ball CreateBall()
         {
             var ball = Instantiate(
@@ -39,6 +105,53 @@ namespace Pinvestor.Game.BallShooter
         private void OnAimInput(
             Vector2 position)
         {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
+                new Vector3(position.x, position.y, 0));
+
+            var direction 
+                = worldPosition - _shootPoint.position;
+            
+            direction.z = 0;
+            
+            _aimDirection = GetQuantizedDirection(direction);
+        }
+        
+        private Vector3 GetQuantizedDirection(Vector3 inputDir)
+        {
+            if (inputDir == Vector3.zero) return Vector3.up;
+
+            float angle = Mathf.Atan2(inputDir.y, inputDir.x) * Mathf.Rad2Deg;
+
+            float aimMin = _aimCenterAngle - _aimArc / 2f;
+            float aimMax = _aimCenterAngle + _aimArc / 2f;
+
+            angle = Mathf.Clamp(angle, aimMin, aimMax);
+            float quantized = Mathf.Round(angle / _angleStep) * _angleStep;
+            float rad = quantized * Mathf.Deg2Rad;
+
+            return new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0).normalized;
+        }
+        
+        private void CalculateTrajectory(
+            Vector3 direction)
+        {
+            _trajectoryPoints
+                = _ballMover.SimulateAccurate(
+                    _currentBall,
+                    direction,
+                    _previewLength,
+                    _shootSpeed * Time.fixedDeltaTime);
+        }
+        
+        private void DrawTrajectoryPreview()
+        {
+            for (int index = 0; index < _trajectoryPoints.Count - 1; index++)
+            {
+                Vector3 position = _trajectoryPoints[index];
+                Vector3 nextPosition = _trajectoryPoints[index + 1];
+                
+                Debug.DrawLine(position, nextPosition, Color.red);
+            }
         }
         
         private void OnShootInput(
@@ -49,22 +162,19 @@ namespace Pinvestor.Game.BallShooter
             
             _inputController.OnShootInput -= OnShootInput;
             
-            var direction 
-                = worldPosition - _shootPoint.position;
+            _waitingForShootInput = false;
             
-            direction.z = 0;
-            
-            ThrowBall(direction);
+            ThrowBall(_aimDirection);
         }
 
         private void ThrowBall(
             Vector2 direction)
         {
             
+            _currentBall.Shoot(
+                _ballMover, 
+                direction, 
+                _shootSpeed);
         }
-        
-        
-        
-        
     }
 }

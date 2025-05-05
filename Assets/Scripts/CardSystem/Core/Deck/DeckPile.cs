@@ -107,9 +107,9 @@ namespace Pinvestor.CardSystem
             if (!slot.TryRemoveCard())
                 return false;
             
-            card.SetDeckPile(EDeckPile.None);
-            
             Debug.Log("Card removed from slot: " + card.CardData.SlotIndex);
+            
+            card.SetDeckPile(EDeckPile.None);
             
             return _cards.Remove(card);
         }

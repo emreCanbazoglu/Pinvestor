@@ -4,6 +4,7 @@ using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
+using Pinvestor.Game.BallSystem;
 using UnityEngine;
 
 namespace Pinvestor.Game
@@ -12,6 +13,8 @@ namespace Pinvestor.Game
     {
         [field: SerializeField] public GameFSM GameFsm { get; private set; } = null;
         [field: SerializeField] public BoardWrapper BoardWrapper { get; private set; } = null;
+        
+        [field: SerializeField] public BallShooter BallShooter { get; private set; } = null;
         [field: SerializeField] public CompanySelectionPileWrapper CompanySelectionPileWrapper { get; private set; } = null;
         
         [SerializeField] private GamePlayer.GamePlayer _gamePlayer = null;
@@ -25,7 +28,6 @@ namespace Pinvestor.Game
         
         private void Awake()
         {
-
             InitializeAsync().Forget();
         }
         
@@ -60,7 +62,9 @@ namespace Pinvestor.Game
         {
             Debug.Log("Playing...");
             
-            Turn turn = new Turn(Table.GamePlayer.CardPlayer);
+            Turn turn = new Turn(
+                Table.GamePlayer.CardPlayer,
+                BallShooter);
 
             while (true)
             {

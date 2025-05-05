@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Pinvestor.CardSystem;
+using Pinvestor.Game.BallSystem;
 using UnityEngine;
 
 namespace Pinvestor.Game
@@ -7,15 +8,18 @@ namespace Pinvestor.Game
     public class Turn
     {
         public CardPlayer Player { get; private set; }
+        public BallShooter BallShooter { get; private set; }
         
         private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
         
         private bool _isCompanyPlaced;
         
         public Turn(
-            CardPlayer player)
+            CardPlayer player,
+            BallShooter ballShooter)
         {
             Player = player;
+            BallShooter = ballShooter;
         }
         
         public async UniTask StartAsync()
@@ -25,6 +29,8 @@ namespace Pinvestor.Game
             await ChooseCompanyCard();
             
             await UniTask.WaitUntil(() => _isCompanyPlaced);
+
+            await BallShooter.ShootBallAsync();
         }
         
         private async UniTask ChooseCompanyCard()
