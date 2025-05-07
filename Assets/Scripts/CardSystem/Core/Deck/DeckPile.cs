@@ -107,13 +107,12 @@ namespace Pinvestor.CardSystem
             if (!slot.TryRemoveCard())
                 return false;
             
-            Debug.Log("Card removed from slot: " + card.CardData.SlotIndex);
+            Debug.Log("Card removed from slot: " + slot.Index);
             
             card.SetDeckPile(EDeckPile.None);
             
             return _cards.Remove(card);
         }
-        
 
         public bool HasSlot(int index)
         {

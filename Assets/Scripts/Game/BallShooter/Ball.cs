@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using AbilitySystem;
 using MEC;
+using Pinvestor.Game.BallSystem.Abilities;
 using UnityEngine;
 
 namespace Pinvestor.Game.BallSystem
@@ -8,6 +11,11 @@ namespace Pinvestor.Game.BallSystem
     {
         [field: SerializeField] public LayerMask LayerMask { get; private set; }
 
+        [SerializeField] private AbilitySystemCharacter _abilitySystemCharacter = null;
+        [SerializeField] private BallCollideAbilityScriptableObject _ballCollideAbility = null;
+        
+        private BallCollideAbilitySpec _ballCollideAbilitySpec;
+        
         public bool IsActive { get; private set; } = false;
         
         private CoroutineHandle _moveRoutineHandle;
@@ -61,6 +69,29 @@ namespace Pinvestor.Game.BallSystem
             return result;
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if(!other.TryGetComponent(out BallTarget ballTarget))
+                return;
+            
+            if (_ballCollideAbilitySpec == null)
+            {
+                _abilitySystemCharacter.TryGetAbilitySpec(
+                    _ballCollideAbility,
+                    out var spec);
+                
+                _ballCollideAbilitySpec = spec as BallCollideAbilitySpec;
+            }
+            
+            if (_ballCollideAbilitySpec == null)
+                return;
+            
+            _ballCollideAbilitySpec.SetCollideTarget(ballTarget);
+
+            _abilitySystemCharacter.TryActivateAbility(
+                _ballCollideAbilitySpec);
+        }
+
         private void OnTriggerExit(Collider other)
         {
             if(!other.TryGetComponent(out BallEntrance entrance))
@@ -72,12 +103,6 @@ namespace Pinvestor.Game.BallSystem
             IsActive = false;
             
             Destroy(gameObject);
-        }
-        
-        public static void LogVector(string label, Vector3 v, int decimals = 6)
-        {
-            string format = "F" + decimals;
-            Debug.Log($"{label} = ({v.x.ToString(format)}, {v.y.ToString(format)}, {v.z.ToString(format)})");
         }
     }
 }

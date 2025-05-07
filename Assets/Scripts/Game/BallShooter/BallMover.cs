@@ -7,6 +7,8 @@ namespace Pinvestor.Game.BallSystem
     {
         public Vector3 Position { get; set; }
         public Vector3 Direction { get; set; }
+        
+        public bool IsHit { get; set; }
     }
 
     public class SimulationResult
@@ -76,6 +78,8 @@ namespace Pinvestor.Game.BallSystem
             float remainingDistance = distance;
             float sphereRadius = ball.transform.localScale.x / 2f;
 
+            bool isHit = false;
+
             for (int index = 0; index < _maxIterations && remainingDistance > 0.01f; index++)
             {
                 if (TryGetValidHit(
@@ -97,6 +101,8 @@ namespace Pinvestor.Game.BallSystem
 
                     currentDir = reflectDir;
                     origin += validHit.normal * 0.01f; // small push to avoid stuck bouncing
+                    
+                    isHit = true;
                 }
                 else
                 {
@@ -108,7 +114,8 @@ namespace Pinvestor.Game.BallSystem
             return new StepResult
             {
                 Position = origin,
-                Direction = currentDir
+                Direction = currentDir,
+                IsHit = isHit
             };
         }
         
@@ -116,17 +123,16 @@ namespace Pinvestor.Game.BallSystem
             Ball ball,
             Vector3 initialDirection,
             float totalDistance,
-            float stepDistance)
+            float stepDistance,
+            int maxCollisions = -1)
         {
             List<Vector3> positions = new List<Vector3>();
-            
-            Ball.LogVector("Simulation Initial Position", ball.transform.position);
-            Ball.LogVector("Simulation Initial Direction", initialDirection);
-            Debug.Log("Step Distance: " + stepDistance);
             
             Vector3 origin = ball.transform.position;
             Vector3 currentDir = initialDirection;
             float remainingDistance = totalDistance;
+            
+            int collisionCount = 0;
 
             while (remainingDistance > 0.01f)
             {
@@ -141,6 +147,12 @@ namespace Pinvestor.Game.BallSystem
                 currentDir = stepResult.Direction;
 
                 positions.Add(origin);
+
+                if (stepResult.IsHit)
+                    collisionCount++;
+                
+                if(maxCollisions > 0 && collisionCount >= maxCollisions)
+                    break;
                 
                 remainingDistance -= step;
             }
@@ -163,8 +175,6 @@ namespace Pinvestor.Game.BallSystem
             newDirection = direction;
             distanceTraveled = 0f;
             
-            Debug.Log("Step Distance: " + remainingDistance);
-
             if (TryGetValidHit(
                     origin,
                     direction, 
@@ -196,7 +206,6 @@ namespace Pinvestor.Game.BallSystem
                 return false;
             }
         }
-
         
         private bool TryGetValidHit(
             Vector3 origin, 

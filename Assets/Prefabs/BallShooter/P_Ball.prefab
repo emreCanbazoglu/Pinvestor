@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8375313013321083311}
   - component: {fileID: 905893637706989453}
+  - component: {fileID: 7013025994482790075}
+  - component: {fileID: 963764313689592044}
   - component: {fileID: 7882854070001715247}
   m_Layer: 8
   m_Name: P_Ball
@@ -49,7 +51,41 @@ MonoBehaviour:
   <LayerMask>k__BackingField:
     serializedVersion: 2
     m_Bits: 192
-  _rigidbody: {fileID: 7882854070001715247}
+  _abilitySystemCharacter: {fileID: 7013025994482790075}
+  _ballCollideAbility: {fileID: 11400000, guid: 831df1b3511a3487f99db8812afe0980, type: 2}
+--- !u!114 &7013025994482790075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6649379739036281003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74fffe556c80c6749af45dd3d5c823b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AttributeSystem>k__BackingField: {fileID: 963764313689592044}
+  _castableAbilities:
+  - {fileID: 11400000, guid: 831df1b3511a3487f99db8812afe0980, type: 2}
+  _initializationAbilities: []
+  _initialTags: []
+--- !u!114 &963764313689592044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6649379739036281003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22372256c460ce147a7df48a7514f360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attributeSystemEvents: []
+  _attributeSet: {fileID: 11400000, guid: e81035ce8fac94d988ad3be027638a48, type: 2}
+  _attributeValues: []
+  _initializeOnAwake: 1
 --- !u!54 &7882854070001715247
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -183,5 +219,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -17,7 +18,10 @@ namespace Pinvestor.Game.BallSystem
         
         [SerializeField] private Ball _ballPrefab = null;
         
+        [SerializeField] private LineRenderer _trajectoryRenderer = null;
+        
         [SerializeField] private float _previewLength = 10f;
+        [SerializeField] private int _previewMaxCollisions = 3;
 
         private float _coef = 1.0f;
         
@@ -81,13 +85,6 @@ namespace Pinvestor.Game.BallSystem
 
                 await UniTask.Yield();
             }
-
-            while (_currentBall.IsActive)
-            {
-                DrawTrajectoryPreview();
-                
-                await UniTask.Yield();
-            }
         }
         
         private Ball CreateBall()
@@ -140,7 +137,8 @@ namespace Pinvestor.Game.BallSystem
                     _currentBall,
                     direction,
                     _previewLength,
-                    _shootSpeed * Time.fixedDeltaTime);
+                    _shootSpeed * Time.fixedDeltaTime,
+                    _previewMaxCollisions);
         }
         
         private void DrawTrajectoryPreview()
@@ -151,26 +149,31 @@ namespace Pinvestor.Game.BallSystem
                 Vector3 nextPosition = _trajectoryPoints[index + 1];
                 
                 Debug.DrawLine(position, nextPosition, Color.red);
+                
             }
+            
+            _trajectoryRenderer.positionCount 
+                = _trajectoryPoints.Count;
+            _trajectoryRenderer.SetPositions(
+                _trajectoryPoints.ToArray());
         }
         
         private void OnShootInput(
             Vector2 position)
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
-                new Vector3(position.x, position.y, 0));
-            
             _inputController.OnShootInput -= OnShootInput;
             
             _waitingForShootInput = false;
             
             ThrowBall(_aimDirection);
+
+            _trajectoryRenderer.positionCount = 0;
+            _trajectoryRenderer.SetPositions(Array.Empty<Vector3>());
         }
 
         private void ThrowBall(
             Vector2 direction)
         {
-            
             _currentBall.Shoot(
                 _ballMover, 
                 direction, 

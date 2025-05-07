@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81550c984ca6212418aa34e257f70412, type: 3}
-  m_Name: Attribute.Health
+  m_Name: Attribute.AP
   m_EditorClassIdentifier: 
-  UniqueId: 8143aa832dc7045179a1f0503c7fd439
-  Name: 
+  UniqueId: dd63c5997fea94f64b1bb5daa4b190f1
+  Name: Attack Power
