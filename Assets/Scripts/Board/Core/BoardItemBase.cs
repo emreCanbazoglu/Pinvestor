@@ -14,6 +14,19 @@ namespace Pinvestor.BoardSystem.Base
         public BoardItemWrapperBase Wrapper { get; private set; }
         
         public List<BoardItemPieceBase> Pieces { get; protected set; }
+        
+        public BoardItemPieceBase MainPiece
+        {
+            get
+            {
+                if (Pieces == null || Pieces.Count == 0)
+                {
+                    return null;
+                }
+
+                return Pieces[0];
+            }
+        }
 
         public Dictionary<Type, BoardItemPropertySpecBase> BoardItemPropertySpecs { get; private set; } = new();
 
@@ -103,10 +116,15 @@ namespace Pinvestor.BoardSystem.Base
             DisposePieces();
 
             DisposeCore();
-            
+
             if (Wrapper != null)
+            {
                 Wrapper.OnDisposed -= OnWrapperDisposed;
-            
+                Wrapper.DestroyWrapper();
+                
+                Wrapper = null;
+            }
+
             OnDisposed?.Invoke(this);
         }
 

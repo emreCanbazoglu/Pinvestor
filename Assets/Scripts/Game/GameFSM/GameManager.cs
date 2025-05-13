@@ -6,6 +6,7 @@ using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pinvestor.Game
 {
@@ -17,7 +18,7 @@ namespace Pinvestor.Game
         [field: SerializeField] public BallShooter BallShooter { get; private set; } = null;
         [field: SerializeField] public CompanySelectionPileWrapper CompanySelectionPileWrapper { get; private set; } = null;
         
-        [SerializeField] private GamePlayer.GamePlayer _gamePlayer = null;
+        [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
         
         [SerializeField] private SerializedDeckDataProvider _serializedDeckDataProvider = null;
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
@@ -35,7 +36,7 @@ namespace Pinvestor.Game
         {
             Table = new Table(
                 GetBoardData(),
-                _gamePlayer,
+                GamePlayer,
                 _serializedDeckDataProvider,
                 _cellLayerInfoColl);
             

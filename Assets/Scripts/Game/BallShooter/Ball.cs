@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using AbilitySystem;
 using MEC;
-using Pinvestor.Game.BallSystem.Abilities;
+using Pinvestor.GameplayAbilitySystem.Abilities;
 using UnityEngine;
 
 namespace Pinvestor.Game.BallSystem

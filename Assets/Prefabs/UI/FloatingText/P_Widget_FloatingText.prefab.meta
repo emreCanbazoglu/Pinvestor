@@ -1,0 +1,7 @@
+fileFormatVersion: 2
+guid: 1aae079ee653c421a809f6c04c44f2e0
+PrefabImporter:
+  externalObjects: {}
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.2272296548459730845","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"c23196fe8ce894d54a9a221d546feeb6\",\"type\":1,\"localId\":2272296548459730845}],\"overrides\":[]}"},{"key":"AssetVariantData.1902823482880887090","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"c23196fe8ce894d54a9a221d546feeb6\",\"type\":1,\"localId\":1902823482880887090}],\"overrides\":[]}"},{"key":"AssetVariantData.6528330675336894263","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"c23196fe8ce894d54a9a221d546feeb6\",\"type\":1,\"localId\":6528330675336894263}],\"overrides\":[]}"},{"key":"AssetVariantData.8609945634978936618","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"c23196fe8ce894d54a9a221d546feeb6\",\"type\":1,\"localId\":8609945634978936618}],\"overrides\":[]}"},{"key":"AssetVariantData.1758937278860254183","userData":"{\"parent\":{\"guid\":\"\",\"type\":0,\"localId\":0},\"children\":[{\"guid\":\"c23196fe8ce894d54a9a221d546feeb6\",\"type\":1,\"localId\":1758937278860254183}],\"overrides\":[]}"}]}'
+  assetBundleName: 
+  assetBundleVariant: 

@@ -13,21 +13,9 @@ MonoBehaviour:
   m_Name: AttributeSet.CardPlayer
   m_EditorClassIdentifier: 
   <AttributeDefinitions>k__BackingField:
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: 8143aa832dc7045179a1f0503c7fd439, type: 2}
+  - <Attribute>k__BackingField: {fileID: 11400000, guid: 1fbd51a01cb214e1bb9bd314a9ac6d3d, type: 2}
     <IsPrimaryAttribute>k__BackingField: 1
     <Multiplier>k__BackingField: 10
-    <BaseValueModifier>k__BackingField: {fileID: 11400000, guid: 6d1bc7c3e63d743759a575b2e20e9737, type: 2}
-    <UseModifierObjectProviderForAttributeSet>k__BackingField: 0
-    <ModifierObjectProvider>k__BackingField: {fileID: 0}
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: 12e5d3defa21047349165cab73d5e90a, type: 2}
-    <IsPrimaryAttribute>k__BackingField: 1
-    <Multiplier>k__BackingField: 2000
-    <BaseValueModifier>k__BackingField: {fileID: 11400000, guid: 6d1bc7c3e63d743759a575b2e20e9737, type: 2}
-    <UseModifierObjectProviderForAttributeSet>k__BackingField: 0
-    <ModifierObjectProvider>k__BackingField: {fileID: 0}
-  - <Attribute>k__BackingField: {fileID: 11400000, guid: 5699d2d73590242978871b7f76819dde, type: 2}
-    <IsPrimaryAttribute>k__BackingField: 1
-    <Multiplier>k__BackingField: 1000
     <BaseValueModifier>k__BackingField: {fileID: 11400000, guid: 6d1bc7c3e63d743759a575b2e20e9737, type: 2}
     <UseModifierObjectProviderForAttributeSet>k__BackingField: 0
     <ModifierObjectProvider>k__BackingField: {fileID: 0}

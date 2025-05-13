@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using AbilitySystem;
 using AbilitySystem.Authoring;
+using Pinvestor.Game.BallSystem;
 using UnityEngine;
 
-namespace Pinvestor.Game.BallSystem.Abilities
+namespace Pinvestor.GameplayAbilitySystem.Abilities
 {
 
     [CreateAssetMenu(
@@ -23,68 +24,61 @@ namespace Pinvestor.Game.BallSystem.Abilities
     
     public class BallCollideAbilitySpec : AbstractAbilitySpec
     {
-        public Ball Ball { get; private set; }
-        public BallTarget CollideTarget { get; private set; }
-        public AbilitySystemCharacter Target { get; private set; }
+        private readonly Ball _ball;
         
-        protected BallCollideAbilityScriptableObject BallCollideAbility 
+        private BallTarget _collideTarget;
+        private AbilitySystemCharacter _target;
+        
+        private BallCollideAbilityScriptableObject BallCollideAbility 
             => (BallCollideAbilityScriptableObject)Ability;
         
         public BallCollideAbilitySpec(
             AbstractAbilityScriptableObject abilitySO, 
             AbilitySystemCharacter owner) : base(abilitySO, owner)
         {
-            Ball = owner.GetComponent<Ball>();
+            _ball = owner.GetComponent<Ball>();
         }
         
         public void SetCollideTarget(
             BallTarget collideTarget)
         {
-            CollideTarget = collideTarget;
+            _collideTarget = collideTarget;
         }
 
         protected override IEnumerator<float> ActivateAbility(
             AbilityTargetData targetData = default)
         {
-            if(CollideTarget == null)
+            if(_collideTarget == null)
                 yield break;
             
-            Target 
-                = CollideTarget
+            _target 
+                = _collideTarget
                     .GetComponent<AbilitySystemCharacter>();
             
             // Check if the target is valid
-            if (Target == null)
+            if (_target == null)
             {
                 Debug.LogError("Target is not a valid AbilitySystemCharacter");
                 yield break;
             }
-
-            if (Ability.Cost)
-            {
-                var costSpec = Owner.MakeOutgoingSpec(this, Ability.Cost);
-                Owner.ApplyGameplayEffectSpecToSelf(costSpec);
-            }
             
-            if (Ability.Cooldown)
-            {
-                var cdSpec = Owner.MakeOutgoingSpec(this, Ability.Cooldown);
-                Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
-            }
+            Cost();
+            Cooldown();
+            
+            _collideTarget.CollidedBy(_ball);
             
             // Apply the collision gameplay effect to the target
             if (BallCollideAbility.CollisionGameplayEffect)
             {
                 var collisionSpec 
-                    = Target.MakeOutgoingSpec(
+                    = Owner.MakeOutgoingSpec(
                         this, 
                         BallCollideAbility.CollisionGameplayEffect);
                 
-                Target.ApplyGameplayEffectSpecToSelf(collisionSpec);
+                _target.ApplyGameplayEffectSpecToSelf(collisionSpec);
             }
 
-            CollideTarget.CollidedBy(Ball);
-            CollideTarget = null;
+            _collideTarget = null;
         }
         
         public override bool CheckGameplayTags()
@@ -93,8 +87,8 @@ namespace Pinvestor.Game.BallSystem.Abilities
                    && AscHasNoneTags(Owner, Ability.AbilityTags.OwnerTags.IgnoreTags)
                    && AscHasAllTags(Owner, Ability.AbilityTags.SourceTags.RequireTags)
                    && AscHasNoneTags(Owner, Ability.AbilityTags.SourceTags.IgnoreTags)
-                   && AscHasAllTags(Target, Ability.AbilityTags.TargetTags.RequireTags)
-                   && AscHasNoneTags(Target, Ability.AbilityTags.TargetTags.IgnoreTags);
+                   && AscHasAllTags(_target, Ability.AbilityTags.TargetTags.RequireTags)
+                   && AscHasNoneTags(_target, Ability.AbilityTags.TargetTags.IgnoreTags);
         }
     }
 }

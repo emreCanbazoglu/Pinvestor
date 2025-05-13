@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 905893637706989453}
   - component: {fileID: 7013025994482790075}
   - component: {fileID: 963764313689592044}
+  - component: {fileID: 1922799822058818806}
   - component: {fileID: 7882854070001715247}
   m_Layer: 8
   m_Name: P_Ball
@@ -86,6 +87,18 @@ MonoBehaviour:
   _attributeSet: {fileID: 11400000, guid: e81035ce8fac94d988ad3be027638a48, type: 2}
   _attributeValues: []
   _initializeOnAwake: 1
+--- !u!114 &1922799822058818806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6649379739036281003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ec5186ac02742b7b4c60e2601f6faee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &7882854070001715247
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -219,5 +232,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.7
+  m_Radius: 0.75
   m_Center: {x: 0, y: 0, z: 0}

@@ -202,6 +202,24 @@ namespace AbilitySystem.Authoring
         {
             yield break;
         }
+
+        protected virtual void Cost()
+        {
+            if (Ability.Cost)
+            {
+                var costSpec = Owner.MakeOutgoingSpec(this, Ability.Cost);
+                Owner.ApplyGameplayEffectSpecToSelf(costSpec);
+            }
+        }
+        
+        protected virtual void Cooldown()
+        {
+            if (Ability.Cooldown)
+            {
+                var cdSpec = Owner.MakeOutgoingSpec(this, Ability.Cooldown);
+                Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
+            }
+        }
         
         /// <summary>
         /// The logic that dictates what the ability does.  Targetting logic should be placed here.

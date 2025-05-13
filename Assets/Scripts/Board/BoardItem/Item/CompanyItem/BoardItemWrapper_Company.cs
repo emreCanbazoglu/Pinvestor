@@ -1,8 +1,11 @@
 using AbilitySystem;
-using DG.Tweening;
+using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CompanySystem;
+using Pinvestor.DamagableSystem;
 using Pinvestor.Game;
+using Pinvestor.Game.BallSystem;
+using Pinvestor.GameplayAbilitySystem.Abilities;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Authoring
@@ -10,13 +13,30 @@ namespace Pinvestor.BoardSystem.Authoring
     public class BoardItemWrapper_Company : BoardItemWrapperBase<BoardItem_Company>
     {
         [field: SerializeField] public AbilitySystemCharacter AbilitySystemCharacter { get; private set; } = null;
+        [field: SerializeField] public AttributeSystemComponent AttributeSystemComponent { get; private set; } = null;
+        [SerializeField] private GenerateRevenueAbilityScriptableObject _generateRevenueAbility = null;
 
-        [SerializeField] private float _releaseSpeed = 1f;
-        [SerializeField] private Ease _releaseEase = Ease.OutBack;
+        [SerializeField] private Damagable _damagable = null;
         
+        [SerializeField] private BallTarget _ballTarget = null;
+
         public Company Company { get; private set; }
+
+        private Transform _slotTransform;
         
-        public Transform SlotTransform { get; private set; }
+        private void OnEnable()
+        {
+            _ballTarget.OnBallCollided += OnBallCollided;
+            
+            _damagable.OnDied += OnDied;
+        }
+
+        private void OnDisable()
+        {
+            _ballTarget.OnBallCollided -= OnBallCollided;
+            
+            _damagable.OnDied -= OnDied;
+        }
         
         protected override void WrapCore()
         {
@@ -80,7 +100,7 @@ namespace Pinvestor.BoardSystem.Authoring
         
         public void SetSlotTransform(Transform slotTransform)
         {
-            SlotTransform = slotTransform;
+            _slotTransform = slotTransform;
             
             transform.SetParent(slotTransform);
             transform.localPosition = Vector3.zero;
@@ -95,20 +115,33 @@ namespace Pinvestor.BoardSystem.Authoring
 
         public void ReleaseToSlot()
         {
-            if (SlotTransform == null)
+            if (_slotTransform == null)
                 return;
             
             gameObject.SetActive(false);
+        }
+        
+        private void OnBallCollided(Ball ball)
+        {
+            if (AbilitySystemCharacter.TryActivateAbility(
+                    _generateRevenueAbility,
+                    out _))
+            {
+                Debug.Log($"Company {gameObject.name} activated ability: {_generateRevenueAbility.name}");
 
-            /*transform
-                .DOMove(SlotTransform.position, _releaseSpeed)
-                .SetSpeedBased()
-                .SetEase(_releaseEase)
-                .OnComplete(() =>
-                {
-                    transform.SetParent(SlotTransform);
-                    transform.localPosition = Vector3.zero;
-                });*/
+                //Shake the company
+                Company.Shake();
+            }
+        }
+
+        private void OnDied(
+            AbilitySystemCharacter other, 
+            DamageInfo damageInfo)
+        {
+            BoardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_Destroyable destroyableSpec);
+            
+            destroyableSpec.Destroy(null);
         }
     }
 }
