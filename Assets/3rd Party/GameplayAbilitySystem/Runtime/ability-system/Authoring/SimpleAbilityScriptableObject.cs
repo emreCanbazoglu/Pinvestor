@@ -45,8 +45,7 @@ namespace AbilitySystem.Authoring
             /// gameplay effect
             /// </summary>
             /// <returns></returns>
-            protected override IEnumerator<float> ActivateAbility(
-                AbilityTargetData targetData = default)
+            protected override IEnumerator<float> ActivateAbility()
             {
                 //Apply Cooldown
                 if (Ability.Cooldown)

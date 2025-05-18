@@ -23,11 +23,6 @@ namespace AbilitySystem
         /// The attribute modifications that this GE provides
         /// </summary>
         public GameplayEffectModifier[] Modifiers;
-
-        /// <summary>
-        /// Other GE to apply to the source ability system, based on presence of tags on source
-        /// </summary>
-        public ConditionalGameplayEffectContainer[] ConditionalGameplayEffects;
     }
 }
  

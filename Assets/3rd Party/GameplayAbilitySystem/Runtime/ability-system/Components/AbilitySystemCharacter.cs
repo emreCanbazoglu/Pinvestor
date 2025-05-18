@@ -79,26 +79,39 @@ namespace AbilitySystem
         /// Applies the gameplay effect spec to self
         /// </summary>
         /// <param name="geSpec">GameplayEffectSpec to apply</param>
-        public bool ApplyGameplayEffectSpecToSelf(
+        public GameplayEffectContainer ApplyGameplayEffectSpecToSelf(
             GameplayEffectSpec geSpec)
         {
-            if (geSpec == null) return true;
+            GameplayEffectContainer geContainer = null;
+            
+            if (geSpec == null) return geContainer;
             bool tagRequirementsOK = CheckTagRequirementsMet(geSpec);
 
-            if (tagRequirementsOK == false) return false;
+            if (tagRequirementsOK == false) return null;
 
             switch (geSpec.GameplayEffect.gameplayEffect.DurationPolicy)
             {
                 case EDurationPolicy.HasDuration:
                 case EDurationPolicy.Infinite:
-                    ApplyDurationalGameplayEffect(geSpec);
+                    geContainer
+                        = ApplyDurationalGameplayEffect(geSpec);
                     break;
                 case EDurationPolicy.Instant:
                     ApplyInstantGameplayEffect(geSpec);
-                    return true;
+                    return geContainer;
             }
 
-            return true;
+            return geContainer;
+        }
+        
+        /// <summary>
+        /// Removes the gameplay effect spec from self
+        /// </summary>
+        /// 
+        public bool RemoveGameplayEffectSpecFromSelf(
+            GameplayEffectContainer geContainer)
+        {
+            return AppliedGameplayEffects.Remove(geContainer);
         }
         
         public GameplayEffectSpec MakeOutgoingSpec(
@@ -208,7 +221,7 @@ namespace AbilitySystem
             }
 
         }
-        private void ApplyDurationalGameplayEffect(GameplayEffectSpec spec)
+        private GameplayEffectContainer ApplyDurationalGameplayEffect(GameplayEffectSpec spec)
         {
             var modifiersToApply = new List<GameplayEffectContainer.ModifierContainer>();
             for (var i = 0; i < spec.GameplayEffect.gameplayEffect.Modifiers.Length; i++)
@@ -246,6 +259,8 @@ namespace AbilitySystem
             AppliedGameplayEffects.Add(geContainer);
             GrantedTags.AddRange(spec.GameplayEffect.gameplayEffectTags.GrantedTags);
             OnGameplayEffectApplied?.Invoke(geContainer);
+
+            return geContainer;
         }
 
         private void UpdateAttributeSystem()
@@ -408,23 +423,17 @@ namespace AbilitySystem
                    || !GrantedAbilities[abilityIndex].CanActivateAbility())
                 return false;
 
-            AbilityTargetData targetData
-                = GrantedAbilities[abilityIndex].GetTargetData();
-
             TryActivateAbilityCore(
-                (uint)abilityIndex,
-                targetData);
+                (uint)abilityIndex);
 
             return true;
         }
 
         private void TryActivateAbilityCore(
-            uint abilityIndex,
-            AbilityTargetData targetData = default)
+            uint abilityIndex)
         {
             GrantedAbilities[(int)abilityIndex]
                 .TryActivateAbility(
-                    targetData, 
                     onValidated,
                     onActivated,
                     onEnded)

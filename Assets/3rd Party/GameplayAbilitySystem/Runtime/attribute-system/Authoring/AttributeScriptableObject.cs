@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AbilitySystem.Authoring;
 using AttributeSystem.Components;
 using UnityEngine;
 using UnityEngine.Serialization;

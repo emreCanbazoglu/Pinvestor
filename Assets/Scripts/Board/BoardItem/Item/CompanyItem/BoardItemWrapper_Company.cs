@@ -138,6 +138,8 @@ namespace Pinvestor.BoardSystem.Authoring
             AbilitySystemCharacter other, 
             DamageInfo damageInfo)
         {
+            AbilitySystemCharacter.CancelAllAbilities();
+            
             BoardItem.TryGetPropertySpec(
                 out BoardItemPropertySpec_Destroyable destroyableSpec);
             

@@ -1,5 +1,7 @@
+using System;
 using AttributeSystem.Authoring;
 using Pinvestor.CompanySystem;
+using Pinvestor.GameplayAbilitySystem;
 using UnityEngine;
 
 namespace Pinvestor.CardSystem
@@ -16,6 +18,10 @@ namespace Pinvestor.CardSystem
         
         [field: SerializeField] public AttributeSetScriptableObject AttributeSet { get; private set; }
             = null;
+
+        [field: SerializeField]
+        public AbilityTriggerDefinitionScriptableObject[] AbilityTriggerDefinitions { get; private set; }
+            = Array.Empty<AbilityTriggerDefinitionScriptableObject>();
         
         [field: SerializeField] public GameObject VisualPrefab { get; private set; } = null;
         

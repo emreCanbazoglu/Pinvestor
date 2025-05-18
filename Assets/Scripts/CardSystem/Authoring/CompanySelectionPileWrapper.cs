@@ -5,6 +5,7 @@ using MMFramework;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.Game;
+using Pinvestor.GameplayAbilitySystem;
 using Pinvestor.UI;
 using UnityEngine;
 
@@ -88,6 +89,13 @@ namespace Pinvestor.CardSystem.Authoring
                 
                 var boardItemWrapper
                     = boardItem.CreateWrapper() as BoardItemWrapper_Company;
+
+                var abilityController 
+                    = boardItemWrapper.GetComponent<AbilityController>();
+                
+                abilityController.Initialize(
+                    ((CompanyCardDataScriptableObject)card.CardDataScriptableObject)
+                    .AbilityTriggerDefinitions);
                 
                 var cardWrapper
                     = card.CreateWrapper() as CompanyCardWrapper;

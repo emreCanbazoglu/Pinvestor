@@ -24,8 +24,6 @@ namespace AbilitySystem.Authoring
         /// </summary>
         protected AbilitySystemCharacter Owner;
         
-        public AbilityTargetDataProviderBaseSpec TargetDataProviderSpec { get; set; }
-
         public Blackboard Blackboard { get; set; }
             = new Blackboard();
 
@@ -48,10 +46,6 @@ namespace AbilitySystem.Authoring
         {
             Ability = ability;
             Owner = owner;
-            
-            if(Ability.TargetDataProvider != null)
-                TargetDataProviderSpec = Ability.TargetDataProvider.CreateSpec(
-                    owner, this);
         }
 
         /// <summary>
@@ -60,7 +54,6 @@ namespace AbilitySystem.Authoring
         /// </summary>
         /// <returns></returns>
         public IEnumerator<float> TryActivateAbility(
-            AbilityTargetData targetData = default,
             Action<bool> onValidatedCallback = null,
             Action onActivatedCallback = null,
             Action onEndedCallback = null)
@@ -78,7 +71,7 @@ namespace AbilitySystem.Authoring
             IEnumerator<float> preActivate = PreActivate();
             while(preActivate.MoveNext())
                 yield return preActivate.Current;
-            IEnumerator<float> activate = ActivateAbility(targetData);
+            IEnumerator<float> activate = ActivateAbility();
             while(activate.MoveNext())
                 yield return activate.Current;
 
@@ -190,11 +183,6 @@ namespace AbilitySystem.Authoring
             };
         }
 
-        public  AbilityTargetData GetTargetData()
-        {
-            return TargetDataProviderSpec?.GetTargetData() ?? new AbilityTargetData();
-        }
-
         /// <summary>
         /// Method to activate before activating this ability.  This method is run after activation checks.
         /// </summary>
@@ -226,8 +214,7 @@ namespace AbilitySystem.Authoring
         /// Gameplay Effects are applied in this method.
         /// </summary>
         /// <returns></returns>
-        protected abstract IEnumerator<float> ActivateAbility(
-            AbilityTargetData targetData = default);
+        protected abstract IEnumerator<float> ActivateAbility();
         
         /// <summary>
         /// Method to run once the ability ends

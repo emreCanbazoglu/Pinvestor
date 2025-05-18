@@ -35,8 +35,7 @@ namespace Pinvestor.AbilitySystem.Abilities
                 = companyCardDataScriptableObject;
         }
 
-        protected override IEnumerator<float> ActivateAbilityCore(
-            AbilityTargetData targetData = default)
+        protected override IEnumerator<float> ActivateAbilityCore()
         {
             yield break;
             

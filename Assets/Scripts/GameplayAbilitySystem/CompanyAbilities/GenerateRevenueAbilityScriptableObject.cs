@@ -21,7 +21,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             return new GenerateRevenueAbilitySpec(this, owner);
         }
     }
-    
+
     public class GenerateRevenueAbilitySpec : AbstractAbilitySpec
     {
         private readonly Company _company;
@@ -54,8 +54,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             base.PreCanActivateAbility();
         }
 
-        protected override IEnumerator<float> ActivateAbility(
-            AbilityTargetData targetData = default)
+        protected override IEnumerator<float> ActivateAbility()
         {
             Cost();
             Cooldown();

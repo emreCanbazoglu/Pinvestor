@@ -229,6 +229,9 @@ PrefabInstance:
       addedObject: {fileID: -7247790588511113972}
     - targetCorrespondingSourceObject: {fileID: 4829362485504519383, guid: af2fb6e875f2d4e6eb4e67e1f6cdffef, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 8049361662124159401}
+    - targetCorrespondingSourceObject: {fileID: 4829362485504519383, guid: af2fb6e875f2d4e6eb4e67e1f6cdffef, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 52692906517809571}
     - targetCorrespondingSourceObject: {fileID: 4829362485504519383, guid: af2fb6e875f2d4e6eb4e67e1f6cdffef, type: 3}
       insertIndex: -1
@@ -293,6 +296,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7e86bb19caca2467c8692932bf73f894, type: 2}
   _initializationAbilities: []
   _initialTags: []
+--- !u!114 &8049361662124159401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102227281378918692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc2531f509a54355b5b2ee713abf395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AbilitySystemCharacter>k__BackingField: {fileID: -7247790588511113972}
+  _abilityTriggerDefinitions: []
 --- !u!114 &52692906517809571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,12 +363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d3c4f50f4034a49ba1888317420400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pivotTransform: {fileID: 8142496550182296141}
   _abilitySystemCharacter: {fileID: -7247790588511113972}
   _healthAttribute: {fileID: 11400000, guid: 8143aa832dc7045179a1f0503c7fd439, type: 2}
   _critGameplayTag: {fileID: 11400000, guid: 63ef5487326704a37b8cf0188eedf693, type: 2}
-  _defaultDamageSkin: {fileID: 11400000, guid: 2c55c64ff2eb84f32a6646146b70fd58, type: 2}
-  _critDamageSkin: {fileID: 11400000, guid: 2c55c64ff2eb84f32a6646146b70fd58, type: 2}
 --- !u!114 &2948654268106856003
 MonoBehaviour:
   m_ObjectHideFlags: 0

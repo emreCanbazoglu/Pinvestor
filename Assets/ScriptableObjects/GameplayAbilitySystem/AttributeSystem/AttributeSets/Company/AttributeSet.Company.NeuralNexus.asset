@@ -15,7 +15,7 @@ MonoBehaviour:
   <AttributeDefinitions>k__BackingField:
   - <Attribute>k__BackingField: {fileID: 11400000, guid: f9426c64767cd41ab9990ea28b95e98b, type: 2}
     <IsPrimaryAttribute>k__BackingField: 1
-    <Multiplier>k__BackingField: 1
+    <Multiplier>k__BackingField: 10
     <BaseValueModifier>k__BackingField: {fileID: 11400000, guid: 6d1bc7c3e63d743759a575b2e20e9737, type: 2}
     <UseModifierObjectProviderForAttributeSet>k__BackingField: 0
     <ModifierObjectProvider>k__BackingField: {fileID: 0}

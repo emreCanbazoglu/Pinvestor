@@ -12,6 +12,16 @@ namespace Pinvestor.CardSystem.Authoring
         protected override void WrapCardCore()
         {
             gameObject.name = "CompanyCardWrapper_" + CompanyCard.CastedCardDataSo.CompanyId.CompanyId;
+
+            LogAbilities();
+        }
+
+        private void LogAbilities()
+        {
+            foreach (var triggerDef in CompanyCard.CastedCardDataSo.AbilityTriggerDefinitions)
+            {
+                Debug.Log(triggerDef.Ability.GetDescription());
+            }
         }
     }
 }

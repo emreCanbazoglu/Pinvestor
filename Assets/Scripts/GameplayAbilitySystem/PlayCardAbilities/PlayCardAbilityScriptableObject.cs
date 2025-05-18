@@ -21,8 +21,7 @@ namespace Pinvestor.AbilitySystem.Abilities
         {
         }
 
-        protected sealed override IEnumerator<float> ActivateAbility(
-            AbilityTargetData targetData = default)
+        protected sealed override IEnumerator<float> ActivateAbility()
         {
             if (Ability.Cost)
             {
@@ -36,12 +35,11 @@ namespace Pinvestor.AbilitySystem.Abilities
                 Owner.ApplyGameplayEffectSpecToSelf(cdSpec);
             }
 
-            yield return ActivateAbilityCore(targetData)
+            yield return ActivateAbilityCore()
                 .WaitUntilDone();
         }
 
-        protected virtual IEnumerator<float> ActivateAbilityCore(
-            AbilityTargetData targetData = default)
+        protected virtual IEnumerator<float> ActivateAbilityCore()
         {
             yield break;
         }

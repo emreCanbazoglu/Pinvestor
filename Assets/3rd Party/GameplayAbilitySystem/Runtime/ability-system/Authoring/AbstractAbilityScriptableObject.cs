@@ -6,6 +6,8 @@ namespace AbilitySystem.Authoring
     public abstract class AbstractAbilityScriptableObject : ScriptableObject
     {
         [ScriptableObjectId] public string AbilityId;        
+        
+        
         /// <summary>
         /// Tags for this ability
         /// </summary>
@@ -25,14 +27,10 @@ namespace AbilitySystem.Authoring
         /// <returns></returns>
         [SerializeField] public GameplayEffectScriptableObject Cooldown;
         
-        /// <summary>
-        /// 
-        /// </summary>
-        [field: SerializeField] public AbilityTargetDataProviderBaseScriptableObject TargetDataProvider { get; private set; }
-
-        [field: SerializeField]
-        public AbilityTargetFilterScriptableObject[] TargetFilters { get; private set; }
-            = Array.Empty<AbilityTargetFilterScriptableObject>();
+        public virtual string GetDescription(float level = 1)
+        {
+            return "No description available.";
+        }
         
         /// <summary>
         /// Creates the Ability Spec (the instantiation of the ability)

@@ -45,8 +45,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _collideTarget = collideTarget;
         }
 
-        protected override IEnumerator<float> ActivateAbility(
-            AbilityTargetData targetData = default)
+        protected override IEnumerator<float> ActivateAbility()
         {
             if(_collideTarget == null)
                 yield break;

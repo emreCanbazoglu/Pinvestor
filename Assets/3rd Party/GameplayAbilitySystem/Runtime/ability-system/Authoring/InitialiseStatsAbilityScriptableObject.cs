@@ -22,8 +22,7 @@ namespace AbilitySystem.Authoring
             {
             }
 
-            protected override IEnumerator<float> ActivateAbility(
-                AbilityTargetData targetData = default)
+            protected override IEnumerator<float> ActivateAbility()
             {
                 // Apply cost and cooldown (if any)
                 if (Ability.Cooldown)
