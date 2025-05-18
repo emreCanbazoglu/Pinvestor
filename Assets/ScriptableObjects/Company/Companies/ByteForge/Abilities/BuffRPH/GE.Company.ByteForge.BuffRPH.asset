@@ -39,3 +39,6 @@ MonoBehaviour:
     Period: 0
     ExecuteOnApplication: 0
   ModifierAppliedHandlers: []
+  ModifierDescriptions:
+  - Verb: Boosts
+    Tone: 1

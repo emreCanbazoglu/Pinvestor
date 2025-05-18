@@ -57,8 +57,6 @@ namespace AbilitySystem.Editor
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(description.FindPropertyRelative("Verb"), new GUIContent("Verb"));
                 EditorGUILayout.PropertyField(description.FindPropertyRelative("Tone"), new GUIContent("Tone"));
-                EditorGUILayout.PropertyField(description.FindPropertyRelative("CustomTargetPhrase"),
-                    new GUIContent("Target Phrase"));
                 EditorGUI.indentLevel--;
 
                 EditorGUILayout.EndVertical();

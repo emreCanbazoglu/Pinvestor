@@ -29,6 +29,12 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
+  ActionDescriptions:
+  - Template: I am goint to school {attribute} for {value} days
+    ModifierIndex: 0
+    ShowDuration: 0
+  CustomDescription: 
   <BuffGameplayEffect>k__BackingField: {fileID: 11400000, guid: 373d3b2f0c8834637b7f181ef2fb2e83, type: 2}
   <TargetFilters>k__BackingField:
+  - {fileID: 11400000, guid: 292410a1a1d624b09bcf47f7bcee26df, type: 2}
   - {fileID: 11400000, guid: 480e36ba1d31a406f896d5b0ebfd5300, type: 2}

@@ -26,14 +26,20 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         {
             return new BuffBoardItemAbilitySpec(this, owner);
         }
-        public override string GetDescription(float level = 1)
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
         {
-            return AbilityDescriptionUtility.GenerateFromEffects(new[]
-            {
-                BuffGameplayEffect,
-                Cost,
-                Cooldown
-            }, level);
+            return new[] { BuffGameplayEffect };
+        }
+        
+        protected override IEnumerable<IAbilityTargetFilter> GetDescriptiveTargetFilters()
+        {
+            return TargetFilters;
+        }
+
+        protected override GameplayEffectScriptableObject GetMainGameplayEffect()
+        {
+            return BuffGameplayEffect;
         }
     }
 

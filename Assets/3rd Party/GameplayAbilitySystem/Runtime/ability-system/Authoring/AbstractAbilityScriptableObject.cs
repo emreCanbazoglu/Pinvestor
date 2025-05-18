@@ -1,8 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AbilitySystem.Authoring
 {
+    [System.Serializable]
+    public struct AbilityActionDescription
+    {
+        [TextArea]
+        public string Template;       // e.g. "Increases {attribute} by {value} every hit."
+        public int ModifierIndex;     // which modifier this refers to (default = 0)
+        public bool ShowDuration;
+    }
+
+    
     public abstract class AbstractAbilityScriptableObject : ScriptableObject
     {
         [ScriptableObjectId] public string AbilityId;        
@@ -27,10 +38,12 @@ namespace AbilitySystem.Authoring
         /// <returns></returns>
         [SerializeField] public GameplayEffectScriptableObject Cooldown;
         
-        public virtual string GetDescription(float level = 1)
-        {
-            return "No description available.";
-        }
+        [SerializeField]
+        public List<AbilityActionDescription> ActionDescriptions = new();
+
+        [SerializeField]
+        [TextArea]
+        public string CustomDescription;
         
         /// <summary>
         /// Creates the Ability Spec (the instantiation of the ability)
@@ -74,6 +87,59 @@ namespace AbilitySystem.Authoring
         public static bool operator !=(AbstractAbilityScriptableObject a, AbstractAbilityScriptableObject b)
         {
             return !(a == b);
+        }
+        
+        public virtual string GetDescription(float level = 1)
+        {
+            if (!string.IsNullOrWhiteSpace(CustomDescription))
+                return CustomDescription;
+
+            if (ActionDescriptions != null && ActionDescriptions.Count > 0)
+            {
+                float duration = TryGetGlobalDuration();
+                return AbilityDescriptionUtility.GenerateActionDescriptions(
+                    ActionDescriptions,
+                    GetMainGameplayEffect(),
+                    duration);
+            }
+            
+            return AbilityDescriptionUtility.GenerateFullAbilityDescription(
+                this,
+                GetDescriptiveGameplayEffects(),
+                GetDescriptiveTargetFilters(),
+                level);
+        }
+        
+        protected virtual float TryGetGlobalDuration()
+        {
+            // Try to read duration from first effect
+            foreach (var effect in GetDescriptiveGameplayEffects())
+            {
+                if (effect == null) continue;
+
+                if (effect.gameplayEffect.DurationPolicy == EDurationPolicy.HasDuration)
+                {
+                    return effect.gameplayEffect.DurationModifier?.GetPreviewValue()
+                           ?? effect.gameplayEffect.DurationMultiplier;
+                }
+            }
+
+            return 0;
+        }
+
+        protected virtual GameplayEffectScriptableObject GetMainGameplayEffect()
+        {
+            return null;
+        }
+
+        protected virtual IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            return new[] { Cost, Cooldown }; // Subclasses can override this
+        }
+        
+        protected virtual IEnumerable<IAbilityTargetFilter> GetDescriptiveTargetFilters()
+        {
+            return Array.Empty<IAbilityTargetFilter>(); // Subclasses can override this
         }
     }
 }

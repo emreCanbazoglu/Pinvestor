@@ -50,7 +50,7 @@ namespace Pinvestor.GameplayAbilitySystem
 
         public override void Deactivate()
         {
-            if(GameManager.Instance 
+            if(GameManager.Instance == null
                || GameManager.Instance.BoardWrapper == null
                || GameManager.Instance.BoardWrapper.Board == null)
                 return;

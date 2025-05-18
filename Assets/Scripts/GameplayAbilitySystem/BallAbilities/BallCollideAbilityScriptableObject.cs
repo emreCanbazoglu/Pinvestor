@@ -20,6 +20,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         {
             return new BallCollideAbilitySpec(this, owner);
         }
+
+        protected override GameplayEffectScriptableObject GetMainGameplayEffect()
+        {
+            return CollisionGameplayEffect;
+        }
     }
     
     public class BallCollideAbilitySpec : AbstractAbilitySpec
