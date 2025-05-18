@@ -18,6 +18,8 @@ namespace AttributeSystem.Authoring
         /// Friendly name of this attribute.  Used for display purposes only.
         /// </summary>
         public string Name;
+        
+        public Color AttributeColor = Color.white;
 
         public virtual AttributeValue CalculateInitialValue(AttributeValue attributeValue, List<AttributeValue> otherAttributeValues)
         {

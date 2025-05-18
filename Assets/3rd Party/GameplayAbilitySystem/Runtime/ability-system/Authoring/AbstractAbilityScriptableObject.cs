@@ -110,7 +110,7 @@ namespace AbilitySystem.Authoring
                 level);
         }
         
-        protected virtual float TryGetGlobalDuration()
+        public virtual float TryGetGlobalDuration()
         {
             // Try to read duration from first effect
             foreach (var effect in GetDescriptiveGameplayEffects())
@@ -127,7 +127,7 @@ namespace AbilitySystem.Authoring
             return 0;
         }
 
-        protected virtual GameplayEffectScriptableObject GetMainGameplayEffect()
+        public virtual GameplayEffectScriptableObject GetMainGameplayEffect()
         {
             return null;
         }

@@ -37,7 +37,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             return TargetFilters;
         }
 
-        protected override GameplayEffectScriptableObject GetMainGameplayEffect()
+        public override GameplayEffectScriptableObject GetMainGameplayEffect()
         {
             return BuffGameplayEffect;
         }

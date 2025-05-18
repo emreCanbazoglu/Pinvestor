@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using AttributeSystem.Authoring;
+using UnityEngine;
 
 namespace AbilitySystem.Authoring
 {
@@ -163,15 +164,18 @@ namespace AbilitySystem.Authoring
             );
         }
 
-        private static string FormatAttributeName(
-            AttributeScriptableObject attribute)
+        private static string FormatAttributeName(AttributeScriptableObject attribute)
         {
             if (attribute == null) return "<missing attribute>";
 
-            if (!string.IsNullOrWhiteSpace(attribute.Name))
-                return attribute.Name;
+            string name = !string.IsNullOrWhiteSpace(attribute.Name)
+                ? attribute.Name
+                : !string.IsNullOrWhiteSpace(attribute.Name)
+                    ? attribute.Name
+                    : attribute.name.Replace("_", " ").ToLower();
 
-            return attribute.name.Replace("_", " ").ToLower();
+            string colorHex = ColorUtility.ToHtmlStringRGB(attribute.AttributeColor);
+            return $"<color=#{colorHex}>{name}</color>";
         }
 
         private static string GetColor(EDescriptionTone tone)
