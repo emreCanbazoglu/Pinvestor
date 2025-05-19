@@ -38,7 +38,7 @@ namespace AbilitySystem.Authoring
                 float scaledValue = baseValue * mod.Multiplier;
 
                 string valueText = mod.ModifierOperator == EAttributeModifier.Multiply
-                    ? $"{scaledValue:P0}"
+                    ? $"{scaledValue * 100:F0}%"
                     : $"{(scaledValue > 0 ? "+" : "")}{scaledValue:F0}";
 
                 string toneColor = GetColor(mod.Tone);
