@@ -1,4 +1,5 @@
 using System;
+using AbilitySystem.Authoring;
 using AbilitySystem.ModifierMagnitude;
 using AttributeSystem.Authoring;
 using AttributeSystem.Components;
@@ -12,6 +13,8 @@ namespace AbilitySystem
         public EAttributeModifier ModifierOperator;
         public ModifierMagnitudeScriptableObject ModifierMagnitude;
         public float Multiplier;
+        public string DescriptionKey;
+        public EDescriptionTone Tone;
     }
 
 

@@ -21,6 +21,8 @@ MonoBehaviour:
       ModifierOperator: 1
       ModifierMagnitude: {fileID: 11400000, guid: 0de22ffe7e2a9453b8cc04adb718bfd6, type: 2}
       Multiplier: 0.2
+      DescriptionKey: buff_rph
+      Tone: 1
   gameplayEffectTags:
     AssetTag: {fileID: 0}
     GrantedTags: []
@@ -39,6 +41,3 @@ MonoBehaviour:
     Period: 0
     ExecuteOnApplication: 0
   ModifierAppliedHandlers: []
-  ModifierDescriptions:
-  - Verb: Boosts
-    Tone: 1

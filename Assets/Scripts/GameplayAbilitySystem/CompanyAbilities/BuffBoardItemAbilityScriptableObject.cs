@@ -31,16 +31,6 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         {
             return new[] { BuffGameplayEffect };
         }
-        
-        protected override IEnumerable<IAbilityTargetFilter> GetDescriptiveTargetFilters()
-        {
-            return TargetFilters;
-        }
-
-        public override GameplayEffectScriptableObject GetMainGameplayEffect()
-        {
-            return BuffGameplayEffect;
-        }
     }
 
     public class BuffBoardItemAbilitySpec : AbstractAbilitySpec

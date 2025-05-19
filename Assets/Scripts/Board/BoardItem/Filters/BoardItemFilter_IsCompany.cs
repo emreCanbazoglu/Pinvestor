@@ -14,10 +14,5 @@ namespace Pinvestor.BoardSystem.Base
             return (EBoardItem)target.GetBoardItemType().GetID()
                    == EBoardItem.Company;
         }
-
-        public override string GetSubjectQualifier()
-        {
-            return "of companies";
-        }
     }
 }

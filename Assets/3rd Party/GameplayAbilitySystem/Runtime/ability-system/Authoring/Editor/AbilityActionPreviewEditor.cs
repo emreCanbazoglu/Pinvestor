@@ -14,27 +14,33 @@ namespace AbilitySystem.Editor
 
             AbstractAbilityScriptableObject ability = (AbstractAbilityScriptableObject)target;
 
-            if (ability.ActionDescriptions == null || ability.ActionDescriptions.Count == 0)
+            if (string.IsNullOrWhiteSpace(ability.CustomDescription))
                 return;
 
-            GameplayEffectScriptableObject mainEffect = ability.GetMainGameplayEffect();
+            var modifiers = ability.GetAllGameplayEffectModifiers();
             float duration = ability.TryGetGlobalDuration();
 
-            string preview = AbilityDescriptionUtility.GenerateActionDescriptions(
-                ability.ActionDescriptions,
-                mainEffect,
+            if (modifiers == null || modifiers.Length == 0)
+                return;
+
+            string preview = AbilityDescriptionUtility.GenerateManualDescription(
+                ability.CustomDescription,
+                modifiers,
                 duration);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("\u2728 Live Description Preview", EditorStyles.boldLabel);
 
-            GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
-            boxStyle.wordWrap = true;
-            boxStyle.normal.textColor = Color.white;
-            boxStyle.fontSize = 11;
+            GUIStyle richTextStyle = new GUIStyle(EditorStyles.label)
+            {
+                richText = true,
+                wordWrap = true,
+                fontSize = 11,
+                normal = { textColor = Color.white }
+            };
 
-            EditorGUILayout.BeginVertical(boxStyle);
-            EditorGUILayout.LabelField(preview, EditorStyles.wordWrappedLabel);
+            EditorGUILayout.BeginVertical(GUI.skin.box);
+            EditorGUILayout.LabelField(preview, richTextStyle);
             EditorGUILayout.EndVertical();
         }
     }

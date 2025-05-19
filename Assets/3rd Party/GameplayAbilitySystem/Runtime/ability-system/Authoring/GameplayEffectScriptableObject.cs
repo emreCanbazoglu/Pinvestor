@@ -18,9 +18,5 @@ namespace AbilitySystem.Authoring
 
         [SerializeField] public GameplayEffectModifierAppliedHandlerScriptableObject[] ModifierAppliedHandlers
             = Array.Empty<GameplayEffectModifierAppliedHandlerScriptableObject>();
-        
-        [SerializeField]
-        public List<EffectDescriptionMeta> ModifierDescriptions = new();
-
     }
 }

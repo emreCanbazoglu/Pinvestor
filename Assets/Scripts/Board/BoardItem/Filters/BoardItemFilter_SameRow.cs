@@ -14,10 +14,5 @@ namespace Pinvestor.BoardSystem.Base
             return source.MainPiece.Cell.Position.y
                    == target.MainPiece.Cell.Position.y;
         }
-
-        public override string GetLocationQualifier()
-        {
-            return "on the same row";
-        }
     }
 }

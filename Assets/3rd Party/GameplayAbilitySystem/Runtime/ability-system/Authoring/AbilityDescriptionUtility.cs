@@ -5,177 +5,63 @@ using UnityEngine;
 
 namespace AbilitySystem.Authoring
 {
-    public interface IAbilityTargetFilter
-    {
-        string GetSubjectQualifier(); // e.g. "of companies"
-        string GetLocationQualifier(); // e.g. "on the same row"
-    }
-
     public static class AbilityDescriptionUtility
     {
         private const string PositiveColor = "#00FF66";
         private const string NegativeColor = "#FF4D4D";
         private const string NeutralColor = "#FFD700";
 
-        public static string GenerateFullAbilityDescription(
-            AbstractAbilityScriptableObject ability,
-            IEnumerable<GameplayEffectScriptableObject> effects,
-            IEnumerable<IAbilityTargetFilter> filters,
-            float level = 1)
-        {
-            StringBuilder sb = new();
-
-            var (subjectQualifier, locationQualifier) = BuildTargetingPhrases(filters);
-
-            foreach (var effect in effects)
-            {
-                if (effect == null || effect.gameplayEffect.Modifiers == null)
-                    continue;
-
-                sb.AppendLine(GenerateEffectDescription(effect, subjectQualifier, locationQualifier, level));
-            }
-
-            return sb.ToString().TrimEnd();
-        }
-
-        public static string GenerateEffectDescription(
-            GameplayEffectScriptableObject effect,
-            string subjectQualifier,
-            string locationQualifier,
-            float level)
-        {
-            var modifiers = effect.gameplayEffect.Modifiers;
-            var metas = effect.ModifierDescriptions;
-
-            if (modifiers == null || modifiers.Length == 0)
-                return string.Empty;
-
-            StringBuilder sb = new();
-
-            for (int i = 0; i < modifiers.Length; i++)
-            {
-                var modifier = modifiers[i];
-                var meta = (i < metas.Count)
-                    ? metas[i]
-                    : new EffectDescriptionMeta { Verb = "affects", Tone = EDescriptionTone.Neutral };
-
-                string attrName = FormatAttributeName(modifier.Attribute);
-                float baseValue = modifier.ModifierMagnitude?.GetPreviewValue() ?? 0f;
-                float scaledValue = baseValue * modifier.Multiplier * level;
-
-                string valueText = modifier.ModifierOperator == EAttributeModifier.Multiply
-                    ? $"{scaledValue:P0}" // e.g., 0.2 → 20%
-                    : $"{(scaledValue > 0 ? "+" : "")}{scaledValue:F0}";
-
-                string color = GetColor(meta.Tone);
-                string coloredValue = $"<color={color}>{valueText}</color>";
-
-                string fullAttr = $"the {attrName}";
-                if (!string.IsNullOrWhiteSpace(subjectQualifier))
-                    fullAttr += $" {subjectQualifier}";
-                if (!string.IsNullOrWhiteSpace(locationQualifier))
-                    fullAttr += $" {locationQualifier}";
-
-                string boldAttr = $"<b>{fullAttr}</b>";
-                string line = $"{meta.Verb} {boldAttr} by {coloredValue}.";
-
-                sb.AppendLine(line);
-            }
-
-            if (effect.gameplayEffect.DurationPolicy == EDurationPolicy.HasDuration)
-            {
-                float duration = effect.gameplayEffect.DurationModifier?.GetPreviewValue()
-                                 ?? effect.gameplayEffect.DurationMultiplier;
-
-                sb.AppendLine($"<color={NeutralColor}>Effect lasts for {duration:F0} seconds.</color>");
-            }
-
-            return sb.ToString().TrimEnd();
-        }
-        
-        public static string GenerateActionDescriptions(
-            List<AbilityActionDescription> actions,
-            GameplayEffectScriptableObject effect,
+        public static string GenerateManualDescription(
+            string template,
+            GameplayEffectModifier[] modifiers,
             float duration = 0)
         {
-            var modifiers = effect?.gameplayEffect.Modifiers ?? null;
-            var metas = effect?.ModifierDescriptions ?? null;
-
             StringBuilder sb = new();
+            string line = ReplaceTokens(template, modifiers);
+            sb.AppendLine(line);
 
-            foreach (var action in actions)
-            {
-                string line = action.Template;
-
-                if (modifiers != null && action.ModifierIndex < modifiers.Length)
-                {
-                    var mod = modifiers[action.ModifierIndex];
-                    var meta = (metas != null && action.ModifierIndex < metas.Count)
-                        ? metas[action.ModifierIndex]
-                        : new EffectDescriptionMeta { Verb = "affects", Tone = EDescriptionTone.Neutral };
-
-                    float baseValue = mod.ModifierMagnitude?.GetPreviewValue() ?? 0f;
-                    float scaledValue = baseValue * mod.Multiplier;
-                    string valueText = mod.ModifierOperator == EAttributeModifier.Multiply
-                        ? $"{scaledValue:P0}" : $"{(scaledValue > 0 ? "+" : "")}{scaledValue:F0}";
-                    string color = GetColor(meta.Tone);
-                    string coloredValue = $"<color={color}>{valueText}</color>";
-
-                    string attrName = FormatAttributeName(mod.Attribute);
-
-                    line = line.Replace("{attribute}", attrName);
-                    line = line.Replace("{value}", coloredValue);
-                }
-
-                sb.AppendLine(line);
-
-                if (action.ShowDuration && duration > 0)
-                {
-                    sb.AppendLine($"<color=#FFD700>Effect lasts for {duration:F0} seconds.</color>");
-                }
-            }
+            if (duration > 0)
+                sb.AppendLine($"<color=#FFD700>Effect lasts for {duration:F0} seconds.</color>");
 
             return sb.ToString().TrimEnd();
         }
 
-
-        public static (string subjectQualifier, string locationQualifier) BuildTargetingPhrases(
-            IEnumerable<IAbilityTargetFilter> filters)
+        private static string ReplaceTokens(string template, GameplayEffectModifier[] modifiers)
         {
-            List<string> subjects = new();
-            List<string> locations = new();
-
-            foreach (var filter in filters)
+            foreach (var mod in modifiers)
             {
-                if (filter == null) continue;
+                if (string.IsNullOrWhiteSpace(mod.DescriptionKey))
+                    continue;
 
-                var subject = filter.GetSubjectQualifier();
-                var location = filter.GetLocationQualifier();
+                string attrName = FormatAttributeName(mod.Attribute);
+                float baseValue = mod.ModifierMagnitude?.GetPreviewValue() ?? 0f;
+                float scaledValue = baseValue * mod.Multiplier;
 
-                if (!string.IsNullOrWhiteSpace(subject))
-                    subjects.Add(subject);
-                if (!string.IsNullOrWhiteSpace(location))
-                    locations.Add(location);
+                string valueText = mod.ModifierOperator == EAttributeModifier.Multiply
+                    ? $"{scaledValue:P0}"
+                    : $"{(scaledValue > 0 ? "+" : "")}{scaledValue:F0}";
+
+                string toneColor = GetColor(mod.Tone);
+                string valueRich = $"<b><color={toneColor}>{valueText}</color></b>";
+
+                string attrColor = ColorUtility.ToHtmlStringRGB(mod.Attribute.AttributeColor);
+                string attrRich = $"<b><color=#{attrColor}>{attrName}</color></b>";
+
+                template = template.Replace($"{{attribute:{mod.DescriptionKey}}}", attrRich);
+                template = template.Replace($"{{value:{mod.DescriptionKey}}}", valueRich);
             }
 
-            return (
-                subjectQualifier: string.Join(" ", subjects), // e.g., "of companies"
-                locationQualifier: string.Join(" ", locations) // e.g., "on the same row"
-            );
+            return template;
         }
 
         private static string FormatAttributeName(AttributeScriptableObject attribute)
         {
             if (attribute == null) return "<missing attribute>";
 
-            string name = !string.IsNullOrWhiteSpace(attribute.Name)
-                ? attribute.Name
-                : !string.IsNullOrWhiteSpace(attribute.Name)
-                    ? attribute.Name
-                    : attribute.name.Replace("_", " ").ToLower();
+            if (!string.IsNullOrWhiteSpace(attribute.Name))
+                return attribute.Name;
 
-            string colorHex = ColorUtility.ToHtmlStringRGB(attribute.AttributeColor);
-            return $"<color=#{colorHex}>{name}</color>";
+            return attribute.name.Replace("_", " ").ToLower();
         }
 
         private static string GetColor(EDescriptionTone tone)
