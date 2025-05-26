@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dab4dc407074b268bc6654be3f4fc7f, type: 3}
+  m_Name: CardData.Company.StackRabbit
+  m_EditorClassIdentifier: 
+  UniqueId: 82c192dbb80884e9986388c0024f4fe5
+  <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
+  <CompanyCategory>k__BackingField: 2
+  <CompanyId>k__BackingField: {fileID: 11400000, guid: eb149cfa3de4f4d38967cd014478bbfa, type: 2}
+  <CompanyArtwork>k__BackingField: {fileID: 21300000, guid: 7b4635987eedf4631b2830b076887382, type: 3}
+  <AttributeSet>k__BackingField: {fileID: 11400000, guid: 86ebe7c89fd5f4a548801f56f2e93a4b, type: 2}
+  <AbilityTriggerDefinitions>k__BackingField: []

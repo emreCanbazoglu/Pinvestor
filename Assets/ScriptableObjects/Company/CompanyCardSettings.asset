@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1585a57b9641bc9eed7383e149b021, type: 3}
+  m_Name: CompanyCardSettings
+  m_EditorClassIdentifier: 
+  _settings:
+  - <CompanyCategory>k__BackingField: 1
+    <MainFrameColor>k__BackingField: {r: 0.90588236, g: 0.45490196, b: 0.18039216, a: 1}
+    <TopContainerColor>k__BackingField: {r: 0.99215686, g: 0.6862745, b: 0.27450982, a: 1}
+    <NameContainerColor>k__BackingField: {r: 0.99607843, g: 0.8980392, b: 0.7254902, a: 1}
+    <InfoContainerColor>k__BackingField: {r: 0.98039216, g: 0.78039217, b: 0.41960785, a: 1}
+    <CategoryIcon>k__BackingField: {fileID: 21300000, guid: 2e57f9725042d4e3aa9ec75259c6c3c0, type: 3}
+  - <CompanyCategory>k__BackingField: 2
+    <MainFrameColor>k__BackingField: {r: 0.8666667, g: 0.29803923, b: 0.3372549, a: 1}
+    <TopContainerColor>k__BackingField: {r: 0.90588236, g: 0.44705883, b: 0.44313726, a: 1}
+    <NameContainerColor>k__BackingField: {r: 0.9764706, g: 0.6862745, b: 0.6313726, a: 1}
+    <InfoContainerColor>k__BackingField: {r: 0.9098039, g: 0.43529412, b: 0.4392157, a: 1}
+    <CategoryIcon>k__BackingField: {fileID: 21300000, guid: 06f2a7cfcd32242219ed1317bd660d83, type: 3}

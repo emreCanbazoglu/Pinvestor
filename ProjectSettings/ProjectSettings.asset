@@ -817,7 +817,7 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: ASSET_VARIANTS
+    Android: ASSET_VARIANTS;SHAPES_URP
     EmbeddedLinux: ASSET_VARIANTS
     GameCoreXboxOne: ASSET_VARIANTS
     Nintendo Switch: ASSET_VARIANTS

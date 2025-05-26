@@ -4,6 +4,8 @@ namespace Pinvestor.CompanySystem
 {
     public class CompanyFactory : Singleton<CompanyFactory>
     {
+        [field: SerializeField] public CompanyCardSettingsScriptableObject CompanyCardSettings { get; private set; } = null;
+
         [SerializeField] private CompanyContainerScriptableObject _companyContainerScriptableObject = null;
         
         public void TryCreateCompany(

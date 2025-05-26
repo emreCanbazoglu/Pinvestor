@@ -11,7 +11,6 @@ namespace Pinvestor.CardSystem
         public CardData CardData { get; private set; }
         public abstract CardDataScriptableObject CardDataScriptableObject { get; }
         
-        protected PlayCardAbilitySpec PlayCardAbilitySpec { get; private set; }
         
         protected CardBase(
             CardPlayer owner,
@@ -19,29 +18,6 @@ namespace Pinvestor.CardSystem
         {
             Owner = owner;
             CardData = cardData;
-        }
-        
-        protected void SetPlayCardAbilitySpec(
-            PlayCardAbilitySpec playCardAbilitySpec)
-        {
-            PlayCardAbilitySpec = playCardAbilitySpec;
-        }
-        
-        public bool CanPlayCard(
-            CardPlayer target = null)
-        {
-            if(target == null)
-                target = Owner;
-            
-            SetTargetCardPlayer(target);
-            
-            return PlayCardAbilitySpec.CanActivateAbility();
-        }
-        
-        private void SetTargetCardPlayer(
-            CardPlayer target)
-        {
-            PlayCardAbilitySpec.TargetCardPlayer = target;
         }
         
         public void SetCardRemovedFromSlot()
@@ -99,12 +75,6 @@ namespace Pinvestor.CardSystem
             TCardDataScriptableObject cardDataSo) : base(owner, cardData)
         {
             CastedCardDataSo = cardDataSo;
-            
-            if(CastedCardDataSo.CardAbilityScriptableObject != null)
-                SetPlayCardAbilitySpec(
-                    CastedCardDataSo.CardAbilityScriptableObject
-                        .CreateSpec(
-                        owner.AbilitySystemCharacter) as PlayCardAbilitySpec);
         }
 
         public CardWrapperBase CreateWrapper()

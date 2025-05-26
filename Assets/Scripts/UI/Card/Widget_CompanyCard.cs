@@ -3,6 +3,7 @@ using AttributeSystem.Authoring;
 using AttributeSystem.Components;
 using MMFramework.MMUI;
 using Pinvestor.CardSystem.Authoring;
+using Pinvestor.CompanySystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -54,12 +55,100 @@ namespace Pinvestor.UI
                 OnPropertyChanged(nameof(RPHText));
             }
         }
+        
+        private string _abilityDescription;
+        [Binding]
+        public string AbilityDescription
+        {
+            get => _abilityDescription;
+            set
+            {
+                _abilityDescription = value;
+                OnPropertyChanged(nameof(AbilityDescription));
+            }
+        }
+        
+        private Sprite _companyArtwork;
+        [Binding]
+        public Sprite CompanyArtwork
+        {
+            get => _companyArtwork;
+            set
+            {
+                _companyArtwork = value;
+                OnPropertyChanged(nameof(CompanyArtwork));
+            }
+        }
+        
+        private Color _mainFrameColor;
+        [Binding]
+        public Color MainFrameColor
+        {
+            get => _mainFrameColor;
+            set
+            {
+                _mainFrameColor = value;
+                OnPropertyChanged(nameof(MainFrameColor));
+            }
+        }
+        
+        private Color _topContainerColor;
+        [Binding]
+        public Color TopContainerColor
+        {
+            get => _topContainerColor;
+            set
+            {
+                _topContainerColor = value;
+                OnPropertyChanged(nameof(TopContainerColor));
+            }
+        }
+        
+        private Color _nameContainerColor;
+        [Binding]
+        public Color NameContainerColor
+        {
+            get => _nameContainerColor;
+            set
+            {
+                _nameContainerColor = value;
+                OnPropertyChanged(nameof(NameContainerColor));
+            }
+        }
+        
+        private Color _infoContainerColor;
+        [Binding]
+        public Color InfoContainerColor
+        {
+            get => _infoContainerColor;
+            set
+            {
+                _infoContainerColor = value;
+                OnPropertyChanged(nameof(InfoContainerColor));
+            }
+        }
+        
+        private Sprite _categoryIcon;
+        [Binding]
+        public Sprite CategoryIcon
+        {
+            get => _categoryIcon;
+            set
+            {
+                _categoryIcon = value;
+                OnPropertyChanged(nameof(CategoryIcon));
+            }
+        }
 
         protected override void ActivatingCustomActions()
         {
             SetCompanyNameText();
             SetHPText();
             SetRPHText();
+            SetAbilityDescription();
+            SetCompanyArtwork();
+            
+            SetVisual();
             
             base.ActivatingCustomActions();
         }
@@ -94,6 +183,46 @@ namespace Pinvestor.UI
                     = rphAttribute.CurrentValue.ToString(
                     "C0", CultureInfo.GetCultureInfo("en-US")) + " RPH";
             }
+        }
+        
+        private void SetAbilityDescription()
+        {
+            AbilityDescription
+                = _companyCardWrapper.CompanyCard.GetCompanyAbilityDescription();
+        }
+        
+        private void SetCompanyArtwork()
+        {
+            if (_companyCardWrapper.CompanyCard.CastedCardDataSo
+                .CompanyArtwork != null)
+            {
+                CompanyArtwork 
+                    = _companyCardWrapper.CompanyCard.CastedCardDataSo
+                        .CompanyArtwork;
+            }
+        }
+
+        private void SetVisual()
+        {
+            var category = _companyCardWrapper
+                .CompanyCard.CastedCardDataSo
+                .CompanyCategory;
+
+            if (!CompanyFactory.Instance.CompanyCardSettings
+                    .TryGetSettings(
+                        category,
+                        out var settings))
+            {
+                Debug.LogError($"No settings found for company category: {category}");
+                return;
+            }
+            
+            MainFrameColor = settings.MainFrameColor;
+            TopContainerColor = settings.TopContainerColor;
+            NameContainerColor = settings.NameContainerColor;
+            InfoContainerColor = settings.InfoContainerColor;
+            
+            CategoryIcon = settings.CategoryIcon;
         }
     }
 }

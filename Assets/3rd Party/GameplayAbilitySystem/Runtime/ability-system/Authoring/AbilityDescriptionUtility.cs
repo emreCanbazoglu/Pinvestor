@@ -7,7 +7,7 @@ namespace AbilitySystem.Authoring
 {
     public static class AbilityDescriptionUtility
     {
-        private const string PositiveColor = "#00FF66";
+        private const string PositiveColor = "#29A900";
         private const string NegativeColor = "#FF4D4D";
         private const string NeutralColor = "#FFD700";
 

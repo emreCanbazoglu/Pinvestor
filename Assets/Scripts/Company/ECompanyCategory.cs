@@ -3,7 +3,7 @@ namespace Pinvestor.CompanySystem
     public enum ECompanyCategory
     {
         None = 0,
-        Tech = 1,
-        Energy = 2
+        Entertainment = 1,
+        TechToys = 2
     }
 }

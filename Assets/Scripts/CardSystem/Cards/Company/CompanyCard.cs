@@ -11,6 +11,12 @@ namespace Pinvestor.CardSystem
             : base(cardPlayer, cardData, cardDataSo)
         {
         }
-
+        
+        public string GetCompanyAbilityDescription()
+        {
+            return CastedCardDataSo.AbilityTriggerDefinitions.Length > 0
+                ? CastedCardDataSo.AbilityTriggerDefinitions[0].Ability.GetDescription()
+                : string.Empty;
+        }
     }
 }

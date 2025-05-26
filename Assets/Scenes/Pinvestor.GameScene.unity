@@ -1414,6 +1414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04bceb13c6b54636aa4fb34d1aea9990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <CompanyCardSettings>k__BackingField: {fileID: 11400000, guid: 45ed2e4145bd4452ba9cf56b1415e88d, type: 2}
   _companyContainerScriptableObject: {fileID: 11400000, guid: abba70c515fa24bd99e13f628c913d28, type: 2}
 --- !u!1 &2070000102
 GameObject:
