@@ -1,6 +1,7 @@
 using AbilitySystem;
 using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.CardSystem.Authoring;
 using Pinvestor.CompanySystem;
 using Pinvestor.DamagableSystem;
 using Pinvestor.Game;
@@ -21,6 +22,8 @@ namespace Pinvestor.BoardSystem.Authoring
         [SerializeField] private BallTarget _ballTarget = null;
 
         public Company Company { get; private set; }
+        
+        public CompanyCardWrapper CompanyCardWrapper { get; private set; }
 
         private Transform _slotTransform;
         
@@ -119,6 +122,12 @@ namespace Pinvestor.BoardSystem.Authoring
                 return;
             
             gameObject.SetActive(false);
+        }
+        
+        public void SetCardWrapper(
+            CompanyCardWrapper companyCardWrapper)
+        {
+            CompanyCardWrapper = companyCardWrapper;
         }
         
         private void OnBallCollided(Ball ball)

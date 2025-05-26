@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using DG.Tweening;
 using MMFramework.MMUI;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.CardSystem.Authoring;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using UnityWeld.Binding;
 
 namespace Pinvestor.UI
 {
@@ -21,6 +24,7 @@ namespace Pinvestor.UI
     
     public class ShowCompanySelectionUIEvent : IEvent { }
     public class HideCompanySelectionUIEvent : IEvent { }
+    public class DeactivateCompanySelectionUIEvent : IEvent { }
     
     public class CompanyCardSelectedEvent : IEvent
     {
@@ -33,8 +37,14 @@ namespace Pinvestor.UI
         }
     }
     
+    [Binding]
     public class CompanySelectionUI : VMBase
     {
+        [SerializeField] private ButtonWidget _hideButton = null;
+        [SerializeField] private ButtonWidget _showButton = null;
+        
+        [SerializeField] private Image _bgImage = null;
+        
         [SerializeField] private RectTransform _cardParentRect = null;
         [SerializeField] private float _yOffset = 100f;
         
@@ -53,6 +63,7 @@ namespace Pinvestor.UI
         private EventBinding<InitializeCompanySelectionUIEvent> _initializeEventBinding;
         private EventBinding<ShowCompanySelectionUIEvent> _showEventBinding;
         private EventBinding<HideCompanySelectionUIEvent> _hideEventBinding;
+        private EventBinding<DeactivateCompanySelectionUIEvent> _deactivateEventBinding;
         
         private readonly Dictionary<CompanyCardWrapper, List<EventTrigger.Entry>>
             _cardEventTriggerEntryMap
@@ -76,18 +87,24 @@ namespace Pinvestor.UI
                 = new EventBinding<HideCompanySelectionUIEvent>(
                     OnHideUIEvent);
             
+            _deactivateEventBinding
+                = new EventBinding<DeactivateCompanySelectionUIEvent>(
+                    OnDeactivateUIEvent);
+            
             EventBus<InitializeCompanySelectionUIEvent>.Register(_initializeEventBinding);
             EventBus<ShowCompanySelectionUIEvent>.Register(_showEventBinding);
             EventBus<HideCompanySelectionUIEvent>.Register(_hideEventBinding);
+            EventBus<DeactivateCompanySelectionUIEvent>.Register(_deactivateEventBinding);
             
             base.AwakeCustomActions();
         }
-        
+
         protected override void OnDestroyCustomActions()
         {
             EventBus<InitializeCompanySelectionUIEvent>.Deregister(_initializeEventBinding);
             EventBus<ShowCompanySelectionUIEvent>.Deregister(_showEventBinding);
             EventBus<HideCompanySelectionUIEvent>.Deregister(_hideEventBinding);
+            EventBus<DeactivateCompanySelectionUIEvent>.Deregister(_deactivateEventBinding);
             
             ClearCardEventTriggers();
             
@@ -197,6 +214,13 @@ namespace Pinvestor.UI
                 
                 _cardTweenMap[card] = tween;
             }
+            
+            _bgImage.enabled = true;
+            
+            TryActivate();
+            
+            _hideButton.TryActivate();
+            _showButton.TryDeactivate();
         }
 
         private void RepositionCard(
@@ -297,6 +321,11 @@ namespace Pinvestor.UI
             }
 
             ClearCardEventTriggers();
+            
+            _bgImage.enabled = false;
+            
+            _hideButton.TryDeactivate();
+            _showButton.TryActivate();
         }
 
         private void ClearCardEventTriggers()
@@ -327,6 +356,33 @@ namespace Pinvestor.UI
             }
 
             _cardTweenMap.Clear();
+        }
+        
+        private void OnDeactivateUIEvent(
+            DeactivateCompanySelectionUIEvent e)
+        {
+            ClearCardEventTriggers();
+            ClearCardTweens();
+            
+            _bgImage.enabled = false;
+            
+            _pileWrapper = null;
+            
+            TryDeactivate();
+        }
+        
+        [Binding]
+        public void OnHideButtonClick()
+        {
+            EventBus<HideCompanySelectionUIEvent>
+                .Raise(new HideCompanySelectionUIEvent());
+        }
+
+        [Binding]
+        public void OnShowButtonClick()
+        {
+            EventBus<ShowCompanySelectionUIEvent>
+                .Raise(new ShowCompanySelectionUIEvent());
         }
     }
 }

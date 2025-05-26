@@ -13,7 +13,7 @@ using PlayerInput = Pinvestor.InputSystem.PlayerInput;
 namespace Pinvestor.CardSystem.Authoring
 {
     public class CompanySelectionInputController : MonoBehaviour, 
-        PlayerInput.ICoreActions
+        PlayerInput.ICompanySelectionActions
     {
         [SerializeField] private CompanySelectionPileWrapper _pileWrapper = null;
 
@@ -38,7 +38,7 @@ namespace Pinvestor.CardSystem.Authoring
             EventBus<CompanyCardSelectedEvent>.Register(_companySelectedBinding);
 
             _playerInput = new PlayerInput();
-            _playerInput.Core.SetCallbacks(this);
+            _playerInput.CompanySelection.SetCallbacks(this);
         }
         
         public void Deactivate()
@@ -90,18 +90,18 @@ namespace Pinvestor.CardSystem.Authoring
 
         private void RegisterToInput()
         {
-            _playerInput.Core.ApprovePlacement.performed += OnApprovePlacement;
-            _playerInput.Core.CancelPlacement.performed += OnCancelPlacement;
+            _playerInput.CompanySelection.ApprovePlacement.performed += OnApprovePlacement;
+            _playerInput.CompanySelection.CancelPlacement.performed += OnCancelPlacement;
             
-            _playerInput.Core.Enable();
+            _playerInput.CompanySelection.Enable();
         }
         
         private void UnregisterFromInput()
         {
-            _playerInput.Core.ApprovePlacement.performed -= OnApprovePlacement;
-            _playerInput.Core.CancelPlacement.performed -= OnCancelPlacement;
+            _playerInput.CompanySelection.ApprovePlacement.performed -= OnApprovePlacement;
+            _playerInput.CompanySelection.CancelPlacement.performed -= OnCancelPlacement;
             
-            _playerInput.Core.Disable();
+            _playerInput.CompanySelection.Disable();
         }
         
         public void OnApprovePlacement(InputAction.CallbackContext ctx)
@@ -136,6 +136,10 @@ namespace Pinvestor.CardSystem.Authoring
                 _placedCompany = _selectedCompany;
                 
                 _selectedCompany = null;
+                
+                EventBus<DeactivateCompanySelectionUIEvent>
+                    .Raise(
+                        new DeactivateCompanySelectionUIEvent());
             }
         }
         

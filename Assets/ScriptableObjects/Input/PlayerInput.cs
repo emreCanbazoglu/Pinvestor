@@ -90,7 +90,7 @@ namespace Pinvestor.InputSystem
     ""name"": ""PlayerInput"",
     ""maps"": [
         {
-            ""name"": ""Core"",
+            ""name"": ""CompanySelection"",
             ""id"": ""93c051bc-9cf3-466b-8e3f-db9d67b9cc99"",
             ""actions"": [
                 {
@@ -206,24 +206,56 @@ namespace Pinvestor.InputSystem
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""BoardInteraction"",
+            ""id"": ""1e16b795-0195-43d3-9bc1-65e7d32936a2"",
+            ""actions"": [
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""8cd6ce48-814a-4be5-b769-f7bc922e8bbc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""0974c006-5017-45ac-afa9-fe6a7e89d793"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
-            // Core
-            m_Core = asset.FindActionMap("Core", throwIfNotFound: true);
-            m_Core_ApprovePlacement = m_Core.FindAction("ApprovePlacement", throwIfNotFound: true);
-            m_Core_CancelPlacement = m_Core.FindAction("CancelPlacement", throwIfNotFound: true);
+            // CompanySelection
+            m_CompanySelection = asset.FindActionMap("CompanySelection", throwIfNotFound: true);
+            m_CompanySelection_ApprovePlacement = m_CompanySelection.FindAction("ApprovePlacement", throwIfNotFound: true);
+            m_CompanySelection_CancelPlacement = m_CompanySelection.FindAction("CancelPlacement", throwIfNotFound: true);
             // BallShooter
             m_BallShooter = asset.FindActionMap("BallShooter", throwIfNotFound: true);
             m_BallShooter_Aim = m_BallShooter.FindAction("Aim", throwIfNotFound: true);
             m_BallShooter_Shoot = m_BallShooter.FindAction("Shoot", throwIfNotFound: true);
+            // BoardInteraction
+            m_BoardInteraction = asset.FindActionMap("BoardInteraction", throwIfNotFound: true);
+            m_BoardInteraction_Click = m_BoardInteraction.FindAction("Click", throwIfNotFound: true);
         }
 
         ~@PlayerInput()
         {
-            UnityEngine.Debug.Assert(!m_Core.enabled, "This will cause a leak and performance issues, PlayerInput.Core.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_CompanySelection.enabled, "This will cause a leak and performance issues, PlayerInput.CompanySelection.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_BallShooter.enabled, "This will cause a leak and performance issues, PlayerInput.BallShooter.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_BoardInteraction.enabled, "This will cause a leak and performance issues, PlayerInput.BoardInteraction.Disable() has not been called.");
         }
 
         /// <summary>
@@ -296,34 +328,34 @@ namespace Pinvestor.InputSystem
             return asset.FindBinding(bindingMask, out action);
         }
 
-        // Core
-        private readonly InputActionMap m_Core;
-        private List<ICoreActions> m_CoreActionsCallbackInterfaces = new List<ICoreActions>();
-        private readonly InputAction m_Core_ApprovePlacement;
-        private readonly InputAction m_Core_CancelPlacement;
+        // CompanySelection
+        private readonly InputActionMap m_CompanySelection;
+        private List<ICompanySelectionActions> m_CompanySelectionActionsCallbackInterfaces = new List<ICompanySelectionActions>();
+        private readonly InputAction m_CompanySelection_ApprovePlacement;
+        private readonly InputAction m_CompanySelection_CancelPlacement;
         /// <summary>
-        /// Provides access to input actions defined in input action map "Core".
+        /// Provides access to input actions defined in input action map "CompanySelection".
         /// </summary>
-        public struct CoreActions
+        public struct CompanySelectionActions
         {
             private @PlayerInput m_Wrapper;
 
             /// <summary>
             /// Construct a new instance of the input action map wrapper class.
             /// </summary>
-            public CoreActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            public CompanySelectionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
             /// <summary>
-            /// Provides access to the underlying input action "Core/ApprovePlacement".
+            /// Provides access to the underlying input action "CompanySelection/ApprovePlacement".
             /// </summary>
-            public InputAction @ApprovePlacement => m_Wrapper.m_Core_ApprovePlacement;
+            public InputAction @ApprovePlacement => m_Wrapper.m_CompanySelection_ApprovePlacement;
             /// <summary>
-            /// Provides access to the underlying input action "Core/CancelPlacement".
+            /// Provides access to the underlying input action "CompanySelection/CancelPlacement".
             /// </summary>
-            public InputAction @CancelPlacement => m_Wrapper.m_Core_CancelPlacement;
+            public InputAction @CancelPlacement => m_Wrapper.m_CompanySelection_CancelPlacement;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
-            public InputActionMap Get() { return m_Wrapper.m_Core; }
+            public InputActionMap Get() { return m_Wrapper.m_CompanySelection; }
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
             public void Enable() { Get().Enable(); }
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -331,9 +363,9 @@ namespace Pinvestor.InputSystem
             /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
             public bool enabled => Get().enabled;
             /// <summary>
-            /// Implicitly converts an <see ref="CoreActions" /> to an <see ref="InputActionMap" /> instance.
+            /// Implicitly converts an <see ref="CompanySelectionActions" /> to an <see ref="InputActionMap" /> instance.
             /// </summary>
-            public static implicit operator InputActionMap(CoreActions set) { return set.Get(); }
+            public static implicit operator InputActionMap(CompanySelectionActions set) { return set.Get(); }
             /// <summary>
             /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
             /// </summary>
@@ -341,11 +373,11 @@ namespace Pinvestor.InputSystem
             /// <remarks>
             /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
             /// </remarks>
-            /// <seealso cref="CoreActions" />
-            public void AddCallbacks(ICoreActions instance)
+            /// <seealso cref="CompanySelectionActions" />
+            public void AddCallbacks(ICompanySelectionActions instance)
             {
-                if (instance == null || m_Wrapper.m_CoreActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_CoreActionsCallbackInterfaces.Add(instance);
+                if (instance == null || m_Wrapper.m_CompanySelectionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_CompanySelectionActionsCallbackInterfaces.Add(instance);
                 @ApprovePlacement.started += instance.OnApprovePlacement;
                 @ApprovePlacement.performed += instance.OnApprovePlacement;
                 @ApprovePlacement.canceled += instance.OnApprovePlacement;
@@ -360,8 +392,8 @@ namespace Pinvestor.InputSystem
             /// <remarks>
             /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
             /// </remarks>
-            /// <seealso cref="CoreActions" />
-            private void UnregisterCallbacks(ICoreActions instance)
+            /// <seealso cref="CompanySelectionActions" />
+            private void UnregisterCallbacks(ICompanySelectionActions instance)
             {
                 @ApprovePlacement.started -= instance.OnApprovePlacement;
                 @ApprovePlacement.performed -= instance.OnApprovePlacement;
@@ -372,12 +404,12 @@ namespace Pinvestor.InputSystem
             }
 
             /// <summary>
-            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CoreActions.UnregisterCallbacks(ICoreActions)" />.
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CompanySelectionActions.UnregisterCallbacks(ICompanySelectionActions)" />.
             /// </summary>
-            /// <seealso cref="CoreActions.UnregisterCallbacks(ICoreActions)" />
-            public void RemoveCallbacks(ICoreActions instance)
+            /// <seealso cref="CompanySelectionActions.UnregisterCallbacks(ICompanySelectionActions)" />
+            public void RemoveCallbacks(ICompanySelectionActions instance)
             {
-                if (m_Wrapper.m_CoreActionsCallbackInterfaces.Remove(instance))
+                if (m_Wrapper.m_CompanySelectionActionsCallbackInterfaces.Remove(instance))
                     UnregisterCallbacks(instance);
             }
 
@@ -387,21 +419,21 @@ namespace Pinvestor.InputSystem
             /// <remarks>
             /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
             /// </remarks>
-            /// <seealso cref="CoreActions.AddCallbacks(ICoreActions)" />
-            /// <seealso cref="CoreActions.RemoveCallbacks(ICoreActions)" />
-            /// <seealso cref="CoreActions.UnregisterCallbacks(ICoreActions)" />
-            public void SetCallbacks(ICoreActions instance)
+            /// <seealso cref="CompanySelectionActions.AddCallbacks(ICompanySelectionActions)" />
+            /// <seealso cref="CompanySelectionActions.RemoveCallbacks(ICompanySelectionActions)" />
+            /// <seealso cref="CompanySelectionActions.UnregisterCallbacks(ICompanySelectionActions)" />
+            public void SetCallbacks(ICompanySelectionActions instance)
             {
-                foreach (var item in m_Wrapper.m_CoreActionsCallbackInterfaces)
+                foreach (var item in m_Wrapper.m_CompanySelectionActionsCallbackInterfaces)
                     UnregisterCallbacks(item);
-                m_Wrapper.m_CoreActionsCallbackInterfaces.Clear();
+                m_Wrapper.m_CompanySelectionActionsCallbackInterfaces.Clear();
                 AddCallbacks(instance);
             }
         }
         /// <summary>
-        /// Provides a new <see cref="CoreActions" /> instance referencing this action map.
+        /// Provides a new <see cref="CompanySelectionActions" /> instance referencing this action map.
         /// </summary>
-        public CoreActions @Core => new CoreActions(this);
+        public CompanySelectionActions @CompanySelection => new CompanySelectionActions(this);
 
         // BallShooter
         private readonly InputActionMap m_BallShooter;
@@ -509,12 +541,108 @@ namespace Pinvestor.InputSystem
         /// Provides a new <see cref="BallShooterActions" /> instance referencing this action map.
         /// </summary>
         public BallShooterActions @BallShooter => new BallShooterActions(this);
+
+        // BoardInteraction
+        private readonly InputActionMap m_BoardInteraction;
+        private List<IBoardInteractionActions> m_BoardInteractionActionsCallbackInterfaces = new List<IBoardInteractionActions>();
+        private readonly InputAction m_BoardInteraction_Click;
         /// <summary>
-        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Core" which allows adding and removing callbacks.
+        /// Provides access to input actions defined in input action map "BoardInteraction".
         /// </summary>
-        /// <seealso cref="CoreActions.AddCallbacks(ICoreActions)" />
-        /// <seealso cref="CoreActions.RemoveCallbacks(ICoreActions)" />
-        public interface ICoreActions
+        public struct BoardInteractionActions
+        {
+            private @PlayerInput m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public BoardInteractionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "BoardInteraction/Click".
+            /// </summary>
+            public InputAction @Click => m_Wrapper.m_BoardInteraction_Click;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_BoardInteraction; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="BoardInteractionActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(BoardInteractionActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="BoardInteractionActions" />
+            public void AddCallbacks(IBoardInteractionActions instance)
+            {
+                if (instance == null || m_Wrapper.m_BoardInteractionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_BoardInteractionActionsCallbackInterfaces.Add(instance);
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="BoardInteractionActions" />
+            private void UnregisterCallbacks(IBoardInteractionActions instance)
+            {
+                @Click.started -= instance.OnClick;
+                @Click.performed -= instance.OnClick;
+                @Click.canceled -= instance.OnClick;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="BoardInteractionActions.UnregisterCallbacks(IBoardInteractionActions)" />.
+            /// </summary>
+            /// <seealso cref="BoardInteractionActions.UnregisterCallbacks(IBoardInteractionActions)" />
+            public void RemoveCallbacks(IBoardInteractionActions instance)
+            {
+                if (m_Wrapper.m_BoardInteractionActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="BoardInteractionActions.AddCallbacks(IBoardInteractionActions)" />
+            /// <seealso cref="BoardInteractionActions.RemoveCallbacks(IBoardInteractionActions)" />
+            /// <seealso cref="BoardInteractionActions.UnregisterCallbacks(IBoardInteractionActions)" />
+            public void SetCallbacks(IBoardInteractionActions instance)
+            {
+                foreach (var item in m_Wrapper.m_BoardInteractionActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_BoardInteractionActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="BoardInteractionActions" /> instance referencing this action map.
+        /// </summary>
+        public BoardInteractionActions @BoardInteraction => new BoardInteractionActions(this);
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "CompanySelection" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="CompanySelectionActions.AddCallbacks(ICompanySelectionActions)" />
+        /// <seealso cref="CompanySelectionActions.RemoveCallbacks(ICompanySelectionActions)" />
+        public interface ICompanySelectionActions
         {
             /// <summary>
             /// Method invoked when associated input action "ApprovePlacement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
@@ -552,6 +680,21 @@ namespace Pinvestor.InputSystem
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnShoot(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "BoardInteraction" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="BoardInteractionActions.AddCallbacks(IBoardInteractionActions)" />
+        /// <seealso cref="BoardInteractionActions.RemoveCallbacks(IBoardInteractionActions)" />
+        public interface IBoardInteractionActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnClick(InputAction.CallbackContext context);
         }
     }
 }

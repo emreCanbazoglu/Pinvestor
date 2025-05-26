@@ -2,7 +2,7 @@
     "name": "PlayerInput",
     "maps": [
         {
-            "name": "Core",
+            "name": "CompanySelection",
             "id": "93c051bc-9cf3-466b-8e3f-db9d67b9cc99",
             "actions": [
                 {
@@ -114,6 +114,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "BoardInteraction",
+            "id": "1e16b795-0195-43d3-9bc1-65e7d32936a2",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "8cd6ce48-814a-4be5-b769-f7bc922e8bbc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0974c006-5017-45ac-afa9-fe6a7e89d793",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

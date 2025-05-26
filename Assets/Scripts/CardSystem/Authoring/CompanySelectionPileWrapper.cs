@@ -100,6 +100,7 @@ namespace Pinvestor.CardSystem.Authoring
                 var cardWrapper
                     = card.CreateWrapper() as CompanyCardWrapper;
                 
+                boardItemWrapper.SetCardWrapper(cardWrapper);
                 boardItemWrapper.SetSlotTransform(_slots[slotIndex]);
                 boardItemWrapper.ReleaseToSlot();
                 
@@ -118,10 +119,12 @@ namespace Pinvestor.CardSystem.Authoring
             foreach (var pair in CompanyCardMap)
             {
                 var boardItemWrapper = pair.Key;
+
+                if (boardItemWrapper == placedCompany) 
+                    continue;
                 
-                if(boardItemWrapper != placedCompany)
-                    boardItemWrapper.DestroyWrapper();
-                
+                boardItemWrapper.DestroyWrapper();
+
                 var cardWrapper = pair.Value;
                 cardWrapper.DestroyWrapper();
             }
