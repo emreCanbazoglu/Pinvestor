@@ -130,6 +130,16 @@ namespace Pinvestor.BoardSystem.Authoring
             CompanyCardWrapper = companyCardWrapper;
         }
         
+        public void ShowCardWrapper()
+        {
+            //Show the card wrapper
+        }
+        
+        public void HideCardWrapper()
+        {
+            //Hide the card wrapper
+        }
+        
         private void OnBallCollided(Ball ball)
         {
             if (AbilitySystemCharacter.TryActivateAbility(

@@ -321,6 +321,7 @@ GameObject:
   - component: {fileID: 8266452848336650611}
   - component: {fileID: 6133370475278887731}
   - component: {fileID: 3957859393792016209}
+  - component: {fileID: 1908487219226545009}
   m_Layer: 7
   m_Name: CompanySelectionPileWrapper
   m_TagString: Untagged
@@ -357,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputController: {fileID: 3957859393792016209}
+  _companyInfoController: {fileID: 1908487219226545009}
   _slots:
   - {fileID: 1846446924472063221}
   - {fileID: 6307712992819985204}
@@ -374,6 +376,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pileWrapper: {fileID: 6133370475278887731}
+--- !u!114 &1908487219226545009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7001869100012057113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae0a6e6ec48854831a8c3f4649d283e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7699109477443544683
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ namespace Pinvestor.CardSystem.Authoring
     public class CompanySelectionPileWrapper : MonoBehaviour
     {
         [SerializeField] private CompanySelectionInputController _inputController = null;
+        [SerializeField] private CompanyInfoController _companyInfoController = null;
         
         [SerializeField] private Transform[] _slots
             = Array.Empty<Transform>();
@@ -58,11 +59,13 @@ namespace Pinvestor.CardSystem.Authoring
                 .Raise(new ShowCompanySelectionUIEvent());
             
             _inputController.Activate();
+            _companyInfoController.Activate();
             
             var placedCompany
                 = await _inputController.WaitUntilCompanyPlacementAsync();
             
             _inputController.Deactivate();
+            _companyInfoController.Deactivate();
 
             DestroyWrappers(placedCompany);
             

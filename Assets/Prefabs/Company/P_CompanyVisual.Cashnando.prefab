@@ -144,7 +144,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: a8887db10680e48f08aa3a00cdae3022, type: 2}
     - target: {fileID: 8396938909662112425, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: m_Name
-      value: P_CompanyVisual.NeuralNexus
+      value: P_CompanyVisual.Cashnando
       objectReference: {fileID: 0}
     - target: {fileID: 8396938909662112425, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: m_Layer
