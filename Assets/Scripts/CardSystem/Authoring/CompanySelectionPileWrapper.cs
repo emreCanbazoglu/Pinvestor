@@ -8,13 +8,14 @@ using Pinvestor.Game;
 using Pinvestor.GameplayAbilitySystem;
 using Pinvestor.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Pinvestor.CardSystem.Authoring
 {
     public class CompanySelectionPileWrapper : MonoBehaviour
     {
         [SerializeField] private CompanySelectionInputController _inputController = null;
-        [SerializeField] private CompanyInfoController _companyInfoController = null;
+        [FormerlySerializedAs("_boardItemInfoController")] [FormerlySerializedAs("_companyInfoController")] [SerializeField] private BoardItemInfoVisualizer _boardItemInfoVisualizer = null;
         
         [SerializeField] private Transform[] _slots
             = Array.Empty<Transform>();
@@ -59,13 +60,13 @@ namespace Pinvestor.CardSystem.Authoring
                 .Raise(new ShowCompanySelectionUIEvent());
             
             _inputController.Activate();
-            _companyInfoController.Activate();
+            _boardItemInfoVisualizer.Activate();
             
             var placedCompany
                 = await _inputController.WaitUntilCompanyPlacementAsync();
             
             _inputController.Deactivate();
-            _companyInfoController.Deactivate();
+            _boardItemInfoVisualizer.Deactivate();
 
             DestroyWrappers(placedCompany);
             

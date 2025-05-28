@@ -23,8 +23,6 @@ namespace Pinvestor.BoardSystem.Authoring
 
         public Company Company { get; private set; }
         
-        public CompanyCardWrapper CompanyCardWrapper { get; private set; }
-
         private Transform _slotTransform;
         
         private void OnEnable()
@@ -127,17 +125,11 @@ namespace Pinvestor.BoardSystem.Authoring
         public void SetCardWrapper(
             CompanyCardWrapper companyCardWrapper)
         {
-            CompanyCardWrapper = companyCardWrapper;
-        }
-        
-        public void ShowCardWrapper()
-        {
-            //Show the card wrapper
-        }
-        
-        public void HideCardWrapper()
-        {
-            //Hide the card wrapper
+            BoardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_CardOwner cardOwnerSpec);
+            
+            cardOwnerSpec.SetCard(
+                companyCardWrapper.Card);
         }
         
         private void OnBallCollided(Ball ball)

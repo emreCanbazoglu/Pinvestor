@@ -20,7 +20,7 @@ namespace Pinvestor.BoardSystem
                 owner);
         }
     }
-    
+
     public class BoardItemPropertySpec_Destroyable : BoardItemPropertySpecBase
     {
         public BoardItemProperty_Destroyable CastedSO { get; private set; }

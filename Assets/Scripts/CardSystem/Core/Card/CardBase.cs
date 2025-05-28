@@ -9,8 +9,10 @@ namespace Pinvestor.CardSystem
     {
         public CardPlayer Owner { get; private set; }
         public CardData CardData { get; private set; }
-        public abstract CardDataScriptableObject CardDataScriptableObject { get; }
         
+        public CardWrapperBase CardWrapper { get; protected set; }
+
+        public abstract CardDataScriptableObject CardDataScriptableObject { get; }
         
         protected CardBase(
             CardPlayer owner,
@@ -64,7 +66,6 @@ namespace Pinvestor.CardSystem
     public abstract class CardBase<TCardDataScriptableObject> : CardBase
         where TCardDataScriptableObject : CardDataScriptableObject
     {
-        public CardWrapperBase CardWrapper { get; private set; }
         public TCardDataScriptableObject CastedCardDataSo { get; private set; }
         
         public sealed override CardDataScriptableObject CardDataScriptableObject => CastedCardDataSo;
