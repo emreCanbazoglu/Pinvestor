@@ -1,4 +1,3 @@
-using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.Game;
 using Pinvestor.UI;
 using UnityEngine;
@@ -7,18 +6,49 @@ using PlayerInput = Pinvestor.InputSystem.PlayerInput;
 
 namespace Pinvestor.BoardSystem.Base
 {
+    public class OnViewBoardModeEnterEvent : IEvent { }
+    public class OnViewBoardModeExitEvent : IEvent { }
+    
     public class BoardItemInfoVisualizer : MonoBehaviour,
         PlayerInput.IBoardInteractionActions
     {
         private PlayerInput _playerInput;
         
         private BoardItemBase _currentBoardItem;
+        
+        private EventBinding<OnViewBoardModeEnterEvent> _viewBoardModeEnterBinding;
+        private EventBinding<OnViewBoardModeExitEvent> _viewBoardModeExitBinding;
 
         private void Awake()
         {
+            _viewBoardModeEnterBinding
+                = new EventBinding<OnViewBoardModeEnterEvent>(
+                    OnViewBoardModeEnter);
+            
+            _viewBoardModeExitBinding
+                = new EventBinding<OnViewBoardModeExitEvent>(
+                    OnViewBoardModeExit);
+            
+            EventBus<OnViewBoardModeEnterEvent>
+                .Register(_viewBoardModeEnterBinding);
+            EventBus<OnViewBoardModeExitEvent>
+                .Register(_viewBoardModeExitBinding);
+            
             InitializeInput();
         }
+
+        private void OnViewBoardModeEnter(
+            OnViewBoardModeEnterEvent e)
+        {
+            Activate();
+        }
         
+        private void OnViewBoardModeExit(
+            OnViewBoardModeExitEvent e)
+        {
+            Deactivate();
+        }
+
         private void OnDestroy()
         {
             if (_playerInput != null)
@@ -39,7 +69,7 @@ namespace Pinvestor.BoardSystem.Base
             _playerInput.BoardInteraction.SetCallbacks(this);
         }
         
-        public void Activate()
+        private void Activate()
         {
             InitializeInput();
             
@@ -48,7 +78,7 @@ namespace Pinvestor.BoardSystem.Base
             _playerInput.BoardInteraction.Enable();
         }
         
-        public void Deactivate()
+        private void Deactivate()
         {
             _playerInput.BoardInteraction.Click.performed -= OnClick;
 
@@ -84,13 +114,21 @@ namespace Pinvestor.BoardSystem.Base
                     return;
                 }
                 
-                if (!cell.MainLayer.RegisteredBoardItemPiece.ParentItem
+                var boardItem = 
+                    cell.MainLayer.RegisteredBoardItemPiece
+                        .ParentItem;
+                
+                if (!boardItem
                     .TryGetPropertySpec(
                         out BoardItemPropertySpec_CardOwner
                             infoVisualizableSpec))
                 {
                     onProcessBoardItemSelection(null);
-                    return;
+                }
+                else
+                {
+                    onProcessBoardItemSelection(
+                        boardItem);
                 }
                 
                 void onProcessBoardItemSelection(

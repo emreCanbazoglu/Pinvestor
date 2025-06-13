@@ -3,6 +3,7 @@ using System.ComponentModel;
 using DG.Tweening;
 using MMFramework.MMUI;
 using Pinvestor.BoardSystem.Authoring;
+using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem.Authoring;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,6 +26,8 @@ namespace Pinvestor.UI
     public class ShowCompanySelectionUIEvent : IEvent { }
     public class HideCompanySelectionUIEvent : IEvent { }
     public class DeactivateCompanySelectionUIEvent : IEvent { }
+    
+
     
     public class CompanyCardSelectedEvent : IEvent
     {
@@ -376,6 +379,9 @@ namespace Pinvestor.UI
         {
             EventBus<HideCompanySelectionUIEvent>
                 .Raise(new HideCompanySelectionUIEvent());
+            
+            EventBus<OnViewBoardModeEnterEvent>
+                .Raise(new OnViewBoardModeEnterEvent());
         }
 
         [Binding]
@@ -383,6 +389,9 @@ namespace Pinvestor.UI
         {
             EventBus<ShowCompanySelectionUIEvent>
                 .Raise(new ShowCompanySelectionUIEvent());
+            
+            EventBus<OnViewBoardModeExitEvent>
+                .Raise(new OnViewBoardModeExitEvent());
         }
     }
 }

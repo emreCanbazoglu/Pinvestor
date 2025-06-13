@@ -29,13 +29,17 @@ namespace Pinvestor.UI
     
     public class BoardItemInfoUI : VMBase
     {
+        [SerializeField] private Transform _cardPivot = null;
+        
         [SerializeField] private float _cardTweenDuration = 0.5f;
         [SerializeField] private Ease _cardTweenEase = Ease.OutBounce;
+        
         
         private EventBinding<ShowBoardItemInfoRequestEvent> _showInfoBinding;
         private EventBinding<HideBoardItemInfoRequestEvent> _hideInfoBinding;
 
         private CardWrapperBase _cardWrapper;
+        private Transform _cardWrapperParent;
         
         private Tween _showTween;
         
@@ -75,8 +79,17 @@ namespace Pinvestor.UI
             
             if (cardOwnerSpec.Card == null)
                 return;
+            
+            TryActivate();
 
             _cardWrapper = cardOwnerSpec.Card.CardWrapper;
+            
+            _cardWrapperParent = _cardWrapper.transform.parent;
+            
+            _cardWrapper.transform.SetParent(
+                _cardPivot, false);
+            
+            _cardWrapper.transform.localPosition = Vector3.zero;
 
             _showTween = _cardWrapper.transform
                 .DOScale(1f, _cardTweenDuration)
@@ -100,11 +113,22 @@ namespace Pinvestor.UI
                 || _cardWrapper != cardOwnerSpec.Card.CardWrapper)
                 return;
             
-            _showTween?.Kill();
+            TryDeactivate();
             
-            _showTween = _cardWrapper.transform
+            _showTween?.Kill();
+
+            var cachedCardWrapper = _cardWrapper;
+            
+            _showTween = cachedCardWrapper.transform
                 .DOScale(0f, _cardTweenDuration)
-                .SetEase(_cardTweenEase);
+                .SetEase(_cardTweenEase)
+                .OnComplete(() =>
+                {
+                    cachedCardWrapper.transform
+                        .SetParent(_cardWrapperParent, false);
+                    
+                    cachedCardWrapper.transform.localPosition = Vector3.zero;
+                });
 
             _cardWrapper = null;
         }

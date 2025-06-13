@@ -9,8 +9,6 @@ namespace Pinvestor.BoardSystem
         menuName = "Pinvestor/Game/Board Item/Property/Card Owner/Default")]
     public class BoardItemProperty_CardOwner : BoardItemPropertySOBase
     {
-        [field: SerializeField] public BoardItemInfoVisualizer InfoVisualizer { get; private set; } = null;
-
         public override BoardItemPropertySpecBase CreateSpec(
             BoardItemBase owner)
         {

@@ -20,3 +20,4 @@ MonoBehaviour:
   BoardItemPropertySOs:
   - {fileID: 11400000, guid: a18511d3838b74a5ebf55b45c8756783, type: 2}
   - {fileID: 11400000, guid: 6ae9631761b5c42f3b911c21565b73a5, type: 2}
+  - {fileID: 11400000, guid: 299b306545c764ddb9ac9a66e21d5134, type: 2}
