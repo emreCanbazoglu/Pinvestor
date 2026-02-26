@@ -7,6 +7,15 @@ using UnityEngine;
 
 namespace AttributeSystem.Components
 {
+    public interface IAttributeBaseValueOverrideResolver
+    {
+        bool TryResolveBaseValue(
+            AttributeSystemComponent attributeSystemComponent,
+            AttributeDefinition attributeDefinition,
+            object modifierObject,
+            out float value);
+    }
+
     /// <summary>
     /// Manages the attributes for a game character
     /// </summary>
@@ -22,6 +31,7 @@ namespace AttributeSystem.Components
         /// Attribute sets assigned to the game character
         /// </summary>
         [SerializeField] private AttributeSetScriptableObject _attributeSet = null;
+        public AttributeSetScriptableObject AttributeSet => _attributeSet;
         
         private List<AttributeDefinition> _attributeDefinitions 
             = new List<AttributeDefinition>();
@@ -36,6 +46,7 @@ namespace AttributeSystem.Components
             = new Dictionary<AttributeScriptableObject, int>();
         
         private bool _isInitialized = false;
+        private IAttributeBaseValueOverrideResolver _baseValueOverrideResolver;
 
         /// <summary>
         /// Marks attribute cache dirty, so it can be recreated next time it is required
@@ -285,6 +296,16 @@ namespace AttributeSystem.Components
             AttributeDefinition attributeDefinition,
             object modifierObject)
         {
+            if (_baseValueOverrideResolver != null
+                && _baseValueOverrideResolver.TryResolveBaseValue(
+                    this,
+                    attributeDefinition,
+                    modifierObject,
+                    out float overriddenValue))
+            {
+                return overriddenValue;
+            }
+
             float value = attributeDefinition.BaseValueModifier
                 .CalculateBaseValue(this, modifierObject);
             
@@ -403,6 +424,17 @@ namespace AttributeSystem.Components
         {
             _attributeSet = attributeSet;
             Initialize();
+        }
+
+        public void SetBaseValueOverrideResolver(
+            IAttributeBaseValueOverrideResolver resolver)
+        {
+            _baseValueOverrideResolver = resolver;
+        }
+
+        public void ClearBaseValueOverrideResolver()
+        {
+            _baseValueOverrideResolver = null;
         }
 
         public void Initialize()

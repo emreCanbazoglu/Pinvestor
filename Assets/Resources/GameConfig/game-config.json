@@ -1,0 +1,74 @@
+{
+    "schemaVersion": 1,
+    "generatedAtUtc": "2026-02-26T22:42:05.3241340Z",
+    "company": {
+        "entries": [
+            {
+                "companyId": "Cashnado",
+                "attributes": [
+                    {
+                        "key": "f9426c64767cd41ab9990ea28b95e98b",
+                        "value": 10.0
+                    },
+                    {
+                        "key": "12e5d3defa21047349165cab73d5e90a",
+                        "value": 1000.0
+                    },
+                    {
+                        "key": "5699d2d73590242978871b7f76819dde",
+                        "value": 200.0
+                    }
+                ],
+                "values": []
+            },
+            {
+                "companyId": "CloutHub",
+                "attributes": [
+                    {
+                        "key": "f9426c64767cd41ab9990ea28b95e98b",
+                        "value": 10.0
+                    },
+                    {
+                        "key": "12e5d3defa21047349165cab73d5e90a",
+                        "value": 1000.0
+                    },
+                    {
+                        "key": "5699d2d73590242978871b7f76819dde",
+                        "value": 200.0
+                    }
+                ],
+                "values": []
+            },
+            {
+                "companyId": "Stack Rabbit",
+                "attributes": [
+                    {
+                        "key": "f9426c64767cd41ab9990ea28b95e98b",
+                        "value": 10.0
+                    },
+                    {
+                        "key": "12e5d3defa21047349165cab73d5e90a",
+                        "value": 1000.0
+                    },
+                    {
+                        "key": "5699d2d73590242978871b7f76819dde",
+                        "value": 200.0
+                    }
+                ],
+                "values": []
+            }
+        ]
+    },
+    "balance": {
+        "values": []
+    },
+    "roundCriteria": {
+        "values": []
+    },
+    "ball": {
+        "values": []
+    },
+    "shop": {
+        "values": []
+    }
+}

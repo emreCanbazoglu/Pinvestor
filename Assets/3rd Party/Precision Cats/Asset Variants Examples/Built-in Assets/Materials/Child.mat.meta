@@ -1,8 +1,0 @@
-fileFormatVersion: 2
-guid: 4c0549b129711c74d8f717326e69b734
-NativeFormatImporter:
-  externalObjects: {}
-  mainObjectFileID: 2100000
-  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"f02541eb64adf314d91d88146332a315\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"m_SavedProperties.m_Floats.Array.data[5].second\",\"m_SavedProperties.m_Colors.Array.data[0].second\",\"m_SavedProperties.m_Colors.Array.data[1].second\",\"M._Color.g\",\"M._Color.b\",\"M._Glossiness\",\"M._EmissionColor.r\",\"M._EmissionColor.b\",\"M._DetailMask.texture\",\"M._DetailAlbedoMap.tiling.x\",\"M._DetailAlbedoMap.offset.y\",\"M._OcclusionStrength\",\"M._Parallax\",\"M._SpecularHighlights\",\"M._MetallicGlossMap.tiling.x\",\"M._MetallicGlossMap.tiling.y\",\"M._Color.r\",\"M._BumpMap.texture\",\"M._MetallicGlossMap.texture\",\"M._EmissionColor.g\",\"m_ShaderKeywords.[\\\"ETC1_EXTERNAL_ALPHA\\\"]\",\"m_ShaderKeywords.[\\\"_EMISSION\\\"]\",\"m_LightmapFlags\",\"m_InvalidKeywords.{\\\"ETC1_EXTERNAL_ALPHA\\\"}\",\"m_ValidKeywords.{\\\"_EMISSION\\\"}\"]}"}]}'
-  assetBundleName: 
-  assetBundleVariant: 

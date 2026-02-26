@@ -1,8 +1,0 @@
-fileFormatVersion: 2
-guid: 31ee9aef58fa79f408d4810361e98fff
-NativeFormatImporter:
-  externalObjects: {}
-  mainObjectFileID: 22100000
-  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"ac758aa2a8f66ee45b8b65f02e438101\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"m_Clips.{5460119fb51433644a0074908cbd841a.Main}.m_OverrideClip\",\"m_Clips.{3a8b8ee95c2caa546886f1b7e51197ee.Main}.m_OverrideClip\",\"m_Clips.{b0bdd3ba146adc9429a7c66504385f7a.Main}.m_OverrideClip\"]}"}]}'
-  assetBundleName: 
-  assetBundleVariant: 

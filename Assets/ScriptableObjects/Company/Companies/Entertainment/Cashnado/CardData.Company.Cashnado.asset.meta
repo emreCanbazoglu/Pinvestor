@@ -3,6 +3,6 @@ guid: 67cfbd4a43e2647a499dc3595f0110f0
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
-  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"a1d044d8e1ac44cf58a3291ec23ad82e\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"UniqueId\",\"<CompanyName>k__BackingField\",\"<AttributeSet>k__BackingField\",\"<CardWrapperPrefab>k__BackingField\",\"<CompanyId>k__BackingField\",\"<CompanyArtwork>k__BackingField\"]}"}]}'
+  userData: '{"typeIsSharedUserData":true,"pairs":[{"key":"AssetVariantData.Main","userData":"{\"parent\":{\"guid\":\"a1d044d8e1ac44cf58a3291ec23ad82e\",\"type\":0,\"localId\":0},\"children\":[],\"overrides\":[\"UniqueId\",\"<CompanyName>k__BackingField\",\"<AttributeSet>k__BackingField\",\"<CardWrapperPrefab>k__BackingField\",\"<CompanyId>k__BackingField\",\"<CompanyArtwork>k__BackingField\",\"<AbilityTriggerDefinitions>k__BackingField.Array.size\",\"<AbilityTriggerDefinitions>k__BackingField.Array.data[0]\"]}"}]}'
   assetBundleName: 
   assetBundleVariant: 

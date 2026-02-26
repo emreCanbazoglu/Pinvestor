@@ -7,6 +7,7 @@ using Pinvestor.DamagableSystem;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using Pinvestor.GameplayAbilitySystem.Abilities;
+using Pinvestor.GameConfigSystem;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Authoring
@@ -62,6 +63,7 @@ namespace Pinvestor.BoardSystem.Authoring
                 out BoardItemPropertySpec_PlacableCompany placableCompanySpec);
 
             placableCompanySpec.OnPlaced -= OnCompanyPlaced;
+            AttributeSystemComponent.ClearBaseValueOverrideResolver();
             
             base.DisposeCore();
         }
@@ -81,6 +83,14 @@ namespace Pinvestor.BoardSystem.Authoring
 
         private void InitializeAttributeSystem()
         {
+            var companyConfigResolver = new CompanyAttributeConfigResolver(
+                GameConfigManager.Instance);
+            var baseValueResolver = new CompanyAttributeBaseValueOverrideResolver(
+                BoardItem.CompanyCardDataSo.CompanyId,
+                companyConfigResolver);
+
+            AttributeSystemComponent.SetBaseValueOverrideResolver(baseValueResolver);
+
             AbilitySystemCharacter.AttributeSystem
                 .Initialize(
                     BoardItem.CompanyCardDataSo.AttributeSet);

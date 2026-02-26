@@ -80,3 +80,8 @@ AssetBundles/*
 .DS_Store
 Assets/GeneratedLocalRepo
 Assets/GeneratedLocalRepo.meta
+
+# Codex local credentials/state (keep prompts and project config tracked)
+.codex/auth*
+.codex/sessions/
+.codex/logs/

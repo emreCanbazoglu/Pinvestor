@@ -4,6 +4,7 @@ using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
+using Pinvestor.GameConfigSystem;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -19,6 +20,7 @@ namespace Pinvestor.Game
         [field: SerializeField] public CompanySelectionPileWrapper CompanySelectionPileWrapper { get; private set; } = null;
         
         [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
+        [SerializeField] private GameConfigManager _gameConfigManager = null;
         
         [SerializeField] private SerializedDeckDataProvider _serializedDeckDataProvider = null;
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
@@ -34,6 +36,8 @@ namespace Pinvestor.Game
         
         private async UniTask InitializeAsync()
         {
+            await TryInitializeGameConfigAsync();
+
             Table = new Table(
                 GetBoardData(),
                 GamePlayer,
@@ -52,6 +56,21 @@ namespace Pinvestor.Game
             Debug.Log("Table initialized");
 
             PlayAsync().Forget();
+        }
+
+        private async UniTask TryInitializeGameConfigAsync()
+        {
+            GameConfigManager gameConfigManager = _gameConfigManager != null
+                ? _gameConfigManager
+                : GameConfigManager.Instance;
+
+            if (gameConfigManager == null)
+            {
+                Debug.LogWarning("GameConfigManager is not present in scene. Skipping GameConfig initialization.");
+                return;
+            }
+
+            await gameConfigManager.InitializeAsync();
         }
         
         private BoardData GetBoardData()

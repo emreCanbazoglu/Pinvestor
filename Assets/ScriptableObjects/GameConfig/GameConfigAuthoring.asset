@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2641cf4bc2dcf4dcf8c64f71a11842a0, type: 3}
+  m_Name: GameConfigAuthoring
+  m_EditorClassIdentifier: 
+  _schemaVersion: 1
+  _companies:
+  - companyId: Cashnado
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 1000
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 200
+    values: []
+  - companyId: CloutHub
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 1000
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 200
+    values: []
+  - companyId: Stack Rabbit
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 1000
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 200
+    values: []
+  _balance: []
+  _roundCriteria: []
+  _ball: []
+  _shop: []
