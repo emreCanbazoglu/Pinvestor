@@ -296,14 +296,16 @@ namespace AttributeSystem.Components
             AttributeDefinition attributeDefinition,
             object modifierObject)
         {
-            if (_baseValueOverrideResolver != null
-                && _baseValueOverrideResolver.TryResolveBaseValue(
-                    this,
-                    attributeDefinition,
-                    modifierObject,
-                    out float overriddenValue))
+            if (_baseValueOverrideResolver != null)
             {
-                return overriddenValue;
+                if (_baseValueOverrideResolver.TryResolveBaseValue(
+                        this,
+                        attributeDefinition,
+                        modifierObject,
+                        out float overriddenValue))
+                {
+                    return overriddenValue;
+                }
             }
 
             float value = attributeDefinition.BaseValueModifier

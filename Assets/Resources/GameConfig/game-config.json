@@ -65,9 +65,29 @@
     "roundCriteria": {
         "values": []
     },
-    "ball": {
-        "values": []
+    "runCycle": {
+        "rounds": [
+            {
+                "roundId": "Round_1",
+                "turnCount": 3,
+                "requiredWorth": 2000.0
+            },
+            {
+                "roundId": "Round_2",
+                "turnCount": 4,
+                "requiredWorth": 6000.0
+            },
+            {
+                "roundId": "Round_3",
+                "turnCount": 5,
+                "requiredWorth": 12000.0
+            }
+        ]
     },
+  "ball": {
+    "shootSpeed": 10.0,
+    "previewLength": 10.0
+  },
     "shop": {
         "values": []
     }

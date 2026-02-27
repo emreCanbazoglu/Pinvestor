@@ -41,6 +41,44 @@ namespace AttributeSystem.Authoring
             return false;
         }
 
+        public bool TryGetAttributeByName(
+            string attributeName,
+            out AttributeScriptableObject attribute)
+        {
+            if (string.IsNullOrWhiteSpace(attributeName))
+                return ReturnNotFound(out attribute);
+
+            for (int i = 0; i < AttributeDefinitions.Length; i++)
+            {
+                AttributeDefinition definition = AttributeDefinitions[i];
+                AttributeScriptableObject candidate = definition?.Attribute;
+                if (candidate == null)
+                    continue;
+
+                if (string.Equals(candidate.Name, attributeName, StringComparison.OrdinalIgnoreCase))
+                    return ReturnFound(candidate, out attribute);
+
+                if (string.Equals(candidate.name, attributeName, StringComparison.OrdinalIgnoreCase))
+                    return ReturnFound(candidate, out attribute);
+            }
+
+            return ReturnNotFound(out attribute);
+        }
+
+        private static bool ReturnFound(
+            AttributeScriptableObject value,
+            out AttributeScriptableObject attribute)
+        {
+            attribute = value;
+            return true;
+        }
+
+        private static bool ReturnNotFound(out AttributeScriptableObject attribute)
+        {
+            attribute = null;
+            return false;
+        }
+
 
         public bool TryGetAttributeValue(
             AttributeScriptableObject attribute,

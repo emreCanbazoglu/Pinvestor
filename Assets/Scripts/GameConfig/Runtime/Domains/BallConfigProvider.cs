@@ -9,7 +9,7 @@ namespace Pinvestor.GameConfigSystem
             _gameConfigManager = gameConfigManager;
         }
 
-        public NamedConfigSectionModel GetConfig()
+        public BallConfigModel GetConfig()
         {
             if (_gameConfigManager == null)
             {

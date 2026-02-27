@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Attribute.Balance
   m_EditorClassIdentifier: 
   UniqueId: 1fbd51a01cb214e1bb9bd314a9ac6d3d
-  Name: Turnly Cost
+  Name: Balance
+  AttributeColor: {r: 1, g: 1, b: 1, a: 1}

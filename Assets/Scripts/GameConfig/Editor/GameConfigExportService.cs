@@ -49,7 +49,12 @@ namespace Pinvestor.GameConfigSystem.Editor
                 },
                 balance = new NamedValueSectionJsonDto { values = ToNamedDtos(asset.Balance) },
                 roundCriteria = new NamedValueSectionJsonDto { values = ToNamedDtos(asset.RoundCriteria) },
-                ball = new NamedValueSectionJsonDto { values = ToNamedDtos(asset.Ball) },
+                runCycle = new RunCycleConfigJsonDto { rounds = ToRunCycleDtos(asset.RunCycleRounds) },
+                ball = new BallConfigJsonDto
+                {
+                    shootSpeed = asset.Ball != null ? asset.Ball.shootSpeed : 10f,
+                    previewLength = asset.Ball != null ? asset.Ball.previewLength : 10f
+                },
                 shop = new NamedValueSectionJsonDto { values = ToNamedDtos(asset.Shop) }
             };
         }
@@ -91,6 +96,26 @@ namespace Pinvestor.GameConfigSystem.Editor
                 {
                     key = source.key ?? string.Empty,
                     value = source.value
+                };
+            }
+
+            return result;
+        }
+
+        private static RoundCycleConfigJsonDto[] ToRunCycleDtos(RoundCycleAuthoringEntry[] rounds)
+        {
+            if (rounds == null || rounds.Length == 0)
+                return Array.Empty<RoundCycleConfigJsonDto>();
+
+            var result = new RoundCycleConfigJsonDto[rounds.Length];
+            for (int i = 0; i < rounds.Length; i++)
+            {
+                RoundCycleAuthoringEntry source = rounds[i] ?? new RoundCycleAuthoringEntry();
+                result[i] = new RoundCycleConfigJsonDto
+                {
+                    roundId = source.roundId ?? string.Empty,
+                    turnCount = source.turnCount,
+                    requiredWorth = source.requiredWorth
                 };
             }
 

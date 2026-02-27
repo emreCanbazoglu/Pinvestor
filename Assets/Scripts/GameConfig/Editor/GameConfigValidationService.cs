@@ -44,7 +44,8 @@ namespace Pinvestor.GameConfigSystem.Editor
 
             ValidateNamedEntries("balance", asset.Balance, errors);
             ValidateNamedEntries("roundCriteria", asset.RoundCriteria, errors);
-            ValidateNamedEntries("ball", asset.Ball, errors);
+            ValidateRunCycle("runCycle", asset.RunCycleRounds, errors);
+            ValidateBallConfig("ball", asset.Ball, errors);
             ValidateNamedEntries("shop", asset.Shop, errors);
 
             return new GameConfigValidationResult(errors);
@@ -75,6 +76,56 @@ namespace Pinvestor.GameConfigSystem.Editor
                 }
             }
         }
+
+        private static void ValidateBallConfig(
+            string sectionName,
+            BallAuthoringConfig ballConfig,
+            List<string> errors)
+        {
+            if (ballConfig == null)
+            {
+                errors.Add($"{sectionName}: config is null.");
+                return;
+            }
+
+            if (ballConfig.shootSpeed <= 0f)
+            {
+                errors.Add($"{sectionName}: shootSpeed must be > 0.");
+            }
+
+            if (ballConfig.previewLength <= 0f)
+            {
+                errors.Add($"{sectionName}: previewLength must be > 0.");
+            }
+        }
+
+        private static void ValidateRunCycle(
+            string sectionName,
+            RoundCycleAuthoringEntry[] rounds,
+            List<string> errors)
+        {
+            var seenRoundIds = new HashSet<string>();
+            foreach (RoundCycleAuthoringEntry round in rounds ?? System.Array.Empty<RoundCycleAuthoringEntry>())
+            {
+                if (round == null)
+                    continue;
+
+                if (string.IsNullOrWhiteSpace(round.roundId))
+                {
+                    errors.Add($"{sectionName}: round has empty roundId.");
+                    continue;
+                }
+
+                if (!seenRoundIds.Add(round.roundId))
+                    errors.Add($"{sectionName}: duplicate roundId '{round.roundId}'.");
+
+                if (round.turnCount < 0)
+                    errors.Add($"{sectionName}:{round.roundId}: turnCount cannot be negative.");
+
+                if (round.requiredWorth < 0f)
+                    errors.Add($"{sectionName}:{round.roundId}: requiredWorth cannot be negative.");
+            }
+        }
     }
 
     public readonly struct GameConfigValidationResult
@@ -98,4 +149,3 @@ namespace Pinvestor.GameConfigSystem.Editor
         }
     }
 }
-

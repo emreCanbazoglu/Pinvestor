@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Pinvestor.GameConfigSystem;
 using UnityEngine;
 
 namespace Pinvestor.Game.BallSystem
@@ -26,6 +27,8 @@ namespace Pinvestor.Game.BallSystem
         private float _coef = 1.0f;
         
         private BallMover _ballMover = null;
+        private BallConfigProvider _ballConfigProvider = null;
+        private bool _ballConfigApplied;
         
         private Ball _currentBall = null;
         
@@ -57,6 +60,8 @@ namespace Pinvestor.Game.BallSystem
 
         public async UniTask ShootBallAsync()
         {
+            TryApplyBallConfig();
+
             _currentBall = CreateBall();
 
             _inputController.OnAimInput += OnAimInput;
@@ -178,6 +183,43 @@ namespace Pinvestor.Game.BallSystem
                 _ballMover, 
                 direction, 
                 _shootSpeed);
+        }
+
+        private void TryApplyBallConfig()
+        {
+            if (_ballConfigApplied)
+            {
+                return;
+            }
+
+            GameConfigManager gameConfigManager = GameConfigManager.Instance;
+            if (gameConfigManager == null || !gameConfigManager.IsInitialized)
+            {
+                return;
+            }
+
+            if (_ballConfigProvider == null)
+            {
+                _ballConfigProvider = new BallConfigProvider(gameConfigManager);
+            }
+
+            BallConfigModel ballConfig = _ballConfigProvider.GetConfig();
+            if (ballConfig == null)
+            {
+                return;
+            }
+
+            if (ballConfig.ShootSpeed > 0f)
+            {
+                _shootSpeed = ballConfig.ShootSpeed;
+            }
+
+            if (ballConfig.PreviewLength > 0f)
+            {
+                _previewLength = ballConfig.PreviewLength;
+            }
+
+            _ballConfigApplied = true;
         }
     }
 }

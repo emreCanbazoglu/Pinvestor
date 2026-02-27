@@ -13,6 +13,8 @@ approves an exception.
 - Wire component references via serialized fields/properties.
 - Prefer prefab-first composition and arrange components in edit mode.
 - Use the existing EventBus system for game events.
+- Keep C# lines short and meaningful for readability.
+- Prefer guard clauses for early exits.
 - Use MEC Coroutines for in-game sequences and gameplay orchestration.
 - Use `UniTask` for async initialization/loading/service operations.
 - Use the existing UI architecture (`VMBase`, `VMCreators`, `WidgetBase`) and UI prefab hierarchy.
@@ -32,6 +34,7 @@ approves an exception.
 - Do not reference `UnityEditor` from runtime code.
 - Do not use `FindObjectOfType` / `FindAnyObjectByType` in production gameplay code.
 - Do not use static mutable state.
+- Do not use braces for single-line conditionals in gameplay/runtime code.
 - Do not use `Update()` unless continuous per-frame behavior is required and justified.
 - Do not use `AddComponent` at runtime for normal game architecture.
 - Do not swallow exceptions or fake success responses.

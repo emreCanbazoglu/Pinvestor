@@ -43,5 +43,15 @@ MonoBehaviour:
     values: []
   _balance: []
   _roundCriteria: []
+  _runCycleRounds:
+  - roundId: Round_1
+    turnCount: 3
+    requiredWorth: 2000
+  - roundId: Round_2
+    turnCount: 4
+    requiredWorth: 6000
+  - roundId: Round_3
+    turnCount: 5
+    requiredWorth: 12000
   _ball: []
   _shop: []

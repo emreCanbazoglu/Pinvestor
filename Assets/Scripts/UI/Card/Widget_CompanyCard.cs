@@ -4,6 +4,7 @@ using AttributeSystem.Components;
 using MMFramework.MMUI;
 using Pinvestor.CardSystem.Authoring;
 using Pinvestor.CompanySystem;
+using Pinvestor.GameConfigSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -162,6 +163,13 @@ namespace Pinvestor.UI
         
         private void SetHPText()
         {
+            if (TryGetCompanyConfig(out CompanyConfigModel companyConfig)
+                && companyConfig.TryGetMaxHP(out float maxHpFromConfig))
+            {
+                MaxHPText = maxHpFromConfig.ToString() + " HP";
+                return;
+            }
+
             if (_companyCardWrapper.CompanyCard.CastedCardDataSo
                 .AttributeSet.TryGetAttributeValue(
                     _maxHPAttribute,
@@ -174,6 +182,14 @@ namespace Pinvestor.UI
         
         private void SetRPHText()
         {
+            if (TryGetCompanyConfig(out CompanyConfigModel companyConfig)
+                && companyConfig.TryGetRevenuePerHit(out float rphFromConfig))
+            {
+                RPHText = rphFromConfig.ToString(
+                    "C0", CultureInfo.GetCultureInfo("en-US")) + " RPH";
+                return;
+            }
+
             if (_companyCardWrapper.CompanyCard.CastedCardDataSo
                 .AttributeSet.TryGetAttributeValue(
                     _rphAttribute,
@@ -223,6 +239,30 @@ namespace Pinvestor.UI
             InfoContainerColor = settings.InfoContainerColor;
             
             CategoryIcon = settings.CategoryIcon;
+        }
+
+        private bool TryGetCompanyConfig(out CompanyConfigModel companyConfig)
+        {
+            companyConfig = null;
+
+            GameConfigManager gameConfigManager = GameConfigManager.Instance;
+            if (gameConfigManager == null || !gameConfigManager.IsInitialized)
+            {
+                return false;
+            }
+
+            if (!gameConfigManager.TryGetService<CompanyConfigService>(out CompanyConfigService companyService))
+            {
+                return false;
+            }
+
+            CompanyIdScriptableObject companyId = _companyCardWrapper.CompanyCard.CastedCardDataSo.CompanyId;
+            if (companyId == null)
+            {
+                return false;
+            }
+
+            return companyService.TryGetCompanyConfig(companyId, out companyConfig);
         }
     }
 }

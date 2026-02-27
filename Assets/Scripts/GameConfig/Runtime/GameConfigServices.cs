@@ -47,6 +47,7 @@ namespace Pinvestor.GameConfigSystem
             registry.Register(new CompanyConfigService(lookup));
             registry.Register(new BalanceConfigService(rootModel.Balance));
             registry.Register(new RoundCriteriaConfigService(rootModel.RoundCriteria));
+            registry.Register(new RunCycleConfigService(rootModel.RunCycle));
             registry.Register(new BallConfigService(rootModel.Ball));
             registry.Register(new ShopConfigService(rootModel.Shop));
 
@@ -88,6 +89,45 @@ namespace Pinvestor.GameConfigSystem
 
             return _lookup.TryGetCompany(companyId, out companyConfig);
         }
+
+        public bool TryGetCompanyMaxHP(
+            CompanyIdScriptableObject companyId,
+            out float value)
+        {
+            value = 0f;
+            if (!TryGetCompanyConfig(companyId, out CompanyConfigModel config))
+            {
+                return false;
+            }
+
+            return config.TryGetMaxHP(out value);
+        }
+
+        public bool TryGetCompanyRevenuePerHit(
+            CompanyIdScriptableObject companyId,
+            out float value)
+        {
+            value = 0f;
+            if (!TryGetCompanyConfig(companyId, out CompanyConfigModel config))
+            {
+                return false;
+            }
+
+            return config.TryGetRevenuePerHit(out value);
+        }
+
+        public bool TryGetCompanyTurnlyCost(
+            CompanyIdScriptableObject companyId,
+            out float value)
+        {
+            value = 0f;
+            if (!TryGetCompanyConfig(companyId, out CompanyConfigModel config))
+            {
+                return false;
+            }
+
+            return config.TryGetTurnlyCost(out value);
+        }
     }
 
     public abstract class NamedSectionConfigServiceBase : IGameConfigService
@@ -116,9 +156,24 @@ namespace Pinvestor.GameConfigSystem
         public RoundCriteriaConfigService(NamedConfigSectionModel config) : base(config) { }
     }
 
-    public sealed class BallConfigService : NamedSectionConfigServiceBase
+    public sealed class BallConfigService : IGameConfigService
     {
-        public BallConfigService(NamedConfigSectionModel config) : base(config) { }
+        public BallConfigModel Config { get; }
+
+        public BallConfigService(BallConfigModel config)
+        {
+            Config = config;
+        }
+    }
+
+    public sealed class RunCycleConfigService : IGameConfigService
+    {
+        public RunCycleConfigModel Config { get; }
+
+        public RunCycleConfigService(RunCycleConfigModel config)
+        {
+            Config = config;
+        }
     }
 
     public sealed class ShopConfigService : NamedSectionConfigServiceBase

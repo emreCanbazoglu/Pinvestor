@@ -12,6 +12,7 @@ namespace Pinvestor.GameConfigSystem.Editor
             Companies,
             Balance,
             RoundCriteria,
+            RunCycle,
             Ball,
             Shop
         }
@@ -80,7 +81,7 @@ namespace Pinvestor.GameConfigSystem.Editor
 
             _selectedTab = (DomainTab)GUILayout.Toolbar(
                 (int)_selectedTab,
-                new[] { "Companies", "Balance", "Round", "Ball", "Shop" });
+                new[] { "Companies", "Balance", "Round", "Run Cycle", "Ball", "Shop" });
 
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Validate"))
@@ -130,6 +131,9 @@ namespace Pinvestor.GameConfigSystem.Editor
                     break;
                 case DomainTab.RoundCriteria:
                     RoundCriteriaConfigDomainEditor.Draw(_serializedObject);
+                    break;
+                case DomainTab.RunCycle:
+                    RunCycleConfigDomainEditor.Draw(_serializedObject);
                     break;
                 case DomainTab.Ball:
                     BallConfigDomainEditor.Draw(_serializedObject);

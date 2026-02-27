@@ -38,12 +38,16 @@ namespace Pinvestor.GameConfigSystem
 
             if (!_companyConfigResolver.TryResolveCompanyConfig(_companyId, out CompanyConfigModel companyConfig))
             {
+                Debug.LogWarning(
+                    $"CompanyAttributeBaseValueOverrideResolver: Could not resolve company config for '{_companyId.CompanyId}'.");
                 return false;
             }
 
             string attributeKey = attributeDefinition.Attribute.UniqueId;
             if (string.IsNullOrWhiteSpace(attributeKey))
             {
+                Debug.LogWarning(
+                    $"CompanyAttributeBaseValueOverrideResolver: Attribute '{attributeDefinition.Attribute.name}' has no UniqueId.");
                 return false;
             }
 
@@ -55,54 +59,17 @@ namespace Pinvestor.GameConfigSystem
             // HP is runtime-backed by MaxHP; if HP is requested and only MaxHP is authored, use MaxHP.
             if (attributeDefinition.Attribute.name == "Attribute.HP")
             {
-                string maxHpKey = FindMaxHpAttributeKey(attributeSystemComponent);
-                if (!string.IsNullOrWhiteSpace(maxHpKey)
-                    && companyConfig.Attributes.TryGetValue(maxHpKey, out value))
+                if (companyConfig.TryGetMaxHP(out value))
                 {
                     return true;
                 }
             }
 
+            Debug.LogWarning(
+                $"CompanyAttributeBaseValueOverrideResolver: Missing config value for company '{_companyId.CompanyId}' " +
+                $"attribute '{attributeDefinition.Attribute.name}' (key='{attributeKey}').");
             return false;
         }
 
-        private static string FindMaxHpAttributeKey(AttributeSystemComponent attributeSystemComponent)
-        {
-            if (attributeSystemComponent == null)
-            {
-                return null;
-            }
-
-            AttributeSetScriptableObject attributeSet = GetAttributeSet(attributeSystemComponent);
-            if (attributeSet == null || attributeSet.AttributeDefinitions == null)
-            {
-                return null;
-            }
-
-            for (int i = 0; i < attributeSet.AttributeDefinitions.Length; i++)
-            {
-                AttributeDefinition def = attributeSet.AttributeDefinitions[i];
-                if (def == null || def.Attribute == null)
-                {
-                    continue;
-                }
-
-                if (def.Attribute.name != "Attribute.MaxHP")
-                {
-                    continue;
-                }
-
-                return def.Attribute.UniqueId;
-            }
-
-            return null;
-        }
-
-        private static AttributeSetScriptableObject GetAttributeSet(AttributeSystemComponent attributeSystemComponent)
-        {
-            return attributeSystemComponent != null
-                ? attributeSystemComponent.AttributeSet
-                : null;
-        }
     }
 }

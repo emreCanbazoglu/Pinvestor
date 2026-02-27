@@ -6,8 +6,14 @@ namespace Pinvestor.GameConfigSystem.Editor
     {
         public static void Draw(SerializedObject serializedObject)
         {
-            DomainEditorUtil.DrawArray(serializedObject, "_ball", "Ball Values");
+            SerializedProperty prop = serializedObject.FindProperty("_ball");
+            if (prop == null)
+            {
+                EditorGUILayout.HelpBox("Ball config property not found.", MessageType.Warning);
+                return;
+            }
+
+            EditorGUILayout.PropertyField(prop, new UnityEngine.GUIContent("Ball Config"), true);
         }
     }
 }
-

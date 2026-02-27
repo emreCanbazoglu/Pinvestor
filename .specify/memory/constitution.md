@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 -> 1.1.0
+- Version change: 1.1.0 -> 1.1.1
 - Modified principles:
   - I. Spec-First for Non-Trivial Changes (clarified config/data implications)
   - III. Runtime-Editor Separation and Deterministic Gameplay (expanded architecture constraints)
@@ -93,6 +93,8 @@ verification.
   not domain-logic owners. When integrating new subsystems/services, prefer extending via
   subservices/adapters/registries instead of adding system-specific behavior directly into manager
   classes.
+- C# readability style for gameplay/runtime code: prefer short, meaningful lines and guard clauses.
+  Single-line conditionals SHOULD omit braces when the body is one statement.
 
 ## Workflow & Quality Gates
 
@@ -112,4 +114,4 @@ engineering guides. Versioning follows semantic versioning: MAJOR for incompatib
 changes, MINOR for new principles/sections or materially stronger requirements, PATCH for
 clarifications only. Constitution compliance is checked during planning and code review.
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-26 | **Last Amended**: 2026-02-26
+**Version**: 1.1.1 | **Ratified**: 2026-02-26 | **Last Amended**: 2026-02-27
