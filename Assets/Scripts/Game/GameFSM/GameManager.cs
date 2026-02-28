@@ -7,7 +7,6 @@ using Pinvestor.CardSystem.Authoring;
 using Pinvestor.GameConfigSystem;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
-using UnityEngine.Serialization;
 using System.Collections.Generic;
 
 namespace Pinvestor.Game

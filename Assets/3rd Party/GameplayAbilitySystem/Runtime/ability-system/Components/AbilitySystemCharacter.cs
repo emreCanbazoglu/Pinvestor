@@ -37,6 +37,7 @@ namespace AbilitySystem
         private bool _castableAbilitiesGranted = false;
 
         private bool _isInitialised = false;
+        private bool _nonPeriodicModifierCompositionDirty = false;
         
         private uint _gameplayEffectGUID = 0;
         private uint _maxGameplayEffectGUID = 9999;
@@ -111,7 +112,11 @@ namespace AbilitySystem
         public bool RemoveGameplayEffectSpecFromSelf(
             GameplayEffectContainer geContainer)
         {
-            return AppliedGameplayEffects.Remove(geContainer);
+            bool removed = AppliedGameplayEffects.Remove(geContainer);
+            if (removed && geContainer?.Spec?.GameplayEffect.Period.IsPeriodic == false)
+                _nonPeriodicModifierCompositionDirty = true;
+            
+            return removed;
         }
         
         public GameplayEffectSpec MakeOutgoingSpec(
@@ -260,12 +265,24 @@ namespace AbilitySystem
             GrantedTags.AddRange(spec.GameplayEffect.gameplayEffectTags.GrantedTags);
             OnGameplayEffectApplied?.Invoke(geContainer);
 
+            if (!spec.GameplayEffect.Period.IsPeriodic)
+                _nonPeriodicModifierCompositionDirty = true;
+
             return geContainer;
         }
 
-        private void UpdateAttributeSystem()
+        private void RecomposeNonPeriodicModifiersIfDirty()
         {
-            // Set Current Value to Base Value (default position if there are no GE affecting that atribute)
+            if (!_nonPeriodicModifierCompositionDirty)
+                return;
+
+            AttributeSystem.ResetAttributeModifiers();
+            ApplyActiveNonPeriodicModifiers();
+            _nonPeriodicModifierCompositionDirty = false;
+        }
+
+        private void ApplyActiveNonPeriodicModifiers()
+        {
             for (var i = 0; i < this.AppliedGameplayEffects.Count; i++)
             {
                 if(this.AppliedGameplayEffects[i].Spec.GameplayEffect.Period.IsPeriodic)
@@ -303,6 +320,8 @@ namespace AbilitySystem
 
         private void CleanGameplayEffects()
         {
+            bool removedNonPeriodicEffect = false;
+
             for (int iGE = AppliedGameplayEffects.Count - 1; iGE >= 0; iGE--)
             {
                 var geContainer = AppliedGameplayEffects[iGE];
@@ -315,8 +334,14 @@ namespace AbilitySystem
                         GrantedTags.Remove(gameplayTag);
 
                     OnGameplayEffectRemoved?.Invoke(geContainer);
+
+                    if (!geContainer.Spec.GameplayEffect.Period.IsPeriodic)
+                        removedNonPeriodicEffect = true;
                 }
             }
+
+            if (removedNonPeriodicEffect)
+                _nonPeriodicModifierCompositionDirty = true;
         }
         
         private void ActivateInitialisationAbilities()
@@ -358,9 +383,7 @@ namespace AbilitySystem
         
         private void Update()
         {
-            // Reset all attributes to 0
-            AttributeSystem.ResetAttributeModifiers();
-            UpdateAttributeSystem();
+            RecomposeNonPeriodicModifiersIfDirty();
 
             TickGameplayEffects();
             CleanGameplayEffects();
@@ -517,6 +540,7 @@ namespace AbilitySystem
         {
             AppliedGameplayEffects.Clear();
             GrantedTags.Clear();
+            _nonPeriodicModifierCompositionDirty = true;
         }
         public void ResetResetable()
         {

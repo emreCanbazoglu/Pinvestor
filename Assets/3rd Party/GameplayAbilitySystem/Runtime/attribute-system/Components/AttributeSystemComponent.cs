@@ -24,6 +24,28 @@ namespace AttributeSystem.Components
         IComponentProvider<AttributeSystemComponent>,
         IResetable
     {
+        public enum EAttributeRecalculationMode
+        {
+            LegacyEveryLateUpdate = 0,
+            DirtyOnDemand = 1,
+        }
+
+        public readonly struct AttributeValueChangedEvent
+        {
+            public AttributeValue PreviousValue { get; }
+            public AttributeValue CurrentValue { get; }
+
+            public AttributeScriptableObject Attribute => CurrentValue.Attribute;
+
+            public AttributeValueChangedEvent(
+                AttributeValue previousValue,
+                AttributeValue currentValue)
+            {
+                PreviousValue = previousValue;
+                CurrentValue = currentValue;
+            }
+        }
+
         [SerializeField] private AbstractAttributeEventHandler[] _attributeSystemEvents
             = Array.Empty<AbstractAttributeEventHandler>();
 
@@ -40,6 +62,8 @@ namespace AttributeSystem.Components
             = new List<AttributeValue>();
         
         [SerializeField] private bool _initializeOnAwake = true;
+        [SerializeField] private EAttributeRecalculationMode _recalculationMode
+            = EAttributeRecalculationMode.LegacyEveryLateUpdate;
 
         private bool _attributeDictStale;
         public Dictionary<AttributeScriptableObject, int> AttributeIndexCache { get; private set; } 
@@ -47,6 +71,14 @@ namespace AttributeSystem.Components
         
         private bool _isInitialized = false;
         private IAttributeBaseValueOverrideResolver _baseValueOverrideResolver;
+        
+        public event Action<AttributeValueChangedEvent> OnAttributeValueUpdated;
+        public event Action<IReadOnlyList<AttributeValueChangedEvent>> OnAttributeValuesUpdated;
+        
+        private readonly List<AttributeValueChangedEvent> _attributeValueChangeEvents
+            = new List<AttributeValueChangedEvent>();
+        
+        private bool _recalculationDirty;
 
         /// <summary>
         /// Marks attribute cache dirty, so it can be recreated next time it is required
@@ -66,6 +98,8 @@ namespace AttributeSystem.Components
         /// <returns>True if attribute was found, false otherwise.</returns>
         public bool TryGetAttributeValue(AttributeScriptableObject attribute, out AttributeValue value, object modifierObject = null)
         {
+            RecalculateIfNeeded();
+
             // If dictionary is stale, rebuild it
             var attributeCache = GetAttributeCache();
 
@@ -109,9 +143,13 @@ namespace AttributeSystem.Components
             var attributeCache = GetAttributeCache();
             if (!attributeCache.TryGetValue(attribute, out var index)) return;
             var attributeValue = _attributeValues[index];
+            float previousBaseValue = attributeValue.BaseValue;
             attributeValue.BaseValue = value;
             _attributeValues[index] = attributeValue;
-            
+
+            if (!Mathf.Approximately(previousBaseValue, attributeValue.BaseValue))
+                MarkRecalculationDirty();
+
             UpdateAttributeCurrentValue(attribute);
         }
 
@@ -158,10 +196,14 @@ namespace AttributeSystem.Components
             {
                 // Get a copy of the attribute value struct
                 value = _attributeValues[index];
-                value.Modifier = value.Modifier.Combine(modifier);
+                AttributeModifier previousModifier = value.Modifier;
+                AttributeModifier combinedModifier = previousModifier.Combine(modifier);
+                value.Modifier = combinedModifier;
 
                 // Structs are copied by value, so the modified attribute needs to be reassigned to the array
                 _attributeValues[index] = value;
+                if (IsModifierChanged(previousModifier, combinedModifier))
+                    MarkRecalculationDirty();
                 return true;
             }
 
@@ -187,6 +229,8 @@ namespace AttributeSystem.Components
                 _attributeDefinitions.Add(attributeDefinitions[i]);
                 attributeCache.Add(attributeDefinitions[i].Attribute, _attributeDefinitions.Count - 1);
             }
+
+            MarkRecalculationDirty();
         }
 
         /// <summary>
@@ -207,6 +251,7 @@ namespace AttributeSystem.Components
             
             // Update attribute cache
             GetAttributeCache();
+            MarkRecalculationDirty();
         }
 
         public void ResetAll()
@@ -217,6 +262,8 @@ namespace AttributeSystem.Components
                 defaultAttribute.Attribute = _attributeValues[i].Attribute;
                 _attributeValues[i] = defaultAttribute;
             }
+
+            MarkRecalculationDirty();
         }
 
         public void ResetAttributeModifiers()
@@ -224,8 +271,12 @@ namespace AttributeSystem.Components
             for (var i = 0; i < _attributeValues.Count; i++)
             {
                 var attributeValue = _attributeValues[i];
+                AttributeModifier previousModifier = attributeValue.Modifier;
                 attributeValue.Modifier = default;
                 _attributeValues[i] = attributeValue;
+
+                if (IsModifierChanged(previousModifier, attributeValue.Modifier))
+                    MarkRecalculationDirty();
             }
         }
 
@@ -340,6 +391,9 @@ namespace AttributeSystem.Components
                     _prevAttributeValues, 
                     ref _attributeValues);
             }
+
+            EmitAttributeValueChangedEvents(_prevAttributeValues, _attributeValues);
+            _recalculationDirty = false;
         }
 
         public void UpdateAttributeCurrentValue(AttributeScriptableObject attribute)
@@ -347,16 +401,14 @@ namespace AttributeSystem.Components
             List<AttributeValue> prevAttributeValues
                 = new List<AttributeValue>();
 
-            AttributeValue attributeValue = default;
-
             for (var i = 0; i < _attributeValues.Count; i++)
             {
-                prevAttributeValues.Add(attributeValue);
+                prevAttributeValues.Add(_attributeValues[i]);
 
                 if (attribute != _attributeValues[i].Attribute)
                     continue;
                 
-                attributeValue = _attributeValues[i];
+                AttributeValue attributeValue = _attributeValues[i];
                 _attributeValues[i] 
                     = attributeValue.Attribute
                         .CalculateCurrentAttributeValue(
@@ -371,9 +423,12 @@ namespace AttributeSystem.Components
             {
                 _attributeSystemEvents[i].PreAttributeChange(
                     this, 
-                    _prevAttributeValues, 
+                    prevAttributeValues, 
                     ref _attributeValues);
             }
+
+            EmitAttributeValueChangedEvents(prevAttributeValues, _attributeValues);
+            _recalculationDirty = false;
         }
 
         private void UpdateAttributeCurrentValue(int index)
@@ -383,6 +438,9 @@ namespace AttributeSystem.Components
                     $"Index {index} is out of range.  " +
                     $"AttributeValues has {_attributeValues.Count} elements.");
             
+            List<AttributeValue> prevAttributeValues
+                = new List<AttributeValue>(_attributeValues);
+
             AttributeValue attributeValue = _attributeValues[index];
             
             _attributeValues[index] 
@@ -396,9 +454,12 @@ namespace AttributeSystem.Components
             {
                 _attributeSystemEvents[i].PreAttributeChange(
                     this, 
-                    _prevAttributeValues, 
+                    prevAttributeValues, 
                     ref _attributeValues);
             }
+
+            EmitAttributeValueChangedEvents(prevAttributeValues, _attributeValues);
+            _recalculationDirty = false;
         }
 
         private Dictionary<AttributeScriptableObject, int> GetAttributeCache()
@@ -459,8 +520,13 @@ namespace AttributeSystem.Components
 
         private void LateUpdate()
         {
+            if (_recalculationMode == EAttributeRecalculationMode.LegacyEveryLateUpdate)
+            {
+                UpdateAttributeCurrentValues();
+                return;
+            }
 
-            UpdateAttributeCurrentValues();
+            RecalculateIfNeeded();
         }
 
         public void ResetResetable()
@@ -473,6 +539,11 @@ namespace AttributeSystem.Components
         public AttributeSystemComponent GetComponent()
         {
             return this;
+        }
+
+        public void RequestRecalculation()
+        {
+            MarkRecalculationDirty();
         }
 
         #region Attribute Value Comparision
@@ -580,5 +651,66 @@ namespace AttributeSystem.Components
         }
 
         #endregion 
+
+        private void EmitAttributeValueChangedEvents(
+            List<AttributeValue> previousValues,
+            List<AttributeValue> currentValues)
+        {
+            _attributeValueChangeEvents.Clear();
+
+            int count = Mathf.Min(previousValues.Count, currentValues.Count);
+            for (int i = 0; i < count; i++)
+            {
+                AttributeValue previousValue = previousValues[i];
+                AttributeValue currentValue = currentValues[i];
+
+                if (!HasAttributeValueChanged(previousValue, currentValue))
+                    continue;
+
+                var changedEvent = new AttributeValueChangedEvent(previousValue, currentValue);
+                _attributeValueChangeEvents.Add(changedEvent);
+                OnAttributeValueUpdated?.Invoke(changedEvent);
+            }
+
+            if (_attributeValueChangeEvents.Count > 0)
+                OnAttributeValuesUpdated?.Invoke(_attributeValueChangeEvents);
+        }
+
+        private static bool HasAttributeValueChanged(
+            AttributeValue previousValue,
+            AttributeValue currentValue)
+        {
+            return !ReferenceEquals(previousValue.Attribute, currentValue.Attribute)
+                   || !Mathf.Approximately(previousValue.BaseValue, currentValue.BaseValue)
+                   || !Mathf.Approximately(previousValue.CurrentValue, currentValue.CurrentValue)
+                   || !Mathf.Approximately(previousValue.Modifier.Add, currentValue.Modifier.Add)
+                   || !Mathf.Approximately(previousValue.Modifier.Multiply, currentValue.Modifier.Multiply)
+                   || !Mathf.Approximately(previousValue.Modifier.Override, currentValue.Modifier.Override);
+        }
+
+        private static bool IsModifierChanged(
+            AttributeModifier previousModifier,
+            AttributeModifier currentModifier)
+        {
+            return !Mathf.Approximately(previousModifier.Add, currentModifier.Add)
+                   || !Mathf.Approximately(previousModifier.Multiply, currentModifier.Multiply)
+                   || !Mathf.Approximately(previousModifier.Override, currentModifier.Override);
+        }
+
+        private void MarkRecalculationDirty()
+        {
+            _recalculationDirty = true;
+        }
+
+        private void RecalculateIfNeeded()
+        {
+            if (_recalculationMode != EAttributeRecalculationMode.DirtyOnDemand)
+                return;
+
+            if (!_recalculationDirty)
+                return;
+
+            UpdateAttributeCurrentValues();
+        }
     }
 }
