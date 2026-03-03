@@ -1,7 +1,14 @@
 using Cysharp.Threading.Tasks;
+using AttributeSystem.Authoring;
+using AttributeSystem.Components;
+using Pinvestor.BoardSystem;
+using Pinvestor.BoardSystem.Authoring;
+using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Pinvestor.Game
 {
@@ -18,6 +25,11 @@ namespace Pinvestor.Game
     {
         public CardPlayer Player { get; private set; }
         public BallShooter BallShooter { get; private set; }
+        public Board Board { get; private set; }
+
+        private const string BalanceAttributeName = "Balance";
+        private const string TurnlyCostAttributeName = "TurnlyCost";
+        private const string HpAttributeName = "HP";
         
         private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
         
@@ -25,10 +37,12 @@ namespace Pinvestor.Game
         
         public Turn(
             CardPlayer player,
-            BallShooter ballShooter)
+            BallShooter ballShooter,
+            Board board)
         {
             Player = player;
             BallShooter = ballShooter;
+            Board = board;
         }
         
         public async UniTask StartAsync()
@@ -84,8 +98,145 @@ namespace Pinvestor.Game
             int turnIndex)
         {
             LogPhase(ETurnPhase.Resolution, roundIndex, turnIndex);
-            // Placeholder for end-of-turn resolution logic (cost deduction, collapse checks, events).
+            EventBus<TurnResolutionStartedEvent>.Raise(
+                new TurnResolutionStartedEvent(roundIndex, turnIndex));
+
+            float totalTurnlyCost = ApplyTurnlyCosts();
+            int collapsedCompanyCount = RemoveCollapsedCompanies();
+            EventBus<TurnResolutionCompletedEvent>.Raise(
+                new TurnResolutionCompletedEvent(
+                    roundIndex,
+                    turnIndex,
+                    totalTurnlyCost,
+                    collapsedCompanyCount));
+
+            Debug.Log(
+                $"Resolution Summary: totalTurnlyCost={totalTurnlyCost}, collapsedCompanies={collapsedCompanyCount}");
+
             return UniTask.CompletedTask;
+        }
+
+        private float ApplyTurnlyCosts()
+        {
+            if (Board == null)
+                return 0f;
+
+            float totalCost = 0f;
+            List<BoardItem_Company> companies = CollectCompanyBoardItems();
+            for (int i = 0; i < companies.Count; i++)
+            {
+                if (TryGetTurnlyCost(companies[i], out float companyTurnlyCost))
+                    totalCost += companyTurnlyCost;
+            }
+
+            if (totalCost <= 0f)
+                return 0f;
+
+            if (!TryGetPlayerBalance(out AttributeSystemComponent playerAttributeSystem, out AttributeScriptableObject balanceAttribute))
+                return 0f;
+
+            playerAttributeSystem.ModifyBaseValue(
+                balanceAttribute,
+                new AttributeModifier { Add = -totalCost },
+                out _);
+
+            return totalCost;
+        }
+
+        private int RemoveCollapsedCompanies()
+        {
+            if (Board == null)
+                return 0;
+
+            int collapsedCount = 0;
+            List<BoardItem_Company> companies = CollectCompanyBoardItems();
+            for (int i = 0; i < companies.Count; i++)
+            {
+                BoardItem_Company companyBoardItem = companies[i];
+                if (!IsCollapsed(companyBoardItem))
+                    continue;
+
+                if (!companyBoardItem.TryGetPropertySpec(out BoardItemPropertySpec_Destroyable destroyableSpec))
+                    continue;
+
+                if (destroyableSpec.IsDestroying)
+                    continue;
+
+                destroyableSpec.Destroy(null);
+                collapsedCount++;
+            }
+
+            return collapsedCount;
+        }
+
+        private List<BoardItem_Company> CollectCompanyBoardItems()
+        {
+            if (Board == null)
+                return new List<BoardItem_Company>();
+
+            return Board.BoardItems
+                .OfType<BoardItem_Company>()
+                .ToList();
+        }
+
+        private bool TryGetTurnlyCost(
+            BoardItem_Company companyBoardItem,
+            out float turnlyCost)
+        {
+            turnlyCost = 0f;
+
+            BoardItemWrapper_Company wrapper = companyBoardItem?.Wrapper as BoardItemWrapper_Company;
+            if (wrapper == null || wrapper.AttributeSystemComponent == null)
+                return false;
+
+            AttributeSystemComponent attributeSystem = wrapper.AttributeSystemComponent;
+            if (!attributeSystem.AttributeSet.TryGetAttributeByName(
+                    TurnlyCostAttributeName,
+                    out AttributeScriptableObject turnlyCostAttribute))
+                return false;
+
+            if (!attributeSystem.TryGetAttributeValue(turnlyCostAttribute, out AttributeValue turnlyCostValue))
+                return false;
+
+            turnlyCost = turnlyCostValue.CurrentValue;
+            return true;
+        }
+
+        private bool IsCollapsed(BoardItem_Company companyBoardItem)
+        {
+            BoardItemWrapper_Company wrapper = companyBoardItem?.Wrapper as BoardItemWrapper_Company;
+            if (wrapper == null || wrapper.AttributeSystemComponent == null)
+                return false;
+
+            AttributeSystemComponent attributeSystem = wrapper.AttributeSystemComponent;
+            if (!attributeSystem.AttributeSet.TryGetAttributeByName(
+                    HpAttributeName,
+                    out AttributeScriptableObject hpAttribute))
+                return false;
+
+            if (!attributeSystem.TryGetAttributeValue(hpAttribute, out AttributeValue hpValue))
+                return false;
+
+            return hpValue.CurrentValue <= 0f;
+        }
+
+        private bool TryGetPlayerBalance(
+            out AttributeSystemComponent attributeSystem,
+            out AttributeScriptableObject balanceAttribute)
+        {
+            attributeSystem = null;
+            balanceAttribute = null;
+
+            if (Player == null || Player.AbilitySystemCharacter == null)
+                return false;
+
+            attributeSystem = Player.AbilitySystemCharacter.AttributeSystem;
+            if (attributeSystem == null || attributeSystem.AttributeSet == null)
+                return false;
+
+            return attributeSystem.AttributeSet.TryGetAttributeByName(
+                BalanceAttributeName,
+                out balanceAttribute);
         }
 
         private async UniTask ChooseCompanyCard()

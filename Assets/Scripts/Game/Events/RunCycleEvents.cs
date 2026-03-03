@@ -48,6 +48,40 @@ namespace Pinvestor.Game
         }
     }
 
+    public sealed class TurnResolutionStartedEvent : IEvent
+    {
+        public int RoundIndex { get; }
+        public int TurnIndex { get; }
+
+        public TurnResolutionStartedEvent(
+            int roundIndex,
+            int turnIndex)
+        {
+            RoundIndex = roundIndex;
+            TurnIndex = turnIndex;
+        }
+    }
+
+    public sealed class TurnResolutionCompletedEvent : IEvent
+    {
+        public int RoundIndex { get; }
+        public int TurnIndex { get; }
+        public float TotalTurnlyCost { get; }
+        public int CollapsedCompanyCount { get; }
+
+        public TurnResolutionCompletedEvent(
+            int roundIndex,
+            int turnIndex,
+            float totalTurnlyCost,
+            int collapsedCompanyCount)
+        {
+            RoundIndex = roundIndex;
+            TurnIndex = turnIndex;
+            TotalTurnlyCost = totalTurnlyCost;
+            CollapsedCompanyCount = collapsedCompanyCount;
+        }
+    }
+
     public sealed class RoundCompletedEvent : IEvent
     {
         public int RoundIndex { get; }

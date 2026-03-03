@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Element Designer"
+  short_description: "Design absurd, rule-bending Pinvestor elements"
+  default_prompt: "Use $game-element-designer to design an absurd-comedy Pinvestor element with full ecosystem synergy and balance analysis."

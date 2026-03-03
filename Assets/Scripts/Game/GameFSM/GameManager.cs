@@ -21,7 +21,6 @@ namespace Pinvestor.Game
         
         [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
         [SerializeField] private GameConfigManager _gameConfigManager = null;
-        [SerializeField] private RunCycleSettings _runCycleSettings = null;
         
         [SerializeField] private SerializedDeckDataProvider _serializedDeckDataProvider = null;
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
@@ -83,15 +82,14 @@ namespace Pinvestor.Game
         {
             Debug.Log("Playing...");
 
-            RoundCycleSettings[] configuredRounds = GetConfiguredRunCycleRounds();
-            if (configuredRounds != null && configuredRounds.Length > 0)
+            if (TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds))
             {
-                await PlayConfiguredRunAsync(configuredRounds);
+                await PlayConfiguredRunAsync(rounds);
                 Debug.Log("Configured run cycle completed.");
             }
             else
             {
-                Debug.LogWarning("No configured rounds found for run cycle. Skipping run cycle execution.");
+                Debug.LogWarning("Run cycle config is missing or empty in GameConfig. Skipping run cycle execution.");
             }
         }
 
@@ -99,7 +97,8 @@ namespace Pinvestor.Game
         {
             RoundContext context = new RoundContext(
                 Table.GamePlayer.CardPlayer,
-                BallShooter);
+                BallShooter,
+                Table.Board);
 
             IReadOnlyList<IRoundPhase> phases = BuildRoundPhases();
             bool allEvaluatedRoundsPassed = true;
@@ -136,17 +135,6 @@ namespace Pinvestor.Game
                     allEvaluatedRoundsPassed,
                     completedRoundCount,
                     totalRoundCount));
-        }
-
-        private RoundCycleSettings[] GetConfiguredRunCycleRounds()
-        {
-            if (TryGetRunCycleFromGameConfig(out RoundCycleSettings[] configRounds))
-                return configRounds;
-
-            if (_runCycleSettings == null || _runCycleSettings.Rounds == null)
-                return Array.Empty<RoundCycleSettings>();
-
-            return _runCycleSettings.Rounds;
         }
 
         private bool TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds)

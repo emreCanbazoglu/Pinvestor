@@ -13,6 +13,39 @@ namespace AbilitySystem
 {
     public class AbilitySystemCharacter : MonoBehaviour, IResetable
     {
+        public readonly struct AppliedModifierInfo
+        {
+            public uint GameplayEffectGuid { get; }
+            public int ModifierIndex { get; }
+            public GameplayEffectSpec Spec { get; }
+            public AttributeScriptableObject Attribute { get; }
+            public AttributeModifier Modifier { get; }
+            public bool IsPeriodic { get; }
+            public EDurationPolicy DurationPolicy { get; }
+            public float DurationRemaining { get; }
+            public float TotalDuration { get; }
+
+            public AppliedModifierInfo(
+                uint gameplayEffectGuid,
+                int modifierIndex,
+                GameplayEffectSpec spec,
+                AttributeScriptableObject attribute,
+                AttributeModifier modifier)
+            {
+                GameplayEffectGuid = gameplayEffectGuid;
+                ModifierIndex = modifierIndex;
+                Spec = spec;
+                Attribute = attribute;
+                Modifier = modifier;
+                IsPeriodic = spec != null && spec.GameplayEffect.Period.IsPeriodic;
+                DurationPolicy = spec != null
+                    ? spec.GameplayEffect.gameplayEffect.DurationPolicy
+                    : EDurationPolicy.Instant;
+                DurationRemaining = spec != null ? spec.DurationRemaining : 0f;
+                TotalDuration = spec != null ? spec.TotalDuration : 0f;
+            }
+        }
+
         [field: SerializeField] public AttributeSystemComponent AttributeSystem { get; set; }
 
         [SerializeField] private AbstractAbilityScriptableObject[] _castableAbilities
@@ -60,6 +93,43 @@ namespace AbilitySystem
         {
             GrantedAbilities.Remove(spec);
             OnRemovedAbility?.Invoke(spec);
+        }
+
+        public List<AppliedModifierInfo> GetAppliedModifierInfos()
+        {
+            var infos = new List<AppliedModifierInfo>();
+            FillAppliedModifierInfos(infos);
+            return infos;
+        }
+
+        public void FillAppliedModifierInfos(List<AppliedModifierInfo> infos)
+        {
+            if (infos == null)
+                throw new ArgumentNullException(nameof(infos));
+
+            infos.Clear();
+
+            for (int effectIndex = 0; effectIndex < AppliedGameplayEffects.Count; effectIndex++)
+            {
+                GameplayEffectContainer container = AppliedGameplayEffects[effectIndex];
+                if (container == null || container.Modifiers == null || container.Spec == null)
+                    continue;
+
+                for (int modifierIndex = 0; modifierIndex < container.Modifiers.Length; modifierIndex++)
+                {
+                    GameplayEffectContainer.ModifierContainer modifierContainer = container.Modifiers[modifierIndex];
+                    if (modifierContainer == null)
+                        continue;
+
+                    infos.Add(
+                        new AppliedModifierInfo(
+                            container.Guid,
+                            modifierIndex,
+                            container.Spec,
+                            modifierContainer.Attribute,
+                            modifierContainer.Modifier));
+                }
+            }
         }
 
         public void RemoveAbilitiesWithTag(GameplayTagScriptableObject tag)

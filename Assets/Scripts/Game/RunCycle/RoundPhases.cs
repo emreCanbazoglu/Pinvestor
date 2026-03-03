@@ -10,7 +10,10 @@ namespace Pinvestor.Game
             RoundContext context,
             RoundRuntimeState runtimeState)
         {
-            Turn turn = new Turn(context.CardPlayer, context.BallShooter);
+            Turn turn = new Turn(
+                context.CardPlayer,
+                context.BallShooter,
+                context.Board);
             return turn.ExecuteCoreTurnAsync(runtimeState.RoundIndex, runtimeState.TurnIndex);
         }
     }
@@ -28,4 +31,3 @@ namespace Pinvestor.Game
         }
     }
 }
-

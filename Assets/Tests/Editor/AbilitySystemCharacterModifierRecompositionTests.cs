@@ -113,6 +113,37 @@ public class AbilitySystemCharacterModifierRecompositionTests
         AssertCurrentValue(character.AttributeSystem, attribute, 100f);
     }
 
+    [Test]
+    public void GetAppliedModifierInfos_IncludesPeriodicAndNonPeriodicEffects()
+    {
+        AbilitySystemCharacter character = CreateCharacterWithSingleAttribute(100f, out AttributeScriptableObject attribute);
+        GameplayEffectScriptableObject nonPeriodicEffect = CreateDurationalEffect(
+            attribute,
+            EDurationPolicy.Infinite,
+            periodIsPeriodic: false,
+            modifierOperator: EAttributeModifier.Add,
+            modifierMagnitude: 7f,
+            durationMagnitude: 1f);
+        GameplayEffectScriptableObject periodicEffect = CreateDurationalEffect(
+            attribute,
+            EDurationPolicy.Infinite,
+            periodIsPeriodic: true,
+            modifierOperator: EAttributeModifier.Add,
+            modifierMagnitude: 3f,
+            durationMagnitude: 1f);
+
+        character.ApplyGameplayEffectSpecToSelf(
+            GameplayEffectSpec.CreateNew(nonPeriodicEffect, character, null, 1f));
+        character.ApplyGameplayEffectSpecToSelf(
+            GameplayEffectSpec.CreateNew(periodicEffect, character, null, 1f));
+
+        List<AbilitySystemCharacter.AppliedModifierInfo> infos = character.GetAppliedModifierInfos();
+
+        Assert.That(infos.Count, Is.EqualTo(2));
+        Assert.That(infos.Exists(i => !i.IsPeriodic && Mathf.Approximately(i.Modifier.Add, 7f)), Is.True);
+        Assert.That(infos.Exists(i => i.IsPeriodic && Mathf.Approximately(i.Modifier.Add, 3f)), Is.True);
+    }
+
     private AbilitySystemCharacter CreateCharacterWithSingleAttribute(
         float baseValue,
         out AttributeScriptableObject attribute)

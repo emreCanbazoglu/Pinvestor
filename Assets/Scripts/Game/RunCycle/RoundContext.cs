@@ -1,5 +1,6 @@
 using AttributeSystem.Authoring;
 using AttributeSystem.Components;
+using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
 
@@ -11,13 +12,16 @@ namespace Pinvestor.Game
 
         public CardPlayer CardPlayer { get; }
         public BallShooter BallShooter { get; }
+        public Board Board { get; }
 
         public RoundContext(
             CardPlayer cardPlayer,
-            BallShooter ballShooter)
+            BallShooter ballShooter,
+            Board board)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
+            Board = board;
         }
 
         public bool TryGetCurrentNetWorth(out float netWorth)

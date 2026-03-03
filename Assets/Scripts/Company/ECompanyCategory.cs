@@ -3,7 +3,9 @@ namespace Pinvestor.CompanySystem
     public enum ECompanyCategory
     {
         None = 0,
-        Entertainment = 1,
-        TechToys = 2
+        SocialMedia = 1,
+        ConsumerTech = 2,
+        FinTech = 3,
+        EnterpriseTech = 4
     }
 }
