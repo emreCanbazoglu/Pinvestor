@@ -95,6 +95,11 @@ namespace Pinvestor.Game
             }
 
             // Initialize PlayerEconomyState (must be in the scene as a singleton MonoBehaviour).
+            // Scene setup: add a PlayerEconomyState component to any persistent GameObject in the
+            // game scene before GameManager.Awake() runs. Without it, economy will not function:
+            // EconomyService.ApplyResolution() will log a warning and skip every turn, and
+            // TryGetCurrentNetWorth() will fall back to the CardPlayer Balance attribute
+            // (which does NOT include revenue calculated by EconomyService).
             if (PlayerEconomyState.Instance != null)
             {
                 PlayerEconomyState.Instance.Initialize(initialCapital);
@@ -102,8 +107,10 @@ namespace Pinvestor.Game
             else
             {
                 Debug.LogError(
-                    "[GameManager] PlayerEconomyState singleton not found in scene. " +
-                    "Economy features will be inactive.");
+                    "[GameManager] PlayerEconomyState singleton not found in the scene. " +
+                    "Economy will not function: net worth will not update, win/loss evaluation " +
+                    "will read the CardPlayer Balance attribute instead of EconomyService state. " +
+                    "Fix: add a PlayerEconomyState MonoBehaviour to a GameObject in the game scene.");
             }
 
             // Build run-level economy services.
