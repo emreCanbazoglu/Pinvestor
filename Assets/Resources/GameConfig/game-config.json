@@ -294,7 +294,9 @@
         ]
     },
     "balance": {
-        "values": []
+        "values": [
+            { "key": "initialCapital", "value": 500.0 }
+        ]
     },
     "roundCriteria": {
         "values": []
