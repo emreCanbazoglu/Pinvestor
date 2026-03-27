@@ -13,7 +13,9 @@ namespace Pinvestor.Game
             Turn turn = new Turn(
                 context.CardPlayer,
                 context.BallShooter,
-                context.Board);
+                context.Board,
+                context.RevenueAccumulator,
+                context.EconomyService);
             return turn.ExecuteCoreTurnAsync(runtimeState.RoundIndex, runtimeState.TurnIndex);
         }
     }

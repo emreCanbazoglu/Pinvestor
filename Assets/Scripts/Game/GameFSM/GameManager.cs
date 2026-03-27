@@ -6,6 +6,7 @@ using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
 using Pinvestor.GameConfigSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Economy;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -21,14 +22,21 @@ namespace Pinvestor.Game
         
         [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
         [SerializeField] private GameConfigManager _gameConfigManager = null;
-        
+
         [SerializeField] private SerializedDeckDataProvider _serializedDeckDataProvider = null;
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
-        [SerializeField] private CellLayerInfoSO[] _cellLayerInfoColl 
+        [SerializeField] private CellLayerInfoSO[] _cellLayerInfoColl
             = Array.Empty<CellLayerInfoSO>();
-        
+
         public Table Table { get; private set; }
-        
+
+        private TurnRevenueAccumulator _revenueAccumulator;
+        private EconomyService _economyService;
+        private EventBinding<RunOutcomeEvent> _runOutcomeEventBinding;
+
+        private const string InitialCapitalConfigKey = "initialCapital";
+        private const float DefaultInitialCapital = 500f;
+
         private void Awake()
         {
             InitializeAsync().Forget();
@@ -43,19 +51,96 @@ namespace Pinvestor.Game
                 GamePlayer,
                 _serializedDeckDataProvider,
                 _cellLayerInfoColl);
-            
+
             await Table.WaitUntilInitialized();
-            
+
             BoardWrapper.WrapBoard(Table.Board);
             CompanySelectionPileWrapper.WrapPile(
                 Table.GamePlayer.CardPlayer.Deck
                     .TryGetDeckPile(EDeckPile.CompanySelection, out var pile)
                     ? pile as CompanySelectionPile
                     : null);
-            
+
             Debug.Log("Table initialized");
 
+            InitializeEconomy();
+
             PlayAsync().Forget();
+        }
+
+        private void InitializeEconomy()
+        {
+            // Read initialCapital from the balance section of GameConfig.
+            float initialCapital = DefaultInitialCapital;
+            GameConfigManager configManager = _gameConfigManager != null
+                ? _gameConfigManager
+                : GameConfigManager.Instance;
+
+            if (configManager != null && configManager.IsInitialized
+                && configManager.TryGetService(out BalanceConfigService balanceService))
+            {
+                if (!balanceService.TryGetValue(InitialCapitalConfigKey, out initialCapital))
+                {
+                    Debug.LogWarning(
+                        $"[GameManager] '{InitialCapitalConfigKey}' key not found in balance config. " +
+                        $"Using default: {DefaultInitialCapital}");
+                    initialCapital = DefaultInitialCapital;
+                }
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "[GameManager] GameConfig not available for economy initialization. " +
+                    $"Using default initialCapital={DefaultInitialCapital}");
+            }
+
+            // Initialize PlayerEconomyState (must be in the scene as a singleton MonoBehaviour).
+            if (PlayerEconomyState.Instance != null)
+            {
+                PlayerEconomyState.Instance.Initialize(initialCapital);
+            }
+            else
+            {
+                Debug.LogError(
+                    "[GameManager] PlayerEconomyState singleton not found in scene. " +
+                    "Economy features will be inactive.");
+            }
+
+            // Build run-level economy services.
+            _revenueAccumulator = new TurnRevenueAccumulator();
+            _economyService = new EconomyService(
+                _revenueAccumulator,
+                configManager);
+
+            // Subscribe to run outcome event.
+            _runOutcomeEventBinding = new EventBinding<RunOutcomeEvent>(OnRunOutcome);
+            EventBus<RunOutcomeEvent>.Register(_runOutcomeEventBinding);
+
+            Debug.Log($"[GameManager] Economy initialized: initialCapital={initialCapital}");
+        }
+
+        private void OnRunOutcome(RunOutcomeEvent e)
+        {
+            string outcome = e.IsWin ? "WIN" : "LOSS";
+            Debug.Log(
+                $"[GameManager] Run outcome: {outcome} | " +
+                $"finalNetWorth={e.FinalNetWorth} | targetNetWorth={e.TargetNetWorth}");
+
+            // Deregister to avoid repeated handling if the event fires more than once.
+            if (_runOutcomeEventBinding != null)
+            {
+                EventBus<RunOutcomeEvent>.Deregister(_runOutcomeEventBinding);
+                _runOutcomeEventBinding = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_runOutcomeEventBinding != null)
+            {
+                EventBus<RunOutcomeEvent>.Deregister(_runOutcomeEventBinding);
+                _runOutcomeEventBinding = null;
+            }
         }
 
         private async UniTask TryInitializeGameConfigAsync()
@@ -98,7 +183,9 @@ namespace Pinvestor.Game
             RoundContext context = new RoundContext(
                 Table.GamePlayer.CardPlayer,
                 BallShooter,
-                Table.Board);
+                Table.Board,
+                _revenueAccumulator,
+                _economyService);
 
             IReadOnlyList<IRoundPhase> phases = BuildRoundPhases();
             bool allEvaluatedRoundsPassed = true;
@@ -108,8 +195,9 @@ namespace Pinvestor.Game
             for (int roundIndex = 0; roundIndex < totalRoundCount; roundIndex++)
             {
                 RoundCycleSettings round = rounds[roundIndex];
+                bool isFinalRound = (roundIndex == totalRoundCount - 1);
                 Round roundRunner = new Round(roundIndex, round, phases);
-                RoundExecutionResult result = await roundRunner.ExecuteAsync(context);
+                RoundExecutionResult result = await roundRunner.ExecuteAsync(context, isFinalRound);
                 completedRoundCount++;
                 if (result.WasRequirementEvaluated)
                 {

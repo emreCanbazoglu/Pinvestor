@@ -24,6 +24,13 @@ namespace Pinvestor.Game
 
         public async UniTask<RoundExecutionResult> ExecuteAsync(RoundContext context)
         {
+            return await ExecuteAsync(context, isFinalRound: false);
+        }
+
+        public async UniTask<RoundExecutionResult> ExecuteAsync(
+            RoundContext context,
+            bool isFinalRound)
+        {
             if (Settings == null)
                 return RoundExecutionResult.Skipped(RoundIndex, "Round settings is null.");
 
@@ -54,6 +61,18 @@ namespace Pinvestor.Game
             Debug.Log(
                 $"Round End: {Settings.RoundId} (index={RoundIndex + 1}, requirementEvaluated={result.WasRequirementEvaluated}, passed={result.PassedRequirement})");
             EventBus<RoundCompletedEvent>.Raise(new RoundCompletedEvent(result));
+
+            // Emit run outcome on the final round so GameManager can react and stop the run.
+            if (isFinalRound && result.WasRequirementEvaluated)
+            {
+                bool isWin = result.PassedRequirement;
+                Debug.Log(
+                    $"[Round] Final round outcome: isWin={isWin}, " +
+                    $"finalNetWorth={result.CurrentWorth}, targetWorth={result.RequiredWorth}");
+                EventBus<RunOutcomeEvent>.Raise(
+                    new RunOutcomeEvent(isWin, result.CurrentWorth, result.RequiredWorth));
+            }
+
             return result;
         }
 

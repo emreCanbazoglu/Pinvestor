@@ -3,6 +3,7 @@ using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Economy;
 
 namespace Pinvestor.Game
 {
@@ -13,15 +14,35 @@ namespace Pinvestor.Game
         public CardPlayer CardPlayer { get; }
         public BallShooter BallShooter { get; }
         public Board Board { get; }
+        public TurnRevenueAccumulator RevenueAccumulator { get; }
+        public EconomyService EconomyService { get; }
 
+        /// <summary>
+        /// Constructor without economy wiring (backward-compatible).
+        /// </summary>
         public RoundContext(
             CardPlayer cardPlayer,
             BallShooter ballShooter,
             Board board)
+            : this(cardPlayer, ballShooter, board, null, null)
+        {
+        }
+
+        /// <summary>
+        /// Constructor with economy wiring.
+        /// </summary>
+        public RoundContext(
+            CardPlayer cardPlayer,
+            BallShooter ballShooter,
+            Board board,
+            TurnRevenueAccumulator revenueAccumulator,
+            EconomyService economyService)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
             Board = board;
+            RevenueAccumulator = revenueAccumulator;
+            EconomyService = economyService;
         }
 
         public bool TryGetCurrentNetWorth(out float netWorth)
