@@ -18,4 +18,5 @@ MonoBehaviour:
   <CompanyId>k__BackingField: {fileID: 11400000, guid: 3c13e58d1cdd42dab0cf1812998a7d52, type: 2}
   <CompanyArtwork>k__BackingField: {fileID: 0}
   <AttributeSet>k__BackingField: {fileID: 11400000, guid: f3306b97064c54849bb920db8960293a, type: 2}
-  <AbilityTriggerDefinitions>k__BackingField: []
+  <AbilityTriggerDefinitions>k__BackingField:
+  - {fileID: 11400000, guid: a7d5e21e416e49aebf66e131161435c5, type: 2}

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655d820694d34583a3adf229ab1f48d7, type: 3}
+  m_Name: Ability.Company.MoodFridgeCloud.FullHpAura
+  m_EditorClassIdentifier: 
+  AbilityId: 4b0d012e948447fda9edcc29381c3821
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: While at full HP, adjacent companies ignore first op-cost deduction each round
+  <OpCostShieldEffect>k__BackingField: {fileID: 11400000, guid: 36ecddf1ab6e4b18ada063895d4fff73, type: 2}
