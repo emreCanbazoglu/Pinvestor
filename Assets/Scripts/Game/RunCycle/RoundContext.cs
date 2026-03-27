@@ -46,27 +46,14 @@ namespace Pinvestor.Game
         }
 
         /// <summary>
-        /// Returns the player's current net worth for win/loss evaluation.
-        /// Reads from PlayerEconomyState (the single source of truth written by EconomyService).
-        /// Falls back to the CardPlayer Balance attribute only when PlayerEconomyState is not
-        /// present in the scene — this preserves backward compatibility in non-economy scenes
-        /// but will not reflect revenue or op-costs calculated by EconomyService.
+        /// Returns the player's current net worth by reading the GAS Balance attribute directly.
+        /// This is the single source of truth — revenue is credited via EconomyService (GAS
+        /// ModifyBaseValue), and op-costs are deducted via Turn.ApplyTurnlyCosts() (also GAS).
         /// </summary>
         public bool TryGetCurrentNetWorth(out float netWorth)
         {
             netWorth = 0f;
 
-            // Primary path: PlayerEconomyState is the single source of truth.
-            // EconomyService.ApplyResolution() writes here each turn; reading here ensures
-            // EvaluateRequirement() and RunOutcomeEvent see the same economy the service computed.
-            if (PlayerEconomyState.Instance != null && PlayerEconomyState.Instance.IsInitialized)
-            {
-                netWorth = PlayerEconomyState.Instance.NetWorth;
-                return true;
-            }
-
-            // Fallback: no economy state in scene — read the legacy CardPlayer Balance attribute.
-            // This path is only hit in scenes that have not added PlayerEconomyState to the scene.
             if (CardPlayer == null || CardPlayer.AbilitySystemCharacter == null)
                 return false;
 

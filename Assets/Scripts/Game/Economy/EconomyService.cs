@@ -1,92 +1,79 @@
-using System.Collections.Generic;
-using Pinvestor.BoardSystem.Authoring;
-using Pinvestor.BoardSystem.Base;
-using Pinvestor.GameConfigSystem;
-using System.Linq;
+using AttributeSystem.Authoring;
+using AttributeSystem.Components;
+using Pinvestor.CardSystem;
 using UnityEngine;
 
 namespace Pinvestor.Game.Economy
 {
     /// <summary>
-    /// Applies turn resolution math: credits accumulated revenue, deducts per-company
-    /// operational costs, and writes the delta to PlayerEconomyState.
-    /// Op-costs come exclusively from GameConfigManager company config.
+    /// Credits accumulated turn revenue to the CardPlayer's Balance attribute via GAS.
+    /// Op-cost deduction is handled exclusively by Turn.ApplyTurnlyCosts() — do not
+    /// deduct op-costs here.
     /// </summary>
     public sealed class EconomyService
     {
         private readonly TurnRevenueAccumulator _accumulator;
-        private readonly GameConfigManager _gameConfigManager;
 
-        public EconomyService(
-            TurnRevenueAccumulator accumulator,
-            GameConfigManager gameConfigManager)
+        private const string BalanceAttributeName = "Balance";
+
+        public EconomyService(TurnRevenueAccumulator accumulator)
         {
             _accumulator = accumulator;
-            _gameConfigManager = gameConfigManager;
         }
 
         /// <summary>
-        /// Credits turn revenue and deducts op-costs for each placed company.
-        /// Writes the net delta to PlayerEconomyState.
-        /// Called from Turn.RunResolutionPhase().
+        /// Credits accumulated turn revenue to the CardPlayer's GAS Balance attribute.
+        /// Called from Turn.RunResolutionPhase() after the Launch Phase.
+        /// Op-costs are NOT deducted here — ApplyTurnlyCosts() in Turn.cs handles that.
         /// </summary>
-        public void ApplyResolution(IEnumerable<BoardItem_Company> placedCompanies)
+        public void ApplyResolution(CardPlayer cardPlayer)
         {
-            if (PlayerEconomyState.Instance == null || !PlayerEconomyState.Instance.IsInitialized)
+            if (cardPlayer == null || cardPlayer.AbilitySystemCharacter == null)
             {
-                Debug.LogWarning("[EconomyService] PlayerEconomyState not initialized. Skipping resolution.");
+                Debug.LogWarning("[EconomyService] CardPlayer or AbilitySystemCharacter is null. Skipping revenue credit.");
+                return;
+            }
+
+            AttributeSystemComponent attributeSystem
+                = cardPlayer.AbilitySystemCharacter.AttributeSystem;
+            if (attributeSystem == null || attributeSystem.AttributeSet == null)
+            {
+                Debug.LogWarning("[EconomyService] AttributeSystemComponent or AttributeSet is null. Skipping revenue credit.");
+                return;
+            }
+
+            if (!attributeSystem.AttributeSet.TryGetAttributeByName(
+                    BalanceAttributeName,
+                    out AttributeScriptableObject balanceAttribute))
+            {
+                Debug.LogWarning($"[EconomyService] Balance attribute '{BalanceAttributeName}' not found. Skipping revenue credit.");
                 return;
             }
 
             float totalRevenue = _accumulator.GetTotalTurnRevenue();
-            float totalOpCost = CalculateTotalOpCost(placedCompanies);
 
-            float worthBefore = PlayerEconomyState.Instance.NetWorth;
+            if (!attributeSystem.TryGetAttributeValue(balanceAttribute, out AttributeValue balanceBefore))
+            {
+                Debug.LogWarning("[EconomyService] Could not read Balance attribute value. Skipping revenue credit.");
+                return;
+            }
+
+            float worthBefore = balanceBefore.CurrentValue;
+
+            if (totalRevenue > 0f)
+            {
+                attributeSystem.ModifyBaseValue(
+                    balanceAttribute,
+                    new AttributeModifier { Add = totalRevenue },
+                    out _);
+            }
+
+            attributeSystem.TryGetAttributeValue(balanceAttribute, out AttributeValue balanceAfter);
+            float worthAfter = balanceAfter.CurrentValue;
 
             Debug.Log(
-                $"[EconomyService] Resolution: " +
-                $"netWorthBefore={worthBefore}, " +
-                $"turnRevenue={totalRevenue}, " +
-                $"totalOpCost={totalOpCost}, " +
-                $"netWorthAfter={worthBefore + totalRevenue - totalOpCost}");
-
-            PlayerEconomyState.Instance.ApplyResolutionDelta(totalRevenue, totalOpCost);
-        }
-
-        private float CalculateTotalOpCost(IEnumerable<BoardItem_Company> placedCompanies)
-        {
-            if (placedCompanies == null)
-                return 0f;
-
-            if (_gameConfigManager == null || !_gameConfigManager.IsInitialized)
-            {
-                Debug.LogWarning(
-                    "[EconomyService] GameConfigManager not available. Op-costs will be 0.");
-                return 0f;
-            }
-
-            if (!_gameConfigManager.TryGetService(out CompanyConfigService companyConfigService))
-            {
-                Debug.LogWarning(
-                    "[EconomyService] CompanyConfigService unavailable. Op-costs will be 0.");
-                return 0f;
-            }
-
-            float total = 0f;
-            foreach (BoardItem_Company company in placedCompanies)
-            {
-                if (company?.CompanyCardDataSo?.CompanyId == null)
-                    continue;
-
-                if (!companyConfigService.TryGetCompanyTurnlyCost(
-                        company.CompanyCardDataSo.CompanyId,
-                        out float opCost))
-                    continue;
-
-                total += opCost;
-            }
-
-            return total;
+                $"[EconomyService] Revenue credited: turnRevenue={totalRevenue}, " +
+                $"balance {worthBefore} → {worthAfter}");
         }
     }
 }

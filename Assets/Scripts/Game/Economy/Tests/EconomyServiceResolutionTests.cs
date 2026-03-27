@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using NUnit.Framework;
-using Pinvestor.BoardSystem.Base;
 using Pinvestor.Game.Economy;
 using Pinvestor.RevenueGeneratorSystem.Core;
 using UnityEngine;
@@ -8,16 +6,20 @@ using UnityEngine;
 namespace Pinvestor.Game.Economy.Tests
 {
     /// <summary>
-    /// EditMode tests for EconomyService.ApplyResolution():
-    /// net worth delta must equal accumulated revenue minus total op-costs.
+    /// EditMode tests for EconomyService.ApplyResolution().
     ///
-    /// These tests use a null GameConfigManager (op-costs from config = 0) so that
-    /// the net-worth delta equals revenue only. Tests for op-cost deduction are covered
-    /// in WinLossConditionTests where the full economy state is exercised.
+    /// EconomyService credits revenue via GAS AttributeSystemComponent.ModifyBaseValue().
+    /// Full GAS integration (CardPlayer with AttributeSystemComponent + AttributeSet SO)
+    /// requires Unity play mode — see T017 manual smoke test.
+    ///
+    /// These tests verify:
+    ///   - Null-guard: ApplyResolution(null) logs a warning and does not throw.
+    ///   - Accumulator integration: GetTotalTurnRevenue() returns the correct total that
+    ///     EconomyService would pass to the Balance attribute.
+    ///   - Accumulator reset isolation: revenue does not leak across turns.
     /// </summary>
     public class EconomyServiceResolutionTests
     {
-        private PlayerEconomyState _economyState;
         private TurnRevenueAccumulator _accumulator;
         private EconomyService _economyService;
         private RevenueGenerator _generatorA;
@@ -25,14 +27,8 @@ namespace Pinvestor.Game.Economy.Tests
         [SetUp]
         public void SetUp()
         {
-            // PlayerEconomyState is a MonoBehaviour singleton — create in scene.
-            var go = new GameObject("PlayerEconomyState");
-            _economyState = go.AddComponent<PlayerEconomyState>();
-
             _accumulator = new TurnRevenueAccumulator();
-
-            // EconomyService with null GameConfigManager — op-costs will be 0.
-            _economyService = new EconomyService(_accumulator, null);
+            _economyService = new EconomyService(_accumulator);
 
             _generatorA = new GameObject("GeneratorA").AddComponent<RevenueGenerator>();
         }
@@ -42,100 +38,79 @@ namespace Pinvestor.Game.Economy.Tests
         {
             _accumulator.Reset();
 
-            if (_economyState != null)
-                Object.DestroyImmediate(_economyState.gameObject);
             if (_generatorA != null)
                 Object.DestroyImmediate(_generatorA.gameObject);
         }
 
+        // ── Null-guard ────────────────────────────────────────────────────────
+
         [Test]
-        public void ApplyResolution_NoHitsNoOpCosts_NetWorthUnchanged()
+        public void ApplyResolution_NullCardPlayer_DoesNotThrow()
         {
-            _economyState.Initialize(1000f);
+            // Should log a warning and return — must not throw.
+            Assert.DoesNotThrow(() =>
+                _economyService.ApplyResolution(null));
+        }
 
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
+        // ── Accumulator state (revenue that EconomyService would credit) ──────
 
-            Assert.AreEqual(1000f, _economyState.NetWorth, 0.001f);
+        [Test]
+        public void Accumulator_NoHits_TotalRevenueIsZero()
+        {
+            // No hits fired — accumulator should report 0.
+            Assert.AreEqual(0f, _accumulator.GetTotalTurnRevenue(), 0.001f);
         }
 
         [Test]
-        public void ApplyResolution_WithRevenue_IncrementsNetWorth()
+        public void Accumulator_SingleHit_TotalRevenueMatchesHitAmount()
         {
-            _economyState.Initialize(1000f);
-
             _accumulator.Subscribe(_generatorA);
             SimulateHit(_generatorA, 150f);
             _accumulator.UnsubscribeAll();
 
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
-
-            // 1000 + 150 = 1150 (op-cost = 0 because no config)
-            Assert.AreEqual(1150f, _economyState.NetWorth, 0.001f);
+            // EconomyService will read this total and credit it to Balance.
+            Assert.AreEqual(150f, _accumulator.GetTotalTurnRevenue(), 0.001f);
         }
 
         [Test]
-        public void ApplyResolution_LastTurnRevenue_MatchesAccumulated()
+        public void Accumulator_MultipleHits_TotalRevenueSumsAll()
         {
-            _economyState.Initialize(500f);
-
             _accumulator.Subscribe(_generatorA);
             SimulateHit(_generatorA, 80f);
             SimulateHit(_generatorA, 20f);
             _accumulator.UnsubscribeAll();
 
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
-
-            Assert.AreEqual(100f, _economyState.LastTurnRevenue, 0.001f);
+            Assert.AreEqual(100f, _accumulator.GetTotalTurnRevenue(), 0.001f);
         }
 
         [Test]
-        public void ApplyResolution_NetWorthDeltaEqualsRevenueMinusOpCost()
+        public void Accumulator_AfterReset_TotalRevenueIsZero()
         {
-            // With null config, op-cost = 0, so delta = revenue.
-            _economyState.Initialize(2000f);
-            float expectedRevenue = 300f;
-
             _accumulator.Subscribe(_generatorA);
-            SimulateHit(_generatorA, expectedRevenue);
+            SimulateHit(_generatorA, 300f);
             _accumulator.UnsubscribeAll();
 
-            float worthBefore = _economyState.NetWorth;
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
-            float worthAfter = _economyState.NetWorth;
+            // Reset simulates turn boundary — next turn starts clean.
+            _accumulator.Reset();
 
-            float actualDelta = worthAfter - worthBefore;
-            // delta = revenue (300) - opCost (0) = 300
-            Assert.AreEqual(expectedRevenue, actualDelta, 0.001f);
+            Assert.AreEqual(0f, _accumulator.GetTotalTurnRevenue(), 0.001f);
         }
 
         [Test]
-        public void ApplyResolution_WhenNotInitialized_DoesNotThrow()
+        public void Accumulator_CrossTurnIsolation_RevenueDoesNotLeak()
         {
-            // PlayerEconomyState not initialized — service should log warning and return.
-            Assert.DoesNotThrow(() =>
-                _economyService.ApplyResolution(new List<BoardItem_Company>()));
-        }
-
-        [Test]
-        public void ApplyResolution_MultipleCallsPerTurn_AccumulatesCorrectly()
-        {
-            _economyState.Initialize(1000f);
-
             // Turn 1
             _accumulator.Subscribe(_generatorA);
             SimulateHit(_generatorA, 200f);
             _accumulator.UnsubscribeAll();
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
 
-            // Turn 2
+            // Turn 2 — reset clears previous turn's totals
             _accumulator.Reset();
             _accumulator.Subscribe(_generatorA);
-            SimulateHit(_generatorA, 150f);
-            _accumulator.UnsubscribeAll();
-            _economyService.ApplyResolution(new List<BoardItem_Company>());
+            SimulateHit(_generatorA, 50f);
 
-            // 1000 + 200 + 150 = 1350
-            Assert.AreEqual(1350f, _economyState.NetWorth, 0.001f);
+            // Only turn 2's revenue should be visible
+            Assert.AreEqual(50f, _accumulator.GetTotalTurnRevenue(), 0.001f);
         }
 
         // ── Helpers ───────────────────────────────────────────────────────────

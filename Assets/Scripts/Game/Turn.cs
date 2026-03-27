@@ -131,12 +131,9 @@ namespace Pinvestor.Game
             EventBus<TurnResolutionStartedEvent>.Raise(
                 new TurnResolutionStartedEvent(roundIndex, turnIndex));
 
-            // Economy: credit turn revenue and deduct op-costs via EconomyService.
-            if (_economyService != null)
-            {
-                List<BoardItem_Company> companies = CollectCompanyBoardItems();
-                _economyService.ApplyResolution(companies);
-            }
+            // Economy: credit turn revenue to the CardPlayer's Balance attribute via EconomyService.
+            // Op-costs are handled separately by ApplyTurnlyCosts() below — do not pass companies here.
+            _economyService?.ApplyResolution(Player);
 
             float totalTurnlyCost = ApplyTurnlyCosts();
             int collapsedCompanyCount = RemoveCollapsedCompanies();

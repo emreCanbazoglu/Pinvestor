@@ -1,4 +1,6 @@
 using System;
+using AttributeSystem.Authoring;
+using AttributeSystem.Components;
 using Cysharp.Threading.Tasks;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
@@ -16,10 +18,10 @@ namespace Pinvestor.Game
     {
         [field: SerializeField] public GameFSM GameFsm { get; private set; } = null;
         [field: SerializeField] public BoardWrapper BoardWrapper { get; private set; } = null;
-        
+
         [field: SerializeField] public BallShooter BallShooter { get; private set; } = null;
         [field: SerializeField] public CompanySelectionPileWrapper CompanySelectionPileWrapper { get; private set; } = null;
-        
+
         [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
         [SerializeField] private GameConfigManager _gameConfigManager = null;
 
@@ -34,6 +36,7 @@ namespace Pinvestor.Game
         private EconomyService _economyService;
         private EventBinding<RunOutcomeEvent> _runOutcomeEventBinding;
 
+        private const string BalanceAttributeName = "Balance";
         private const string InitialCapitalConfigKey = "initialCapital";
         private const float DefaultInitialCapital = 500f;
 
@@ -41,7 +44,7 @@ namespace Pinvestor.Game
         {
             InitializeAsync().Forget();
         }
-        
+
         private async UniTask InitializeAsync()
         {
             await TryInitializeGameConfigAsync();
@@ -94,36 +97,55 @@ namespace Pinvestor.Game
                     $"Using default initialCapital={DefaultInitialCapital}");
             }
 
-            // Initialize PlayerEconomyState (must be in the scene as a singleton MonoBehaviour).
-            // Scene setup: add a PlayerEconomyState component to any persistent GameObject in the
-            // game scene before GameManager.Awake() runs. Without it, economy will not function:
-            // EconomyService.ApplyResolution() will log a warning and skip every turn, and
-            // TryGetCurrentNetWorth() will fall back to the CardPlayer Balance attribute
-            // (which does NOT include revenue calculated by EconomyService).
-            if (PlayerEconomyState.Instance != null)
-            {
-                PlayerEconomyState.Instance.Initialize(initialCapital);
-            }
-            else
-            {
-                Debug.LogError(
-                    "[GameManager] PlayerEconomyState singleton not found in the scene. " +
-                    "Economy will not function: net worth will not update, win/loss evaluation " +
-                    "will read the CardPlayer Balance attribute instead of EconomyService state. " +
-                    "Fix: add a PlayerEconomyState MonoBehaviour to a GameObject in the game scene.");
-            }
+            // Initialize the CardPlayer's Balance attribute to initialCapital.
+            // This is the GAS single source of truth for net worth — no parallel economy state.
+            InitializeBalanceAttribute(Table.GamePlayer.CardPlayer, initialCapital);
 
             // Build run-level economy services.
             _revenueAccumulator = new TurnRevenueAccumulator();
-            _economyService = new EconomyService(
-                _revenueAccumulator,
-                configManager);
+            _economyService = new EconomyService(_revenueAccumulator);
 
             // Subscribe to run outcome event.
             _runOutcomeEventBinding = new EventBinding<RunOutcomeEvent>(OnRunOutcome);
             EventBus<RunOutcomeEvent>.Register(_runOutcomeEventBinding);
 
             Debug.Log($"[GameManager] Economy initialized: initialCapital={initialCapital}");
+        }
+
+        private static void InitializeBalanceAttribute(CardPlayer cardPlayer, float initialCapital)
+        {
+            if (cardPlayer == null || cardPlayer.AbilitySystemCharacter == null)
+            {
+                Debug.LogWarning(
+                    "[GameManager] CardPlayer or AbilitySystemCharacter is null. " +
+                    "Cannot initialize Balance attribute.");
+                return;
+            }
+
+            AttributeSystemComponent attributeSystem
+                = cardPlayer.AbilitySystemCharacter.AttributeSystem;
+            if (attributeSystem == null || attributeSystem.AttributeSet == null)
+            {
+                Debug.LogWarning(
+                    "[GameManager] AttributeSystemComponent or AttributeSet is null. " +
+                    "Cannot initialize Balance attribute.");
+                return;
+            }
+
+            if (!attributeSystem.AttributeSet.TryGetAttributeByName(
+                    BalanceAttributeName,
+                    out AttributeScriptableObject balanceAttribute))
+            {
+                Debug.LogWarning(
+                    $"[GameManager] Balance attribute '{BalanceAttributeName}' not found. " +
+                    "Cannot initialize Balance attribute.");
+                return;
+            }
+
+            attributeSystem.SetAttributeBaseValue(balanceAttribute, initialCapital);
+
+            Debug.Log(
+                $"[GameManager] Balance attribute initialized to {initialCapital}");
         }
 
         private void OnRunOutcome(RunOutcomeEvent e)
@@ -164,7 +186,7 @@ namespace Pinvestor.Game
 
             await gameConfigManager.InitializeAsync();
         }
-        
+
         private BoardData GetBoardData()
         {
             return new BoardData(_boardSize);
