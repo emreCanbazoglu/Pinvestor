@@ -1,4 +1,3 @@
-using System;
 using MMFramework.MMUI;
 using Pinvestor.Game.Offer;
 using Pinvestor.GameConfigSystem;
