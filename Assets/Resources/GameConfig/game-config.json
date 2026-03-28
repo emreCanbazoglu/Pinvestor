@@ -295,7 +295,11 @@
     },
     "balance": {
         "values": [
-            { "key": "initialCapital", "value": 500.0 }
+            { "key": "initialCapital", "value": 500.0 },
+            {
+                "key": "cashout_rate",
+                "value": 0.5
+            }
         ]
     },
     "roundCriteria": {

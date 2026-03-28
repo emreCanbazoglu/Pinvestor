@@ -1,3 +1,16 @@
+Status: MERGED
+PR: #1
+Merged: 2026-03-28
+Merge commit: 7488b0210fc073cab98c354d9997540de5904178
+
+Deferred to spec-006:
+- (none)
+
+Post-merge notes:
+- PlayerEconomyState.cs was created then removed — economy state uses CardPlayer Balance attribute (GAS) as single source of truth
+- EconomyService.ApplyResolution() credits revenue via attributeSystem.ModifyBaseValue()
+- GameManager.InitializeBalanceAttribute() sets initial capital from GameConfig
+
 # Tasks: Economy & Resolution Phase
 
 **Input**: `specs/004-economy-resolution/spec.md`, `plan.md`

@@ -5,6 +5,8 @@ using Pinvestor.CompanySystem;
 using Pinvestor.DamagableSystem;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Economy;
+using Pinvestor.Game.Health;
 using Pinvestor.GameplayAbilitySystem.Abilities;
 using Pinvestor.GameConfigSystem;
 using Pinvestor.RevenueGeneratorSystem.Core;
@@ -25,6 +27,13 @@ namespace Pinvestor.BoardSystem.Authoring
         [field: SerializeField] public RevenueGenerator RevenueGenerator { get; private set; } = null;
 
         public Company Company { get; private set; }
+
+        /// <summary>Per-instance health state. Initialized in WrapCore from GameConfig MaxHP.</summary>
+        public CompanyHealthState HealthState { get; private set; }
+
+        /// <summary>Per-instance valuation model. Initialized in WrapCore from GameConfig.</summary>
+        public CompanyValuationModel ValuationModel { get; private set; }
+
 
         private Transform _slotTransform;
 
@@ -47,6 +56,8 @@ namespace Pinvestor.BoardSystem.Authoring
             InitializeAttributeSystem();
 
             CreateCompany();
+
+            InitializeHealthAndValuation();
 
             string companyId = BoardItem.CompanyData.RefCardId;
             gameObject.name = "BoardItemWrapper_" + companyId;
@@ -120,6 +131,50 @@ namespace Pinvestor.BoardSystem.Authoring
             Company.transform.localPosition = Vector3.zero;
         }
 
+        /// <summary>
+        /// Creates per-instance CompanyHealthState and CompanyValuationModel from GameConfig.
+        /// Called during WrapCore so models are ready before OnEnable subscribes listeners.
+        /// </summary>
+        private void InitializeHealthAndValuation()
+        {
+            float maxHp = 1f;
+            float purchaseCost = 0f;
+            float cashoutRate = CompanyValuationModel.DefaultCashoutRate;
+
+            if (GameConfigManager.Instance != null && GameConfigManager.Instance.IsInitialized)
+            {
+                string companyId = BoardItem.CompanyData.RefCardId;
+
+                if (GameConfigManager.Instance.TryGetService(out CompanyConfigService companyConfigService))
+                {
+                    companyConfigService.TryGetCompanyMaxHP(
+                        companyId,
+                        out maxHp);
+
+                    // Purchase cost: use TurnlyCost as a proxy until a dedicated cost field is added.
+                    // TODO(spec-004): replace with actual purchase cost field when spec 004 merges.
+                    if (companyConfigService.TryGetCompanyConfig(
+                            companyId,
+                            out var companyConfig))
+                    {
+                        if (companyConfig.TryGetTurnlyCost(out float turnlyCost))
+                            purchaseCost = turnlyCost;
+                    }
+                }
+
+                if (GameConfigManager.Instance.TryGetService(out BalanceConfigService balanceService))
+                {
+                    balanceService.TryGetValue(
+                        CompanyValuationModel.CashoutRateKey,
+                        out cashoutRate);
+                }
+            }
+
+            HealthState = new CompanyHealthState(maxHp);
+            ValuationModel = new CompanyValuationModel(purchaseCost, cashoutRate);
+        }
+
+
         public void SetSlotTransform(Transform slotTransform)
         {
             _slotTransform = slotTransform;
@@ -160,12 +215,17 @@ namespace Pinvestor.BoardSystem.Authoring
             AbilitySystemCharacter other,
             DamageInfo damageInfo)
         {
+            // Cancel all abilities immediately so no further revenue or effects fire.
             AbilitySystemCharacter.CancelAllAbilities();
 
-            BoardItem.TryGetPropertySpec(
-                out BoardItemPropertySpec_Destroyable destroyableSpec);
+            // Mark the runtime health model as pending collapse.
+            // Actual board removal and CompanyCollapsedEvent emission happen in
+            // Turn.RemoveCollapsedCompanies() during the Resolution Phase, so the
+            // ball's current launch-phase trajectory is not disrupted mid-flight.
+            HealthState?.MarkPendingCollapse();
 
-            destroyableSpec.Destroy(null);
+            Debug.Log($"[spec-006] Company {gameObject.name} HP reached 0 — flagged PendingCollapse. " +
+                      $"Removal deferred to Resolution Phase.");
         }
     }
 }
