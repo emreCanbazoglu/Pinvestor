@@ -27,14 +27,20 @@ namespace Pinvestor.Game
         public BallShooter BallShooter { get; private set; }
         public Board Board { get; private set; }
 
+        /// <summary>
+        /// Service for executing player-initiated cashouts during the Offer Phase.
+        /// Available after construction; UI callers can retrieve this from the active Turn.
+        /// </summary>
+        public Game.Economy.CashoutService CashoutService { get; private set; }
+
         private const string BalanceAttributeName = "Balance";
         private const string TurnlyCostAttributeName = "TurnlyCost";
         private const string HpAttributeName = "HP";
-        
+
         private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
-        
+
         private bool _isCompanyPlaced;
-        
+
         public Turn(
             CardPlayer player,
             BallShooter ballShooter,
@@ -43,6 +49,7 @@ namespace Pinvestor.Game
             Player = player;
             BallShooter = ballShooter;
             Board = board;
+            CashoutService = new Game.Economy.CashoutService(this);
         }
         
         public async UniTask StartAsync()
@@ -162,8 +169,25 @@ namespace Pinvestor.Game
                 if (destroyableSpec.IsDestroying)
                     continue;
 
+                // Capture company identity before destroy (wrapper reference becomes invalid after).
+                string companyId = string.Empty;
+                var boardPosition = new Vector2Int(
+                    companyBoardItem.BoardItemData.Col,
+                    companyBoardItem.BoardItemData.Row);
+
+                if (companyBoardItem.Wrapper is BoardItemWrapper_Company companyWrapper)
+                {
+                    companyId = companyWrapper.Company?.CompanyId?.CompanyId ?? string.Empty;
+                }
+
                 destroyableSpec.Destroy(null);
                 collapsedCount++;
+
+                // Emit collapse event — investment capital is NOT refunded.
+                EventBus<CompanyCollapsedEvent>.Raise(
+                    new CompanyCollapsedEvent(companyId, boardPosition));
+
+                Debug.Log($"[spec-006] Company '{companyId}' collapsed at {boardPosition}. Investment lost.");
             }
 
             return collapsedCount;

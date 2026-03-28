@@ -60,7 +60,12 @@
         ]
     },
     "balance": {
-        "values": []
+        "values": [
+            {
+                "key": "cashout_rate",
+                "value": 0.5
+            }
+        ]
     },
     "roundCriteria": {
         "values": []
