@@ -115,7 +115,7 @@ namespace Pinvestor.Game
         private async UniTask RunNewOfferPhase()
         {
             CompanyOfferDrawer drawer = new CompanyOfferDrawer(_companyPool, _companyConfigService);
-            List<GameConfigSystem.CompanyConfigModel> offered = drawer.DrawOffer();
+            List<CompanyConfigModel> offered = drawer.DrawOffer();
 
             if (offered.Count == 0)
             {
@@ -154,6 +154,10 @@ namespace Pinvestor.Game
 
             // Clear context to prevent stale state.
             context.Clear();
+
+            // Register the company-placed binding so RunPlacementPhase can await _isCompanyPlaced.
+            _companyPlacedEventBinding = new EventBinding<CompanyPlacedEvent>(OnCompanyPlaced);
+            EventBus<CompanyPlacedEvent>.Register(_companyPlacedEventBinding);
 
             Debug.Log($"[Turn] Offer phase complete. Selected: {result.CompanyId}");
         }
