@@ -3,6 +3,7 @@ using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Economy;
 
 namespace Pinvestor.Game
 {
@@ -13,17 +14,42 @@ namespace Pinvestor.Game
         public CardPlayer CardPlayer { get; }
         public BallShooter BallShooter { get; }
         public Board Board { get; }
+        public TurnRevenueAccumulator RevenueAccumulator { get; }
+        public EconomyService EconomyService { get; }
 
+        /// <summary>
+        /// Constructor without economy wiring (backward-compatible).
+        /// </summary>
         public RoundContext(
             CardPlayer cardPlayer,
             BallShooter ballShooter,
             Board board)
+            : this(cardPlayer, ballShooter, board, null, null)
+        {
+        }
+
+        /// <summary>
+        /// Constructor with economy wiring.
+        /// </summary>
+        public RoundContext(
+            CardPlayer cardPlayer,
+            BallShooter ballShooter,
+            Board board,
+            TurnRevenueAccumulator revenueAccumulator,
+            EconomyService economyService)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
             Board = board;
+            RevenueAccumulator = revenueAccumulator;
+            EconomyService = economyService;
         }
 
+        /// <summary>
+        /// Returns the player's current net worth by reading the GAS Balance attribute directly.
+        /// This is the single source of truth — revenue is credited via EconomyService (GAS
+        /// ModifyBaseValue), and op-costs are deducted via Turn.ApplyTurnlyCosts() (also GAS).
+        /// </summary>
         public bool TryGetCurrentNetWorth(out float netWorth)
         {
             netWorth = 0f;
@@ -35,7 +61,7 @@ namespace Pinvestor.Game
                 = CardPlayer.AbilitySystemCharacter.AttributeSystem;
             if (attributeSystem == null)
                 return false;
-            
+
             AttributeSetScriptableObject attributeSet = attributeSystem.AttributeSet;
             if (attributeSet == null
                 || attributeSet.AttributeDefinitions == null
