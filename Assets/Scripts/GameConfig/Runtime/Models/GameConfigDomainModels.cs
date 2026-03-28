@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AttributeSystem.Authoring;
+using Pinvestor.CompanySystem;
 
 namespace Pinvestor.GameConfigSystem
 {
@@ -152,6 +153,24 @@ namespace Pinvestor.GameConfigSystem
         {
             value = TurnlyCost;
             return HasTurnlyCost;
+        }
+
+        public bool TryGetCompanyCategory(out ECompanyCategory category)
+        {
+            category = ECompanyCategory.None;
+            if (!Values.TryGetValue(CompanyConfigValueKeys.CompanyCategory, out float rawCategory))
+            {
+                return false;
+            }
+
+            int enumValue = (int)rawCategory;
+            if (!System.Enum.IsDefined(typeof(ECompanyCategory), enumValue))
+            {
+                return false;
+            }
+
+            category = (ECompanyCategory)enumValue;
+            return category != ECompanyCategory.None;
         }
     }
 

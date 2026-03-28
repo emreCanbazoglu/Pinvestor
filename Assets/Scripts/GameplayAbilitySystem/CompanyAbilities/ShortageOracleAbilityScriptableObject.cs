@@ -42,7 +42,8 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         private Dictionary<ECompanyCategory, int> _categoryHits = new Dictionary<ECompanyCategory, int>();
         private bool _predictionActive;
 
-        private Dictionary<BoardItem_Company, EventBinding<Ball>> _hitTrackers = new Dictionary<BoardItem_Company, EventBinding<Ball>>();
+        private Dictionary<BoardItem_Company, EventBinding<BallHitEvent>> _hitTrackers 
+            = new Dictionary<BoardItem_Company, EventBinding<BallHitEvent>>();
 
         private EventBinding<RoundStartedEvent> _roundStartBinding;
         private EventBinding<TurnResolutionStartedEvent> _turnResBinding;
@@ -100,7 +101,8 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
         private void TrackHit(BoardItem_Company companyItem)
         {
-            var category = companyItem.CompanyCardDataSo?.CompanyCategory ?? ECompanyCategory.None;
+            var companyId = companyItem.CompanyData?.RefCardId;
+            var category = CompanyCategoryResolver.ResolveOrNone(companyId);
             if (category == ECompanyCategory.None)
                 return;
 
