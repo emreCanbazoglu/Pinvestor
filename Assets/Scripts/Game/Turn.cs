@@ -91,17 +91,13 @@ namespace Pinvestor.Game
         {
             LogPhase(ETurnPhase.Offer, roundIndex, turnIndex);
 
-            // Use the new offer system when both pool and config service are available (T009).
-            if (_companyPool != null && _companyConfigService != null)
+            if (_companyPool == null || _companyConfigService == null)
             {
-                await RunNewOfferPhase();
+                Debug.LogError("[Turn] RunOfferPhase: CompanyPool or CompanyConfigService is null. Cannot run offer phase.");
+                return;
             }
-            else
-            {
-                // Fallback to legacy card-based offer when dependencies are missing.
-                Debug.LogWarning("[Turn] RunOfferPhase: CompanyPool or CompanyConfigService not provided. Falling back to legacy offer.");
-                await ChooseCompanyCard();
-            }
+
+            await RunNewOfferPhase();
         }
 
         /// <summary>
@@ -324,22 +320,6 @@ namespace Pinvestor.Game
                 out balanceAttribute);
         }
 
-        private async UniTask ChooseCompanyCard()
-        {
-            Player.Deck.TryGetDeckPile<CompanySelectionPile>(
-                out var chooseCompanyPile);
-
-            await chooseCompanyPile.FillSlots();
-
-            _companyPlacedEventBinding
-                = new EventBinding<CompanyPlacedEvent>(
-                    OnCompanyPlaced);
-            
-            EventBus<CompanyPlacedEvent>
-                .Register(
-                    _companyPlacedEventBinding);
-        }
-
         private void OnCompanyPlaced(
             CompanyPlacedEvent e)
         {
@@ -353,11 +333,6 @@ namespace Pinvestor.Game
             // Mark the placed company in the pool so it won't be offered again (T004).
             if (_companyPool != null)
                 _companyPool.MarkPlaced(companyId);
-
-            Player.Deck.TryGetDeckPile<CompanySelectionPile>(
-                out var chooseCompanyPile);
-
-            chooseCompanyPile?.ResetSlots();
 
             _isCompanyPlaced = true;
         }

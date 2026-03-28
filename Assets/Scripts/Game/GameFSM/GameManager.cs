@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
-using Pinvestor.CardSystem.Authoring;
 using Pinvestor.GameConfigSystem;
 using Pinvestor.Game.BallSystem;
 using Pinvestor.Game.Offer;
@@ -18,8 +17,7 @@ namespace Pinvestor.Game
         [field: SerializeField] public BoardWrapper BoardWrapper { get; private set; } = null;
         
         [field: SerializeField] public BallShooter BallShooter { get; private set; } = null;
-        [field: SerializeField] public CompanySelectionPileWrapper CompanySelectionPileWrapper { get; private set; } = null;
-        
+
         [field: SerializeField] public GamePlayer.GamePlayer GamePlayer { get; private set; }= null;
         [SerializeField] private GameConfigManager _gameConfigManager = null;
         
@@ -46,14 +44,9 @@ namespace Pinvestor.Game
                 _cellLayerInfoColl);
             
             await Table.WaitUntilInitialized();
-            
+
             BoardWrapper.WrapBoard(Table.Board);
-            CompanySelectionPileWrapper.WrapPile(
-                Table.GamePlayer.CardPlayer.Deck
-                    .TryGetDeckPile(EDeckPile.CompanySelection, out var pile)
-                    ? pile as CompanySelectionPile
-                    : null);
-            
+
             Debug.Log("Table initialized");
 
             PlayAsync().Forget();

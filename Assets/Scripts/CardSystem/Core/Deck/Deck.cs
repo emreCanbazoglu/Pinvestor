@@ -7,22 +7,22 @@ namespace Pinvestor.CardSystem
     public class Deck
     {
         public CardPlayer Owner { get; private set; }
-        
+
         public List<DeckPile> DeckPiles { get; private set; }
             = new List<DeckPile>();
-        
+
         private IDeckDataProvider _deckDataProvider;
-        
+
         public Action<CardBase> OnCardAdded { get; set; }
         public Action<CardBase> OnCardRemoved { get; set; }
-        
+
         public Deck(
             CardPlayer owner,
             IDeckDataProvider deckDataProvider)
         {
             Owner = owner;
             _deckDataProvider = deckDataProvider;
-            
+
             Initialize();
         }
 
@@ -40,40 +40,8 @@ namespace Pinvestor.CardSystem
 
                 DeckPiles.Add(deckPile);
             }
-
-            IReadOnlyList<CardData> allCardData
-                = _deckDataProvider.GetCardData();
-
-            foreach (var cardData in allCardData)
-            {
-                if (!CardFactory.Instance.TryCreateCard(
-                        Owner,
-                        cardData,
-                        out CardBase card))
-                    continue;
-
-                if (!TryAddCard(card, setDeckData: false))
-                {
-                    Debug.LogError("Failed to add card to deck pile: " + cardData.ReferenceCardId);
-                }
-            }
         }
 
-        public bool TryAddCard(
-            CardData cardData,
-            bool setDeckData = true)
-        {
-            if (!CardFactory.Instance.TryCreateCard(
-                    Owner,
-                    cardData,
-                    out CardBase card))
-                return false;
-
-            TryAddCard(card, setDeckData);
-
-            return true;
-        }
-        
         private bool TryAddCard(
             CardBase card,
             bool setDeckData = true)
@@ -87,20 +55,17 @@ namespace Pinvestor.CardSystem
                 card.CardData.SlotIndex,
                 card);
 
-            //if (setDeckData)
-                //UpdateDeckData();
-            
             OnCardAdded?.Invoke(card);
-            
+
             return true;
         }
-        
+
         public bool TryAddCard(
             CardBase card,
             DeckPile deckPile,
             bool setDeckData = true)
         {
-            if(!DeckPiles.Contains(deckPile))
+            if (!DeckPiles.Contains(deckPile))
                 return false;
 
             if (card.CardData.DeckPile != EDeckPile.None)
@@ -110,21 +75,18 @@ namespace Pinvestor.CardSystem
                         setDeckData: false))
                     return false;
             }
-            
+
             if (!TryGetDeckPile(
                     card.CardData.DeckPile,
                     out DeckPile newDeckPile))
                 return false;
-            
+
             newDeckPile.TryAddCard(
                 card.CardData.SlotIndex,
                 card);
 
-            //if (setDeckData)
-            //UpdateDeckData();
-            
             OnCardAdded?.Invoke(card);
-            
+
             return true;
         }
 
@@ -132,22 +94,19 @@ namespace Pinvestor.CardSystem
             CardBase card,
             bool setDeckData = true)
         {
-            if(!TryGetDeckPile(
+            if (!TryGetDeckPile(
                    card.CardData.DeckPile,
                    out DeckPile deckPile))
                 return false;
 
             if (!deckPile.TryRemoveCard(card))
                 return false;
-            
-            //if (setDeckData)
-                //UpdateDeckData();
 
             OnCardRemoved?.Invoke(card);
 
             return true;
         }
-        
+
         public bool TryGetDeckPile(
             EDeckPile deckPileType,
             out DeckPile deckPile)
@@ -166,7 +125,7 @@ namespace Pinvestor.CardSystem
 
             return false;
         }
-        
+
         public bool TryGetDeckPile<T>(
             out T deckPile)
             where T : DeckPile
@@ -185,7 +144,7 @@ namespace Pinvestor.CardSystem
 
             return false;
         }
-        
+
         public List<CardBase> GetAllCards()
         {
             List<CardBase> allCards = new List<CardBase>();

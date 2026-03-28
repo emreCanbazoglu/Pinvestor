@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Pinvestor.CardSystem;
+using Pinvestor.GameConfigSystem;
+using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Base
 {
@@ -7,18 +8,29 @@ namespace Pinvestor.BoardSystem.Base
     {
         public BoardItemData_Company CompanyData => (BoardItemData_Company) BoardItemData;
 
-        public CompanyCardDataScriptableObject CompanyCardDataSo { get; private set; }
-        
+        public CompanyConfigModel CompanyConfig { get; private set; }
+
         protected override void InitCore(
             BoardItemDataBase data)
         {
-            CardFactory.Instance.CardContainer
-                .TryGetCardData(
-                    CompanyData.RefCardId,
-                    out var cardDataSo);
-            
-            CompanyCardDataSo = cardDataSo as CompanyCardDataScriptableObject;
-            
+            if (GameConfigManager.Instance != null
+                && GameConfigManager.Instance.IsInitialized
+                && GameConfigManager.Instance.TryGetService(out CompanyConfigService configService))
+            {
+                if (!configService.TryGetCompanyConfig(CompanyData.RefCardId, out var config))
+                {
+                    Debug.LogError($"[BoardItem_Company] No CompanyConfigModel found for company ID '{CompanyData.RefCardId}'.");
+                }
+                else
+                {
+                    CompanyConfig = config;
+                }
+            }
+            else
+            {
+                Debug.LogError($"[BoardItem_Company] GameConfigManager not available when initializing company '{CompanyData.RefCardId}'.");
+            }
+
             base.InitCore(data);
         }
 
@@ -26,17 +38,17 @@ namespace Pinvestor.BoardSystem.Base
             bool isPlaceholder = false)
         {
             List<BoardItemPieceBase> pieces = new List<BoardItemPieceBase>();
-            
+
             BoardItemPiece_Company piece = new BoardItemPiece_Company(this);
             pieces.Add(piece);
 
             return pieces;
         }
     }
-    
+
     public class BoardItemPiece_Company : BoardItemPieceBase
     {
-        public BoardItemPiece_Company(BoardItemBase boardItem) 
+        public BoardItemPiece_Company(BoardItemBase boardItem)
             : base(boardItem)
         {
         }

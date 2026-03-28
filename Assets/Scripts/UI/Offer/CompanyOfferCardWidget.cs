@@ -1,6 +1,5 @@
 using System.Globalization;
 using MMFramework.MMUI;
-using Pinvestor.CardSystem;
 using Pinvestor.CompanySystem;
 using Pinvestor.Game.Offer;
 using Pinvestor.GameConfigSystem;
@@ -13,7 +12,6 @@ namespace Pinvestor.UI.Offer
     /// <summary>
     /// Displays company attributes for a single offer card in the Company Offer Panel.
     /// Driven by CompanyConfigModel data from GameConfig.
-    /// Visual properties (artwork, category colors) are looked up from CompanyCardDataScriptableObject.
     ///
     /// Selected / unselected state is reflected via a highlight border color.
     /// No animation required per spec.
@@ -188,7 +186,6 @@ namespace Pinvestor.UI.Offer
 
         /// <summary>
         /// Populates the widget with data from a CompanyConfigModel.
-        /// Looks up visual data (artwork, category) from CardFactory if available.
         /// Call this before activating the widget.
         /// </summary>
         public void Populate(CompanyConfigModel model)
@@ -204,7 +201,11 @@ namespace Pinvestor.UI.Offer
                 ? model.TurnlyCost.ToString("C0", CultureInfo.GetCultureInfo("en-US")) + " / turn"
                 : "-- / turn";
 
-            PopulateFromCardDataSo(model.CompanyId);
+            // Visual properties — industry tag, artwork, category colors — are not yet wired to
+            // GameConfig. These fields remain blank until a visual data source is added.
+            IndustryTagText = string.Empty;
+            SkillDescription = string.Empty;
+            CompanyArtwork = null;
         }
 
         /// <summary>
@@ -217,88 +218,12 @@ namespace Pinvestor.UI.Offer
 
         // --- Private helpers ---
 
-        private void PopulateFromCardDataSo(string companyId)
-        {
-            CompanyCardDataScriptableObject cardDataSo = FindCardDataSo(companyId);
-
-            if (cardDataSo == null)
-            {
-                Debug.LogWarning($"[CompanyOfferCardWidget] No CompanyCardDataScriptableObject found for '{companyId}'. Using fallback visuals.");
-                IndustryTagText = string.Empty;
-                SkillDescription = string.Empty;
-                CompanyArtwork = null;
-                return;
-            }
-
-            // Industry tag from ECompanyCategory enum name.
-            IndustryTagText = cardDataSo.CompanyCategory.ToString();
-
-            // Skill description from ability definitions (T015: fallback to skill ID string with warning if not found).
-            if (cardDataSo.AbilityTriggerDefinitions != null && cardDataSo.AbilityTriggerDefinitions.Length > 0)
-            {
-                string description = cardDataSo.AbilityTriggerDefinitions[0].Ability.GetDescription();
-                SkillDescription = string.IsNullOrEmpty(description)
-                    ? $"[{cardDataSo.AbilityTriggerDefinitions[0].Ability.name}]"
-                    : description;
-            }
-            else
-            {
-                SkillDescription = string.Empty;
-            }
-
-            CompanyArtwork = cardDataSo.CompanyArtwork;
-
-            ApplyCategoryVisuals(cardDataSo.CompanyCategory);
-        }
-
-        private void ApplyCategoryVisuals(ECompanyCategory category)
-        {
-            if (CompanyFactory.Instance == null
-                || CompanyFactory.Instance.CompanyCardSettings == null)
-            {
-                Debug.LogWarning("[CompanyOfferCardWidget] CompanyFactory or CompanyCardSettings not available.");
-                return;
-            }
-
-            if (!CompanyFactory.Instance.CompanyCardSettings.TryGetSettings(category, out var settings))
-            {
-                Debug.LogWarning($"[CompanyOfferCardWidget] No settings for category {category}.");
-                return;
-            }
-
-            MainFrameColor = settings.MainFrameColor;
-            TopContainerColor = settings.TopContainerColor;
-            NameContainerColor = settings.NameContainerColor;
-            InfoContainerColor = settings.InfoContainerColor;
-            CategoryIcon = settings.CategoryIcon;
-        }
-
         private void ApplySelectionVisual()
         {
             if (_selectionBorder == null)
                 return;
 
             _selectionBorder.color = _isSelected ? _selectedBorderColor : _deselectedBorderColor;
-        }
-
-        private static CompanyCardDataScriptableObject FindCardDataSo(string companyId)
-        {
-            if (CardFactory.Instance == null || CardFactory.Instance.CardContainer == null)
-                return null;
-
-            var allCards = CardFactory.Instance.CardContainer
-                .GetCardDataOfType<CompanyCardDataScriptableObject>();
-
-            foreach (var cardSo in allCards)
-            {
-                if (cardSo.CompanyId != null
-                    && cardSo.CompanyId.CompanyId == companyId)
-                {
-                    return cardSo;
-                }
-            }
-
-            return null;
         }
     }
 }

@@ -17,15 +17,29 @@ namespace Pinvestor.GameConfigSystem
             out CompanyConfigModel companyConfig)
         {
             companyConfig = null;
+            if (companyId == null)
+            {
+                Debug.LogError("CompanyAttributeConfigResolver: CompanyId is null.");
+                return false;
+            }
+
+            return TryResolveCompanyConfig(companyId.CompanyId, out companyConfig);
+        }
+
+        public bool TryResolveCompanyConfig(
+            string companyId,
+            out CompanyConfigModel companyConfig)
+        {
+            companyConfig = null;
             if (_gameConfigManager == null)
             {
                 Debug.LogError("CompanyAttributeConfigResolver: GameConfigManager is null.");
                 return false;
             }
 
-            if (companyId == null)
+            if (string.IsNullOrWhiteSpace(companyId))
             {
-                Debug.LogError("CompanyAttributeConfigResolver: CompanyId is null.");
+                Debug.LogError("CompanyAttributeConfigResolver: CompanyId is null or empty.");
                 return false;
             }
 
@@ -46,7 +60,7 @@ namespace Pinvestor.GameConfigSystem
                 return true;
             }
 
-            Debug.LogError($"CompanyAttributeConfigResolver: Missing config for companyId '{companyId.CompanyId}'.");
+            Debug.LogError($"CompanyAttributeConfigResolver: Missing config for companyId '{companyId}'.");
             return false;
         }
     }
