@@ -3,7 +3,7 @@
 **Input**: `specs/006-health-collapse-cashout/spec.md`, `plan.md`
 **Codebase audit required**: `Assets/Scripts/Damagable/`, `Board/Stability/`, `BoardItemWrapper_Company.cs`, `GameplayAbilitySystem/CompanyAbilities/`, `Turn.cs`
 
-**Status: IN REVIEW / PR: #TBD**
+**Status: IN REVIEW / PR: #4**
 
 ## Phase 1: Health State
 
