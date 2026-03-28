@@ -25,8 +25,6 @@ namespace Pinvestor.GameConfigSystem.Editor
             = new GameConfigValidationService();
         private readonly GameConfigExportService _exportService
             = new GameConfigExportService();
-        private readonly GameConfigCompanyImportService _companyImportService
-            = new GameConfigCompanyImportService();
         private string _lastMessage = string.Empty;
         private MessageType _lastMessageType = MessageType.Info;
 
@@ -89,14 +87,6 @@ namespace Pinvestor.GameConfigSystem.Editor
                 GameConfigValidationResult result = _validationService.Validate(_authoringAsset);
                 _lastMessage = result.ToMultilineString();
                 _lastMessageType = result.IsValid ? MessageType.Info : MessageType.Error;
-            }
-
-            if (GUILayout.Button("Import Companies"))
-            {
-                bool success = _companyImportService.TryImportCompanies(_authoringAsset, out string message);
-                _lastMessage = message;
-                _lastMessageType = success ? MessageType.Info : MessageType.Error;
-                _serializedObject = null;
             }
 
             if (GUILayout.Button("Export JSON"))

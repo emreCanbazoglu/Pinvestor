@@ -18,5 +18,16 @@ namespace Pinvestor.CompanySystem
             else
                 company = null;
         }
+
+        public void TryCreateCompany(
+            string companyId,
+            out Company company)
+        {
+            if (_companyContainerScriptableObject
+                .TryGetCompany(companyId, out Company c))
+                company = Instantiate(c);
+            else
+                company = null;
+        }
     }
 }

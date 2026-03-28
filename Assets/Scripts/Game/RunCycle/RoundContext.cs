@@ -4,6 +4,8 @@ using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
 using Pinvestor.Game.Economy;
+using Pinvestor.Game.Offer;
+using Pinvestor.GameConfigSystem;
 
 namespace Pinvestor.Game
 {
@@ -18,13 +20,20 @@ namespace Pinvestor.Game
         public EconomyService EconomyService { get; }
 
         /// <summary>
+        /// Tracks available/placed/discarded companies for this run.
+        /// Initialized at run start; persists across all turns in the run.
+        /// </summary>
+        public RunCompanyPool CompanyPool { get; }
+
+        /// <summary>
         /// Constructor without economy wiring (backward-compatible).
         /// </summary>
         public RoundContext(
             CardPlayer cardPlayer,
             BallShooter ballShooter,
-            Board board)
-            : this(cardPlayer, ballShooter, board, null, null)
+            Board board,
+            RunCompanyPool companyPool = null)
+            : this(cardPlayer, ballShooter, board, companyPool, null, null)
         {
         }
 
@@ -35,12 +44,14 @@ namespace Pinvestor.Game
             CardPlayer cardPlayer,
             BallShooter ballShooter,
             Board board,
+            RunCompanyPool companyPool,
             TurnRevenueAccumulator revenueAccumulator,
             EconomyService economyService)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
             Board = board;
+            CompanyPool = companyPool ?? new RunCompanyPool();
             RevenueAccumulator = revenueAccumulator;
             EconomyService = economyService;
         }

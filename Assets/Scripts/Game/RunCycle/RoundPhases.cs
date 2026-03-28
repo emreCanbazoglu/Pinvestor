@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Pinvestor.GameConfigSystem;
 
 namespace Pinvestor.Game
 {
@@ -10,12 +11,21 @@ namespace Pinvestor.Game
             RoundContext context,
             RoundRuntimeState runtimeState)
         {
+            // Resolve CompanyConfigService for the offer drawer (may be null if GameConfig not loaded).
+            CompanyConfigService companyConfigService = null;
+            GameConfigManager gameConfigManager = GameConfigManager.Instance;
+            if (gameConfigManager != null && gameConfigManager.IsInitialized)
+                gameConfigManager.TryGetService(out companyConfigService);
+
             Turn turn = new Turn(
                 context.CardPlayer,
                 context.BallShooter,
                 context.Board,
+                context.CompanyPool,
+                companyConfigService,
                 context.RevenueAccumulator,
                 context.EconomyService);
+
             return turn.ExecuteCoreTurnAsync(runtimeState.RoundIndex, runtimeState.TurnIndex);
         }
     }
