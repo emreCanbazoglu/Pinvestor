@@ -106,8 +106,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 if (!(item is BoardItem_Company companyItem))
                     continue;
 
-                var cardData = companyItem.CompanyCardDataSo;
-                if (cardData == null || cardData.CompanyCategory != ECompanyCategory.SocialMedia)
+                var companyId = companyItem.CompanyData?.RefCardId;
+                var category = CompanyCategoryResolver.ResolveOrNone(companyId);
+                if (category != ECompanyCategory.SocialMedia)
                     continue;
 
                 if (!companyItem.Wrapper.TryGetComponent(out AbilitySystemCharacter asc))

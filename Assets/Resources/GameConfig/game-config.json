@@ -1,334 +1,417 @@
 {
-    "schemaVersion": 1,
-    "generatedAtUtc": "2026-03-27T00:00:00.0000000Z",
-    "company": {
-        "entries": [
-            {
-                "companyId": "CloutHubLive",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 100.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "RageLoopStudio",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 12.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 90.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 45.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "TrendNecroAgency",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 8.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 110.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "CancelShieldPR",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 14.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 80.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 55.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "AutoPilotPantry",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 95.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 45.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "SleepDebtSaaS",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 100.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "OneTapButler",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 8.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 85.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 40.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "MoodFridgeCloud",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 12.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 90.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "LoopholeLedger",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 100.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "DeferredAlphaCapital",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 110.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 60.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "CreditKaraoke",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 8.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 80.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 45.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "AuditFogExchange",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 100.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "PanicFulfillmentOS",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 90.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "LastMileOrchestrator",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 100.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "ShortageOracleAI",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 10.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 95.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 50.0
-                    }
-                ],
-                "values": []
-            },
-            {
-                "companyId": "RepoReaperSystems",
-                "attributes": [
-                    {
-                        "key": "f9426c64767cd41ab9990ea28b95e98b",
-                        "value": 12.0
-                    },
-                    {
-                        "key": "12e5d3defa21047349165cab73d5e90a",
-                        "value": 105.0
-                    },
-                    {
-                        "key": "5699d2d73590242978871b7f76819dde",
-                        "value": 55.0
-                    }
-                ],
-                "values": []
-            }
-        ]
-    },
-    "balance": {
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-03-27T00:00:00.0000000Z",
+  "company": {
+    "entries": [
+      {
+        "companyId": "CloutHubLive",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 100.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
         "values": [
-            { "key": "initialCapital", "value": 500.0 },
-            {
-                "key": "cashout_rate",
-                "value": 0.5
-            }
+          {
+            "key": "companyCategory",
+            "value": 1.0
+          }
         ]
-    },
-    "roundCriteria": {
-        "values": []
-    },
-    "runCycle": {
-        "rounds": [
-            {
-                "roundId": "Round_1",
-                "turnCount": 3,
-                "requiredWorth": 2000.0
-            },
-            {
-                "roundId": "Round_2",
-                "turnCount": 4,
-                "requiredWorth": 6000.0
-            },
-            {
-                "roundId": "Round_3",
-                "turnCount": 5,
-                "requiredWorth": 12000.0
-            }
+      },
+      {
+        "companyId": "RageLoopStudio",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 12.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 90.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 45.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 1.0
+          }
         ]
-    },
-    "ball": {
-        "shootSpeed": 10.0,
-        "previewLength": 10.0
-    },
-    "shop": {
-        "values": []
-    }
+      },
+      {
+        "companyId": "TrendNecroAgency",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 8.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 110.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "companyId": "CancelShieldPR",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 14.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 80.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 55.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 1.0
+          }
+        ]
+      },
+      {
+        "companyId": "AutoPilotPantry",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 95.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 45.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "companyId": "SleepDebtSaaS",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 100.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "companyId": "OneTapButler",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 8.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 85.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 40.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "companyId": "MoodFridgeCloud",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 12.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 90.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 2.0
+          }
+        ]
+      },
+      {
+        "companyId": "LoopholeLedger",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 100.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "companyId": "DeferredAlphaCapital",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 110.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 60.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "companyId": "CreditKaraoke",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 8.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 80.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 45.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "companyId": "AuditFogExchange",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 100.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 3.0
+          }
+        ]
+      },
+      {
+        "companyId": "PanicFulfillmentOS",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 90.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "companyId": "LastMileOrchestrator",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 100.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "companyId": "ShortageOracleAI",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 10.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 95.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 50.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 4.0
+          }
+        ]
+      },
+      {
+        "companyId": "RepoReaperSystems",
+        "attributes": [
+          {
+            "key": "f9426c64767cd41ab9990ea28b95e98b",
+            "value": 12.0
+          },
+          {
+            "key": "12e5d3defa21047349165cab73d5e90a",
+            "value": 105.0
+          },
+          {
+            "key": "5699d2d73590242978871b7f76819dde",
+            "value": 55.0
+          }
+        ],
+        "values": [
+          {
+            "key": "companyCategory",
+            "value": 4.0
+          }
+        ]
+      }
+    ]
+  },
+  "balance": {
+    "values": [
+      {
+        "key": "initialCapital",
+        "value": 500.0
+      },
+      {
+        "key": "cashout_rate",
+        "value": 0.5
+      }
+    ]
+  },
+  "roundCriteria": {
+    "values": []
+  },
+  "runCycle": {
+    "rounds": [
+      {
+        "roundId": "Round_1",
+        "turnCount": 3,
+        "requiredWorth": 2000.0
+      },
+      {
+        "roundId": "Round_2",
+        "turnCount": 4,
+        "requiredWorth": 6000.0
+      },
+      {
+        "roundId": "Round_3",
+        "turnCount": 5,
+        "requiredWorth": 12000.0
+      }
+    ]
+  },
+  "ball": {
+    "shootSpeed": 10.0,
+    "previewLength": 10.0
+  },
+  "shop": {
+    "values": []
+  }
 }

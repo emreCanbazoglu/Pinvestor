@@ -115,11 +115,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 if (!selfCell.IsLinkedCell(otherCell))
                     continue;
 
-                var cardData = companyItem.CompanyCardDataSo;
-                if (cardData == null || cardData.CompanyCategory == ECompanyCategory.None)
+                var companyId = companyItem.CompanyData?.RefCardId;
+                var category = CompanyCategoryResolver.ResolveOrNone(companyId);
+                if (category == ECompanyCategory.None)
                     continue;
 
-                categories.Add(cardData.CompanyCategory);
+                categories.Add(category);
             }
 
             return categories.Count;

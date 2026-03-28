@@ -147,10 +147,6 @@ namespace Pinvestor.BoardSystem.Authoring
 
                 if (GameConfigManager.Instance.TryGetService(out CompanyConfigService companyConfigService))
                 {
-                    companyConfigService.TryGetCompanyMaxHP(
-                        companyId,
-                        out maxHp);
-
                     // Purchase cost: use TurnlyCost as a proxy until a dedicated cost field is added.
                     // TODO(spec-004): replace with actual purchase cost field when spec 004 merges.
                     if (companyConfigService.TryGetCompanyConfig(
@@ -159,6 +155,9 @@ namespace Pinvestor.BoardSystem.Authoring
                     {
                         if (companyConfig.TryGetTurnlyCost(out float turnlyCost))
                             purchaseCost = turnlyCost;
+
+                        if(companyConfig.HasMaxHP)
+                            maxHp = companyConfig.MaxHP;
                     }
                 }
 

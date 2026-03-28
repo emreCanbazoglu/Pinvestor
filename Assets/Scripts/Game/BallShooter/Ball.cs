@@ -6,6 +6,16 @@ using UnityEngine;
 
 namespace Pinvestor.Game.BallSystem
 {
+    public class BallHitEvent : IEvent
+    {
+        public Ball Ball { get; }
+        
+        public BallHitEvent(Ball ball)
+        {
+            Ball = ball;
+        }
+    }
+    
     public class Ball : MonoBehaviour
     {
         [field: SerializeField] public LayerMask LayerMask { get; private set; }
