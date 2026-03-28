@@ -34,6 +34,7 @@ namespace Pinvestor.BoardSystem.Authoring
         /// <summary>Per-instance valuation model. Initialized in WrapCore from GameConfig.</summary>
         public CompanyValuationModel ValuationModel { get; private set; }
 
+
         private Transform _slotTransform;
 
         private void OnEnable()
@@ -58,7 +59,7 @@ namespace Pinvestor.BoardSystem.Authoring
 
             InitializeHealthAndValuation();
 
-            string companyId = BoardItem.CompanyConfig?.CompanyId ?? "Unknown";
+            string companyId = BoardItem.CompanyData.RefCardId;
             gameObject.name = "BoardItemWrapper_" + companyId;
 
             BoardItem.TryGetPropertySpec(
@@ -172,6 +173,7 @@ namespace Pinvestor.BoardSystem.Authoring
             HealthState = new CompanyHealthState(maxHp);
             ValuationModel = new CompanyValuationModel(purchaseCost, cashoutRate);
         }
+
 
         public void SetSlotTransform(Transform slotTransform)
         {

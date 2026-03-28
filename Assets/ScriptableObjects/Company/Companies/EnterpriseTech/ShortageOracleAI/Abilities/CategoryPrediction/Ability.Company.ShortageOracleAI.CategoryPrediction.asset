@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fa1bb919a04bec9d0789d34ae935d8, type: 3}
+  m_Name: Ability.Company.ShortageOracleAI.CategoryPrediction
+  m_EditorClassIdentifier: 
+  AbilityId: 4988a968960b4ebb840d11a1b450ed7c
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: Round start: predict category; end of turn: under-hit = payout, over-hit = penalty
+  <PredictionPayoutEffect>k__BackingField: {fileID: 11400000, guid: 7e24a3ce07144b988baeb74dfea7f401, type: 2}
+  <MispredictionPenaltyEffect>k__BackingField: {fileID: 11400000, guid: 379390c470054c518f4b7570eff61ea4, type: 2}

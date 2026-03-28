@@ -27,5 +27,22 @@ namespace Pinvestor.CompanySystem
             company = null;
             return false;
         }
+
+        public bool TryGetCompany(
+            string companyId,
+            out Company company)
+        {
+            foreach (Company c in _companies)
+            {
+                if (c.CompanyId != null && c.CompanyId.CompanyId == companyId)
+                {
+                    company = c;
+                    return true;
+                }
+            }
+
+            company = null;
+            return false;
+        }
     }
 }

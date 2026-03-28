@@ -62,4 +62,4 @@ Post-merge notes:
 - [x] T014 [P] Add EditMode test for revenue accumulation math (multiple companies, multiple hits) in `Assets/Scripts/Game/Economy/Tests/TurnRevenueAccumulatorTests.cs`
 - [x] T015 [P] Add EditMode test for `EconomyService.ApplyResolution()` — verify net worth delta equals revenue minus total op-costs
 - [x] T016 [P] Add EditMode test for win condition (net worth >= target) and loss condition (net worth < target)
-- [ ] T017 Manual play-mode smoke test: play 1 full turn, verify net worth changes by expected amount; play to final round, verify outcome event fires (requires Unity editor)
+- [ ] T017 Manual play-mode smoke test: play 1 full turn, verify net worth changes by expected amount; play to final round, verify outcome event fires

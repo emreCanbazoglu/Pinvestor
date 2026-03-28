@@ -1,17 +1,16 @@
 using AttributeSystem.Authoring;
 using AttributeSystem.Components;
-using Pinvestor.CompanySystem;
 using UnityEngine;
 
 namespace Pinvestor.GameConfigSystem
 {
     public sealed class CompanyAttributeBaseValueOverrideResolver : IAttributeBaseValueOverrideResolver
     {
-        private readonly CompanyIdScriptableObject _companyId;
+        private readonly string _companyId;
         private readonly CompanyAttributeConfigResolver _companyConfigResolver;
 
         public CompanyAttributeBaseValueOverrideResolver(
-            CompanyIdScriptableObject companyId,
+            string companyId,
             CompanyAttributeConfigResolver companyConfigResolver)
         {
             _companyId = companyId;
@@ -31,7 +30,7 @@ namespace Pinvestor.GameConfigSystem
                 return false;
             }
 
-            if (_companyConfigResolver == null || _companyId == null)
+            if (_companyConfigResolver == null || string.IsNullOrWhiteSpace(_companyId))
             {
                 return false;
             }
@@ -39,7 +38,7 @@ namespace Pinvestor.GameConfigSystem
             if (!_companyConfigResolver.TryResolveCompanyConfig(_companyId, out CompanyConfigModel companyConfig))
             {
                 Debug.LogWarning(
-                    $"CompanyAttributeBaseValueOverrideResolver: Could not resolve company config for '{_companyId.CompanyId}'.");
+                    $"CompanyAttributeBaseValueOverrideResolver: Could not resolve company config for '{_companyId}'.");
                 return false;
             }
 
@@ -66,7 +65,7 @@ namespace Pinvestor.GameConfigSystem
             }
 
             Debug.LogWarning(
-                $"CompanyAttributeBaseValueOverrideResolver: Missing config value for company '{_companyId.CompanyId}' " +
+                $"CompanyAttributeBaseValueOverrideResolver: Missing config value for company '{_companyId}' " +
                 $"attribute '{attributeDefinition.Attribute.name}' (key='{attributeKey}').");
             return false;
         }
