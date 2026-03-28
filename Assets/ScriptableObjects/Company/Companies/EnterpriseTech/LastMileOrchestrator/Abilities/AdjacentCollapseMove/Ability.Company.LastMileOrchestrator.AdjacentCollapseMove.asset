@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639eaac6c56e4224bf236294ca59e158, type: 3}
+  m_Name: Ability.Company.LastMileOrchestrator.AdjacentCollapseMove
+  m_EditorClassIdentifier: 
+  AbilityId: 265469a199784fcc9c46969ccb5689b0
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: Adjacent collapse → move into tile, trigger free hit payout (once/round). TODO(spec-006): collapse handler
+  <FreeHitPayoutEffect>k__BackingField: {fileID: 11400000, guid: 74470a1e632f462bb6d364e8c07d8830, type: 2}

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c1585a57b9641bc9eed7383e149b021, type: 3}
   m_Name: CompanyCardSettings
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   _settings:
   - <CompanyCategory>k__BackingField: 1
     <MainFrameColor>k__BackingField: {r: 0.90588236, g: 0.45490196, b: 0.18039216, a: 1}
@@ -25,3 +25,15 @@ MonoBehaviour:
     <NameContainerColor>k__BackingField: {r: 0.9764706, g: 0.6862745, b: 0.6313726, a: 1}
     <InfoContainerColor>k__BackingField: {r: 0.9098039, g: 0.43529412, b: 0.4392157, a: 1}
     <CategoryIcon>k__BackingField: {fileID: 21300000, guid: 06f2a7cfcd32242219ed1317bd660d83, type: 3}
+  - <CompanyCategory>k__BackingField: 3
+    <MainFrameColor>k__BackingField: {r: 0.23137255, g: 0.6, b: 0.3372549, a: 1}
+    <TopContainerColor>k__BackingField: {r: 0.3019608, g: 0.7372549, b: 0.4117647, a: 1}
+    <NameContainerColor>k__BackingField: {r: 0.7294118, g: 0.9254902, b: 0.7686275, a: 1}
+    <InfoContainerColor>k__BackingField: {r: 0.4117647, g: 0.8, b: 0.5411765, a: 1}
+    <CategoryIcon>k__BackingField: {fileID: 0}
+  - <CompanyCategory>k__BackingField: 4
+    <MainFrameColor>k__BackingField: {r: 0.23529412, g: 0.39215687, b: 0.7019608, a: 1}
+    <TopContainerColor>k__BackingField: {r: 0.3372549, g: 0.49803922, b: 0.8, a: 1}
+    <NameContainerColor>k__BackingField: {r: 0.6862745, g: 0.7764706, b: 0.9411765, a: 1}
+    <InfoContainerColor>k__BackingField: {r: 0.42745098, g: 0.5882353, b: 0.8627451, a: 1}
+    <CategoryIcon>k__BackingField: {fileID: 0}

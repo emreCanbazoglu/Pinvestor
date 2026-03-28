@@ -7,6 +7,7 @@ using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using Pinvestor.GameplayAbilitySystem.Abilities;
 using Pinvestor.GameConfigSystem;
+using Pinvestor.RevenueGeneratorSystem.Core;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Authoring
@@ -20,6 +21,8 @@ namespace Pinvestor.BoardSystem.Authoring
         [SerializeField] private Damagable _damagable = null;
 
         [SerializeField] private BallTarget _ballTarget = null;
+
+        [field: SerializeField] public RevenueGenerator RevenueGenerator { get; private set; } = null;
 
         public Company Company { get; private set; }
 

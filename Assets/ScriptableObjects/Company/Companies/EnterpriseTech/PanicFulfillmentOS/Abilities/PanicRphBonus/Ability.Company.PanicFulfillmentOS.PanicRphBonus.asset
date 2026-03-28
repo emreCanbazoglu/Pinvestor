@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eead4f8dcf049bd9fe2058f0dcc4e84, type: 3}
+  m_Name: Ability.Company.PanicFulfillmentOS.PanicRphBonus
+  m_EditorClassIdentifier: 
+  AbilityId: cada92f6646e45239c3ccd45ca0c32df
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: Gains +RPH per company below 50% HP (live bonus cap +8)
+  <RphBonusPerCompanyEffect>k__BackingField: {fileID: 11400000, guid: 10df7b32e131453fba19d52a7c009f0b, type: 2}
+  <MaxBonusStacks>k__BackingField: 8

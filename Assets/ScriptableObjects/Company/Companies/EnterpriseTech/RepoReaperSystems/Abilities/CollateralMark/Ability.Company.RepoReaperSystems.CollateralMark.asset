@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06cf4c59f39747b99514cf8e1e5bc8b1, type: 3}
+  m_Name: Ability.Company.RepoReaperSystems.CollateralMark
+  m_EditorClassIdentifier: 
+  AbilityId: 0bedf963cf0541cb85ea57afbb69a68f
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: On cashout: mark random adjacent company as Collateral (+RPH, +HP loss per hit, 2 turns)
+  <CollateralRphBonusEffect>k__BackingField: {fileID: 11400000, guid: 7386745d5a824f3684aa0c2af8264309, type: 2}
+  <CollateralHpDebuffEffect>k__BackingField: {fileID: 11400000, guid: 1b92295d444d4afd9c01c8ad69db28ee, type: 2}

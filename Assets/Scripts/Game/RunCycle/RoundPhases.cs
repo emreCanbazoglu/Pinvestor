@@ -22,7 +22,9 @@ namespace Pinvestor.Game
                 context.BallShooter,
                 context.Board,
                 context.CompanyPool,
-                companyConfigService);
+                companyConfigService,
+                context.RevenueAccumulator,
+                context.EconomyService);
 
             return turn.ExecuteCoreTurnAsync(runtimeState.RoundIndex, runtimeState.TurnIndex);
         }

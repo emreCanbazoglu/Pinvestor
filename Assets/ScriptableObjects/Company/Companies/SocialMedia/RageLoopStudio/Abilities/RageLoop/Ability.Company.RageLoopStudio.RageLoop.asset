@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 767b04feb70945b4a1cfb85c6f94b19d, type: 3}
+  m_Name: Ability.Company.RageLoopStudio.RageLoop
+  m_EditorClassIdentifier: 
+  AbilityId: d3764c413e994a6488a0d6c604848ec3
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: Every 3rd hit → +RPH for all SocialMedia this turn (max 2 procs)
+  <RphBuffEffect>k__BackingField: {fileID: 11400000, guid: edef3a4c10c04b0488a22c5ccbaf0690, type: 2}
+  <HitsPerProc>k__BackingField: 3
+  <MaxProcsPerTurn>k__BackingField: 2

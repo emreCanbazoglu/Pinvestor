@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d3ac0557774480cbb3a950762e39865, type: 3}
+  m_Name: Ability.Company.SleepDebtSaaS.SleepDebt
+  m_EditorClassIdentifier: 
+  AbilityId: 36f392decb0349c5ada39e4703c01fad
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: Exactly 2 hits → +permanent RPH (cap 6); over-hit → extra HP loss
+  <PermanentRphBonusEffect>k__BackingField: {fileID: 11400000, guid: d2776850970b4c8a8a7b7ee5ed2b8e02, type: 2}
+  <ExtraHpLossEffect>k__BackingField: {fileID: 11400000, guid: 1acdd959b2b748ab82bd98ba7843082b, type: 2}
+  <TargetHitCount>k__BackingField: 2
+  <MaxPermanentBonus>k__BackingField: 6

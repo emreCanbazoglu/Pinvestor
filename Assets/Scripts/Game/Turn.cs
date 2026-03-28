@@ -6,6 +6,7 @@ using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Economy;
 using Pinvestor.Game.Offer;
 using Pinvestor.GameConfigSystem;
 using UnityEngine;
@@ -28,6 +29,9 @@ namespace Pinvestor.Game
         public CardPlayer Player { get; private set; }
         public BallShooter BallShooter { get; private set; }
         public Board Board { get; private set; }
+
+        private readonly TurnRevenueAccumulator _revenueAccumulator;
+        private readonly EconomyService _economyService;
 
         private const string BalanceAttributeName = "Balance";
         private const string TurnlyCostAttributeName = "TurnlyCost";
@@ -53,14 +57,28 @@ namespace Pinvestor.Game
             Board board,
             RunCompanyPool companyPool = null,
             CompanyConfigService companyConfigService = null)
+            : this(player, ballShooter, board, companyPool, companyConfigService, null, null)
+        {
+        }
+
+        public Turn(
+            CardPlayer player,
+            BallShooter ballShooter,
+            Board board,
+            RunCompanyPool companyPool,
+            CompanyConfigService companyConfigService,
+            TurnRevenueAccumulator revenueAccumulator,
+            EconomyService economyService)
         {
             Player = player;
             BallShooter = ballShooter;
             Board = board;
             _companyPool = companyPool;
             _companyConfigService = companyConfigService;
+            _revenueAccumulator = revenueAccumulator;
+            _economyService = economyService;
         }
-        
+
         public async UniTask StartAsync()
         {
             await StartAsync(-1, -1);
@@ -79,12 +97,20 @@ namespace Pinvestor.Game
         {
             _isCompanyPlaced = false;
 
+            // Reset accumulator and subscribe to all active company revenue generators
+            // before this turn's launch phase begins.
+            ResetAndSubscribeAccumulator();
+
             await RunOfferPhase(roundIndex, turnIndex);
             await RunPlacementPhase(roundIndex, turnIndex);
             await RunLaunchPhase(roundIndex, turnIndex);
+
+            // Unsubscribe after Launch Phase — no more hits should count for this turn.
+            UnsubscribeAccumulator();
+
             await RunResolutionPhase(roundIndex, turnIndex);
         }
-        
+
         private async UniTask RunOfferPhase(
             int roundIndex,
             int turnIndex)
@@ -181,6 +207,10 @@ namespace Pinvestor.Game
             LogPhase(ETurnPhase.Resolution, roundIndex, turnIndex);
             EventBus<TurnResolutionStartedEvent>.Raise(
                 new TurnResolutionStartedEvent(roundIndex, turnIndex));
+
+            // Economy: credit turn revenue to the CardPlayer's Balance attribute via EconomyService.
+            // Op-costs are handled separately by ApplyTurnlyCosts() below — do not pass companies here.
+            _economyService?.ApplyResolution(Player);
 
             float totalTurnlyCost = ApplyTurnlyCosts();
             int collapsedCompanyCount = RemoveCollapsedCompanies();
@@ -318,6 +348,30 @@ namespace Pinvestor.Game
             return attributeSystem.AttributeSet.TryGetAttributeByName(
                 BalanceAttributeName,
                 out balanceAttribute);
+        }
+
+        private void ResetAndSubscribeAccumulator()
+        {
+            if (_revenueAccumulator == null)
+                return;
+
+            _revenueAccumulator.Reset();
+
+            // Subscribe to every active company's RevenueGenerator on the board.
+            List<BoardItem_Company> companies = CollectCompanyBoardItems();
+            for (int i = 0; i < companies.Count; i++)
+            {
+                BoardItemWrapper_Company wrapper
+                    = companies[i]?.Wrapper as BoardItemWrapper_Company;
+
+                if (wrapper?.RevenueGenerator != null)
+                    _revenueAccumulator.Subscribe(wrapper.RevenueGenerator);
+            }
+        }
+
+        private void UnsubscribeAccumulator()
+        {
+            _revenueAccumulator?.UnsubscribeAll();
         }
 
         private void OnCompanyPlaced(
