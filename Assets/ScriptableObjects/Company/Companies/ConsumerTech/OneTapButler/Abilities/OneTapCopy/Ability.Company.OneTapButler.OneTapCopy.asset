@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8083ff7dc934bc19ae5ca05e206abd4, type: 3}
+  m_Name: Ability.Company.OneTapButler.OneTapCopy
+  m_EditorClassIdentifier: 
+  AbilityId: ec9f869753404ea8a4daaf744bd38d68
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: On placement turn: copy cheapest adjacent company's RPH at 50% for 2 turns
+  <CopiedRphBuffEffect>k__BackingField: {fileID: 11400000, guid: 2d9d7a0756a7480791181423cb46ef3e, type: 2}
+  <CopyRatio>k__BackingField: 0.5
+  <BuffDurationTurns>k__BackingField: 2

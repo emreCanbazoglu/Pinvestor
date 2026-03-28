@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15ee84d94d8c418590420488873b0ce8, type: 3}
+  m_Name: Ability.Company.DeferredAlphaCapital.DeferDamage
+  m_EditorClassIdentifier: 
+  AbilityId: 467ce0dcf9db41229ae7bc29261852dc
+  AbilityTags:
+    AssetTag: {fileID: 0}
+    CancelAbilitiesWithTags: []
+    BlockAbilitiesWithTags: []
+    ActivationOwnedTags: []
+    OwnerTags:
+      RequireTags: []
+      IgnoreTags: []
+    SourceTags:
+      RequireTags: []
+      IgnoreTags: []
+    TargetTags:
+      RequireTags: []
+      IgnoreTags: []
+  Cost: {fileID: 0}
+  Cooldown: {fileID: 0}
+  CustomDescription: On hit: defer 1 damage to round end; deferred damage +15% cashout. TODO(spec-006): deferred damage cashout value
+  <DeferHpEffect>k__BackingField: {fileID: 11400000, guid: 5d91775b461842ec928bd80d9b8b3fde, type: 2}
+  <MaxDeferralsPerRound>k__BackingField: 3
+  <CashoutBonusPerDeferral>k__BackingField: 0.15

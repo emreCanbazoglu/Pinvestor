@@ -11,35 +11,152 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2641cf4bc2dcf4dcf8c64f71a11842a0, type: 3}
   m_Name: GameConfigAuthoring
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
   _schemaVersion: 1
   _companies:
-  - companyId: Cashnado
+  - companyId: CloutHubLive
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
       value: 10
     - key: 12e5d3defa21047349165cab73d5e90a
-      value: 1000
+      value: 100
     - key: 5699d2d73590242978871b7f76819dde
-      value: 200
+      value: 50
     values: []
-  - companyId: CloutHub
+  - companyId: RageLoopStudio
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
-      value: 10
+      value: 12
     - key: 12e5d3defa21047349165cab73d5e90a
-      value: 1000
+      value: 90
     - key: 5699d2d73590242978871b7f76819dde
-      value: 200
+      value: 45
     values: []
-  - companyId: Stack Rabbit
+  - companyId: TrendNecroAgency
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 8
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 110
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: CancelShieldPR
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 14
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 80
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 55
+    values: []
+  - companyId: AutoPilotPantry
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
       value: 10
     - key: 12e5d3defa21047349165cab73d5e90a
-      value: 1000
+      value: 95
     - key: 5699d2d73590242978871b7f76819dde
-      value: 200
+      value: 45
+    values: []
+  - companyId: SleepDebtSaaS
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 100
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: OneTapButler
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 8
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 85
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 40
+    values: []
+  - companyId: MoodFridgeCloud
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 12
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 90
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: LoopholeLedger
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 100
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: DeferredAlphaCapital
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 110
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 60
+    values: []
+  - companyId: CreditKaraoke
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 8
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 80
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 45
+    values: []
+  - companyId: AuditFogExchange
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 100
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: PanicFulfillmentOS
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 90
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: LastMileOrchestrator
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 100
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: ShortageOracleAI
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 10
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 95
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 50
+    values: []
+  - companyId: RepoReaperSystems
+    attributes:
+    - key: f9426c64767cd41ab9990ea28b95e98b
+      value: 12
+    - key: 12e5d3defa21047349165cab73d5e90a
+      value: 105
+    - key: 5699d2d73590242978871b7f76819dde
+      value: 55
     values: []
   _balance: []
   _roundCriteria: []
