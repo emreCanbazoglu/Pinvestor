@@ -1,7 +1,6 @@
 using AbilitySystem;
 using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
-using Pinvestor.CardSystem.Authoring;
 using Pinvestor.CompanySystem;
 using Pinvestor.DamagableSystem;
 using Pinvestor.Game;
@@ -10,6 +9,7 @@ using Pinvestor.Game.Economy;
 using Pinvestor.Game.Health;
 using Pinvestor.GameplayAbilitySystem.Abilities;
 using Pinvestor.GameConfigSystem;
+using Pinvestor.RevenueGeneratorSystem.Core;
 using UnityEngine;
 
 namespace Pinvestor.BoardSystem.Authoring
@@ -21,8 +21,10 @@ namespace Pinvestor.BoardSystem.Authoring
         [SerializeField] private GenerateRevenueAbilityScriptableObject _generateRevenueAbility = null;
 
         [SerializeField] private Damagable _damagable = null;
-        
+
         [SerializeField] private BallTarget _ballTarget = null;
+
+        [field: SerializeField] public RevenueGenerator RevenueGenerator { get; private set; } = null;
 
         public Company Company { get; private set; }
 
@@ -33,21 +35,21 @@ namespace Pinvestor.BoardSystem.Authoring
         public CompanyValuationModel ValuationModel { get; private set; }
 
         private Transform _slotTransform;
-        
+
         private void OnEnable()
         {
             _ballTarget.OnBallCollided += OnBallCollided;
-            
+
             _damagable.OnDied += OnDied;
         }
 
         private void OnDisable()
         {
             _ballTarget.OnBallCollided -= OnBallCollided;
-            
+
             _damagable.OnDied -= OnDied;
         }
-        
+
         protected override void WrapCore()
         {
             InitializeAttributeSystem();
@@ -56,17 +58,17 @@ namespace Pinvestor.BoardSystem.Authoring
 
             InitializeHealthAndValuation();
 
-            gameObject.name
-                = "BoardItemWrapper_" + BoardItem.CompanyCardDataSo.CompanyId.CompanyId;
-            
+            string companyId = BoardItem.CompanyConfig?.CompanyId ?? "Unknown";
+            gameObject.name = "BoardItemWrapper_" + companyId;
+
             BoardItem.TryGetPropertySpec(
                 out BoardItemPropertySpec_PlacableCompany placableCompanySpec);
 
             placableCompanySpec.OnPlaced += OnCompanyPlaced;
-            
+
             base.WrapCore();
         }
-        
+
         protected override void DisposeCore()
         {
             BoardItem.TryGetPropertySpec(
@@ -74,7 +76,7 @@ namespace Pinvestor.BoardSystem.Authoring
 
             placableCompanySpec.OnPlaced -= OnCompanyPlaced;
             AttributeSystemComponent.ClearBaseValueOverrideResolver();
-            
+
             base.DisposeCore();
         }
 
@@ -83,34 +85,43 @@ namespace Pinvestor.BoardSystem.Authoring
             if (cell == null)
                 return;
 
-            var parentCellWrapper 
+            var parentCellWrapper
                 = GameManager.Instance.BoardWrapper
                     .CellWrappers[cell];
-            
+
             transform.SetParent(parentCellWrapper.transform);
         }
 
-
         private void InitializeAttributeSystem()
         {
+            string companyId = BoardItem.CompanyData.RefCardId;
+
             var companyConfigResolver = new CompanyAttributeConfigResolver(
                 GameConfigManager.Instance);
             var baseValueResolver = new CompanyAttributeBaseValueOverrideResolver(
-                BoardItem.CompanyCardDataSo.CompanyId,
+                companyId,
                 companyConfigResolver);
 
             AttributeSystemComponent.SetBaseValueOverrideResolver(baseValueResolver);
 
-            AbilitySystemCharacter.AttributeSystem
-                .Initialize(
-                    BoardItem.CompanyCardDataSo.AttributeSet);
+            // Initialize using the AttributeSet already assigned in the inspector.
+            // Values are overridden at runtime via CompanyAttributeBaseValueOverrideResolver.
+            AbilitySystemCharacter.AttributeSystem.Initialize();
         }
 
         private void CreateCompany()
         {
+            string companyId = BoardItem.CompanyData.RefCardId;
+
             CompanyFactory.Instance.TryCreateCompany(
-                BoardItem.CompanyCardDataSo.CompanyId,
+                companyId,
                 out Company company);
+
+            if (company == null)
+            {
+                Debug.LogError($"[BoardItemWrapper_Company] CompanyFactory could not create company for ID '{companyId}'.");
+                return;
+            }
 
             Company = company;
             Company.SetBoardItemWrapper(this);
@@ -131,16 +142,18 @@ namespace Pinvestor.BoardSystem.Authoring
 
             if (GameConfigManager.Instance != null && GameConfigManager.Instance.IsInitialized)
             {
+                string companyId = BoardItem.CompanyData.RefCardId;
+
                 if (GameConfigManager.Instance.TryGetService(out CompanyConfigService companyConfigService))
                 {
                     companyConfigService.TryGetCompanyMaxHP(
-                        BoardItem.CompanyCardDataSo.CompanyId,
+                        companyId,
                         out maxHp);
 
                     // Purchase cost: use TurnlyCost as a proxy until a dedicated cost field is added.
                     // TODO(spec-004): replace with actual purchase cost field when spec 004 merges.
                     if (companyConfigService.TryGetCompanyConfig(
-                            BoardItem.CompanyCardDataSo.CompanyId,
+                            companyId,
                             out var companyConfig))
                     {
                         if (companyConfig.TryGetTurnlyCost(out float turnlyCost))
@@ -159,19 +172,19 @@ namespace Pinvestor.BoardSystem.Authoring
             HealthState = new CompanyHealthState(maxHp);
             ValuationModel = new CompanyValuationModel(purchaseCost, cashoutRate);
         }
-        
+
         public void SetSlotTransform(Transform slotTransform)
         {
             _slotTransform = slotTransform;
-            
+
             transform.SetParent(slotTransform);
             transform.localPosition = Vector3.zero;
         }
-        
+
         public void SetSelected(bool isSelected)
         {
-            Debug.Log("Company: " + Company.CompanyId.CompanyId + " SetSelected: " + isSelected);
-            
+            Debug.Log("Company: " + (Company != null ? Company.CompanyId?.CompanyId : "null") + " SetSelected: " + isSelected);
+
             gameObject.SetActive(true);
         }
 
@@ -179,20 +192,10 @@ namespace Pinvestor.BoardSystem.Authoring
         {
             if (_slotTransform == null)
                 return;
-            
+
             gameObject.SetActive(false);
         }
-        
-        public void SetCardWrapper(
-            CompanyCardWrapper companyCardWrapper)
-        {
-            BoardItem.TryGetPropertySpec(
-                out BoardItemPropertySpec_CardOwner cardOwnerSpec);
-            
-            cardOwnerSpec.SetCard(
-                companyCardWrapper.Card);
-        }
-        
+
         private void OnBallCollided(Ball ball)
         {
             if (AbilitySystemCharacter.TryActivateAbility(
