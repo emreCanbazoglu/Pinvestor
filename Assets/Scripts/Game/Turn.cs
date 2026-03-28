@@ -6,6 +6,8 @@ using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Offer;
+using Pinvestor.GameConfigSystem;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,19 +32,33 @@ namespace Pinvestor.Game
         private const string BalanceAttributeName = "Balance";
         private const string TurnlyCostAttributeName = "TurnlyCost";
         private const string HpAttributeName = "HP";
-        
+
         private EventBinding<CompanyPlacedEvent> _companyPlacedEventBinding;
-        
+
         private bool _isCompanyPlaced;
-        
+
+        // Offer phase dependencies.
+        private readonly RunCompanyPool _companyPool;
+        private readonly CompanyConfigService _companyConfigService;
+
+        /// <summary>
+        /// The company selected during the offer phase for this turn.
+        /// Available to the placement phase after RunOfferPhase completes.
+        /// </summary>
+        public CompanyConfigModel SelectedCompany { get; private set; }
+
         public Turn(
             CardPlayer player,
             BallShooter ballShooter,
-            Board board)
+            Board board,
+            RunCompanyPool companyPool = null,
+            CompanyConfigService companyConfigService = null)
         {
             Player = player;
             BallShooter = ballShooter;
             Board = board;
+            _companyPool = companyPool;
+            _companyConfigService = companyConfigService;
         }
         
         public async UniTask StartAsync()
@@ -74,7 +90,72 @@ namespace Pinvestor.Game
             int turnIndex)
         {
             LogPhase(ETurnPhase.Offer, roundIndex, turnIndex);
-            await ChooseCompanyCard();
+
+            // Use the new offer system when both pool and config service are available (T009).
+            if (_companyPool != null && _companyConfigService != null)
+            {
+                await RunNewOfferPhase();
+            }
+            else
+            {
+                // Fallback to legacy card-based offer when dependencies are missing.
+                Debug.LogWarning("[Turn] RunOfferPhase: CompanyPool or CompanyConfigService not provided. Falling back to legacy offer.");
+                await ChooseCompanyCard();
+            }
+        }
+
+        /// <summary>
+        /// New offer phase flow:
+        /// 1. Draw 3 companies from RunCompanyPool via CompanyOfferDrawer.
+        /// 2. Populate OfferPhaseContext and open the UI panel.
+        /// 3. Await player selection.
+        /// 4. Mark unselected companies as discarded.
+        /// 5. Store selected company on SelectedCompany for the placement phase.
+        /// </summary>
+        private async UniTask RunNewOfferPhase()
+        {
+            CompanyOfferDrawer drawer = new CompanyOfferDrawer(_companyPool, _companyConfigService);
+            List<GameConfigSystem.CompanyConfigModel> offered = drawer.DrawOffer();
+
+            if (offered.Count == 0)
+            {
+                Debug.LogWarning("[Turn] RunNewOfferPhase: No companies available to offer. Skipping offer phase.");
+                return;
+            }
+
+            OfferPhaseContext context = new OfferPhaseContext(offered);
+
+            // Open the UI panel and wait for selection.
+            EventBus<ShowCompanyOfferPanelEvent>.Raise(
+                new ShowCompanyOfferPanelEvent(context));
+
+            CompanyConfigModel result = await context.SelectionTask;
+
+            // Fallback guard (T020): if somehow the task resolved without a real selection, force-pick first.
+            if (result == null)
+            {
+                Debug.LogWarning("[Turn] RunNewOfferPhase: Selection resolved with null. Auto-selecting first company.");
+                context.ForceSelectFirst();
+                result = context.ConfirmedSelection;
+            }
+
+            // Close the offer panel.
+            EventBus<HideCompanyOfferPanelEvent>.Raise(new HideCompanyOfferPanelEvent());
+
+            // Mark the 2 unselected cards as discarded (T010).
+            foreach (var company in offered)
+            {
+                if (company.CompanyId != result.CompanyId)
+                    _companyPool.MarkDiscarded(company.CompanyId);
+            }
+
+            // Store selected company — placement phase will read it (T011).
+            SelectedCompany = result;
+
+            // Clear context to prevent stale state.
+            context.Clear();
+
+            Debug.Log($"[Turn] Offer phase complete. Selected: {result.CompanyId}");
         }
 
         private async UniTask RunPlacementPhase(
@@ -261,14 +342,19 @@ namespace Pinvestor.Game
             EventBus<CompanyPlacedEvent>
                 .Deregister(
                     _companyPlacedEventBinding);
-            
-            Debug.Log("Company placed: " + e.Company.Company.CompanyId.CompanyId);
-            
+
+            string companyId = e.Company.Company.CompanyId.CompanyId;
+            Debug.Log("Company placed: " + companyId);
+
+            // Mark the placed company in the pool so it won't be offered again (T004).
+            if (_companyPool != null)
+                _companyPool.MarkPlaced(companyId);
+
             Player.Deck.TryGetDeckPile<CompanySelectionPile>(
                 out var chooseCompanyPile);
 
-            chooseCompanyPile.ResetSlots();
-            
+            chooseCompanyPile?.ResetSlots();
+
             _isCompanyPlaced = true;
         }
 

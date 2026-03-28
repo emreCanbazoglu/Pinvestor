@@ -6,6 +6,7 @@ using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
 using Pinvestor.GameConfigSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Offer;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -95,10 +96,13 @@ namespace Pinvestor.Game
 
         private async UniTask PlayConfiguredRunAsync(RoundCycleSettings[] rounds)
         {
+            RunCompanyPool companyPool = BuildRunCompanyPool();
+
             RoundContext context = new RoundContext(
                 Table.GamePlayer.CardPlayer,
                 BallShooter,
-                Table.Board);
+                Table.Board,
+                companyPool);
 
             IReadOnlyList<IRoundPhase> phases = BuildRoundPhases();
             bool allEvaluatedRoundsPassed = true;
@@ -129,6 +133,9 @@ namespace Pinvestor.Game
                     Debug.LogWarning($"Round Requirement Check Skipped: Round {roundIndex + 1}. {result.Message}");
                 }
             }
+
+            // Clear the company pool on run end to prevent stale state in the next run (T022).
+            companyPool.Clear();
 
             EventBus<RunCycleCompletedEvent>.Raise(
                 new RunCycleCompletedEvent(
@@ -175,6 +182,48 @@ namespace Pinvestor.Game
                 new TurnExecutionRoundPhase(),
                 new ShopPlaceholderRoundPhase(),
             };
+        }
+
+        /// <summary>
+        /// Builds and initializes the RunCompanyPool from the GameConfig company list.
+        /// Called once at run start (T003, T021).
+        /// </summary>
+        private RunCompanyPool BuildRunCompanyPool()
+        {
+            var pool = new RunCompanyPool();
+
+            GameConfigManager gameConfigManager = _gameConfigManager != null
+                ? _gameConfigManager
+                : GameConfigManager.Instance;
+
+            if (gameConfigManager == null || !gameConfigManager.IsInitialized)
+            {
+                Debug.LogWarning("[GameManager] GameConfigManager not ready. RunCompanyPool will be empty.");
+                return pool;
+            }
+
+            if (!gameConfigManager.TryGetService<CompanyConfigService>(out _))
+            {
+                Debug.LogWarning("[GameManager] CompanyConfigService not available. RunCompanyPool will be empty.");
+                return pool;
+            }
+
+            // Collect all company IDs from the root model.
+            if (gameConfigManager.RootModel?.Companies == null)
+            {
+                Debug.LogWarning("[GameManager] No companies in GameConfig root model.");
+                return pool;
+            }
+
+            var companyIds = new System.Collections.Generic.List<string>();
+            foreach (var company in gameConfigManager.RootModel.Companies)
+            {
+                if (!string.IsNullOrWhiteSpace(company.CompanyId))
+                    companyIds.Add(company.CompanyId);
+            }
+
+            pool.Initialize(companyIds);
+            return pool;
         }
     }
 }

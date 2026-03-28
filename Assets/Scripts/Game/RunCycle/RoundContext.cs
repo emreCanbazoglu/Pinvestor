@@ -3,6 +3,8 @@ using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CardSystem;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Offer;
+using Pinvestor.GameConfigSystem;
 
 namespace Pinvestor.Game
 {
@@ -14,14 +16,22 @@ namespace Pinvestor.Game
         public BallShooter BallShooter { get; }
         public Board Board { get; }
 
+        /// <summary>
+        /// Tracks available/placed/discarded companies for this run.
+        /// Initialized at run start; persists across all turns in the run.
+        /// </summary>
+        public RunCompanyPool CompanyPool { get; }
+
         public RoundContext(
             CardPlayer cardPlayer,
             BallShooter ballShooter,
-            Board board)
+            Board board,
+            RunCompanyPool companyPool = null)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
             Board = board;
+            CompanyPool = companyPool ?? new RunCompanyPool();
         }
 
         public bool TryGetCurrentNetWorth(out float netWorth)
