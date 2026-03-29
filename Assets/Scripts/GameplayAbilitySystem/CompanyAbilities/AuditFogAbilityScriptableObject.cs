@@ -3,6 +3,7 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             // TODO(spec-006): collapse handler — subscribe to collapse events from spec-006
             // and intercept the first collapse per round, hiding it until round end.
-            Debug.Log("[AuditFog] Ability active. Waiting for spec-006 collapse handler to be implemented.");
+            GameEventLog.Add("ABILITY+", "[AuditFog] Active — awaiting spec-006 collapse handler", new UnityEngine.Color(0.6f, 0.9f, 0.6f));
 
             while (true)
             {
@@ -81,8 +82,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 return false;
 
             _hiddenCollapseUsedThisRound = true;
-            Debug.Log($"[AuditFog] Hidden collapse triggered for {collapsingItem}. " +
-                      $"TODO(spec-006): defer removal until round end, keep revenue active.");
+            GameEventLog.Add("ABILITY", $"[AuditFog] Hidden collapse for {collapsingItem} (TODO spec-006: defer until round end)", new UnityEngine.Color(0.6f, 0.6f, 1f));
             return true;
         }
     }

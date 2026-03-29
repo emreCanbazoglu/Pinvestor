@@ -31,6 +31,9 @@ namespace Pinvestor.Game.BallSystem
 
         private void OnDestroy()
         {
+            // Ensure BallShooter.ShootBallAsync() is never left waiting if the ball
+            // is destroyed by anything other than the normal OnTriggerExit path.
+            IsActive = false;
             Timing.KillCoroutines(_moveRoutineHandle);
         }
 

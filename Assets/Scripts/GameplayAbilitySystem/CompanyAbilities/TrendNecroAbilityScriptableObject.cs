@@ -3,6 +3,7 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using UnityEngine;
 
@@ -78,8 +79,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 return;
 
             RecycledHypeStacks++;
-            Debug.Log($"[TrendNecro] Adjacent company collapsed. RecycledHypeStacks={RecycledHypeStacks}. " +
-                      $"TODO(spec-006): apply cashout doubling modifier on next cashout.");
+            GameEventLog.Add("ABILITY", $"[TrendNecro] Adjacent collapse → Recycled Hype ×{RecycledHypeStacks} (next cashout doubled)", new UnityEngine.Color(0.9f, 0.6f, 1f));
         }
 
         /// <summary>

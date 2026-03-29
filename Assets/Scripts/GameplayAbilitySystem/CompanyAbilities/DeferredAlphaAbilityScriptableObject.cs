@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AbilitySystem;
 using AbilitySystem.Authoring;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -98,8 +99,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _deferralsThisRound++;
             DeferredDamageCount++;
 
-            Debug.Log($"[DeferredAlpha] Deferred 1 damage. Total deferred={DeferredDamageCount}. " +
-                      $"TODO(spec-006): cashout bonus +{DeferredAlphaAbility.CashoutBonusPerDeferral * 100}% per point.");
+            GameEventLog.Add("ABILITY", $"[DeferredAlpha] Deferred hit #{DeferredDamageCount} (this round: {_deferralsThisRound}/{DeferredAlphaAbility.MaxDeferralsPerRound})", new UnityEngine.Color(0.6f, 0.6f, 1f));
         }
 
         private void OnRoundStarted(RoundStartedEvent _)

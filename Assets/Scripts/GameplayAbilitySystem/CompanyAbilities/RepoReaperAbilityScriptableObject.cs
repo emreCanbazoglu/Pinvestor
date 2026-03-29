@@ -3,6 +3,7 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using UnityEngine;
 
@@ -28,6 +29,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new RepoReaperAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (CollateralRphBonusEffect != null) yield return CollateralRphBonusEffect;
+            if (CollateralHpDebuffEffect != null) yield return CollateralHpDebuffEffect;
         }
     }
 
@@ -62,7 +69,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             var adjacent = GetRandomAdjacentCompany();
             if (adjacent == null)
             {
-                Debug.Log("[RepoReaper] No adjacent company to mark as Collateral.");
+                GameEventLog.Add("ABILITY", "[RepoReaper] No adjacent company to mark as Collateral", new UnityEngine.Color(0.7f, 0.7f, 0.7f));
                 return;
             }
 
@@ -81,7 +88,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 asc.ApplyGameplayEffectSpecToSelf(debuffSpec);
             }
 
-            Debug.Log($"[RepoReaper] Marked {adjacent.gameObject.name} as Collateral (+RPH, +HP loss per hit for 2 turns).");
+            GameEventLog.Add("ABILITY", $"[RepoReaper] Marked {adjacent.gameObject.name} as Collateral (+RPH, +HP loss per hit × 2 turns)", new UnityEngine.Color(1f, 0.6f, 0.2f));
         }
 
         private BoardItemWrapper_Company GetRandomAdjacentCompany()

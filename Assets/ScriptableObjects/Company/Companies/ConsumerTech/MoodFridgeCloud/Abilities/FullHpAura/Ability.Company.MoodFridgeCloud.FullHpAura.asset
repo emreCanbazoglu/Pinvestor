@@ -29,5 +29,6 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: While at full HP, adjacent companies ignore first op-cost deduction each round
+  CustomDescription: While at full HP adjacent companies ignore their first op-cost
+    deduction each round
   <OpCostShieldEffect>k__BackingField: {fileID: 11400000, guid: 36ecddf1ab6e4b18ada063895d4fff73, type: 2}

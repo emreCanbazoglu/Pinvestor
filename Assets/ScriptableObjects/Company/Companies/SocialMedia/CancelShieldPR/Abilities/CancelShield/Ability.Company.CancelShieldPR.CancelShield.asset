@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39c2c7f8bd8c4b6ea1285ea3190ee1e9, type: 3}
   m_Name: Ability.Company.CancelShieldPR.CancelShield
   m_EditorClassIdentifier: 
-  AbilityId: 116e76f3c131440eb5992c5849347e8a
+  AbilityId: 75dbcfe1fbfc42fa8a07bb7713d6ff7d
   AbilityTags:
     AssetTag: {fileID: 0}
     CancelAbilitiesWithTags: []
@@ -29,7 +29,8 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: 4+ hits this turn → 50% bonus revenue or 50% fine at turn end
+  CustomDescription: "4+ hits this turn \u2192 50% chance: +50% {attribute:rph_buff}
+    bonus OR {value:hp_modifier} {attribute:hp_modifier} fine at turn end"
   <BonusRevenueEffect>k__BackingField: {fileID: 11400000, guid: 79e40242663a4fd29a1a3b72df130b46, type: 2}
   <FineEffect>k__BackingField: {fileID: 11400000, guid: 1ed803cf4ef0437f8e9498dd1bd9cc42, type: 2}
   <HitThreshold>k__BackingField: 4

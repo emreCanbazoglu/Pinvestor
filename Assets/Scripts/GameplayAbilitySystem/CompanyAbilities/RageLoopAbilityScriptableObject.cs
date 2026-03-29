@@ -4,6 +4,7 @@ using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.CompanySystem;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -28,6 +29,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new RageLoopAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (RphBuffEffect != null) yield return RphBuffEffect;
         }
     }
 
@@ -100,6 +106,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             if (RageLoopAbility.RphBuffEffect == null)
                 return;
 
+            int buffedCount = 0;
             var allBoardItems = GameManager.Instance.BoardWrapper.Board.BoardItems;
             foreach (var item in allBoardItems)
             {
@@ -116,7 +123,10 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
                 var spec = Owner.MakeOutgoingSpec(this, RageLoopAbility.RphBuffEffect);
                 asc.ApplyGameplayEffectSpecToSelf(spec);
+                buffedCount++;
             }
+
+            GameEventLog.Add("ABILITY", $"[RageLoop] Hit {_hitCount} — proc #{_procCount}: buffed {buffedCount} SocialMedia companies", new UnityEngine.Color(1f, 0.45f, 0.2f));
         }
     }
 }

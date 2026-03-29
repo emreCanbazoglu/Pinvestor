@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dab4dc407074b268bc6654be3f4fc7f, type: 3}
   m_Name: CardData.Company.DeferredAlphaCapital
   m_EditorClassIdentifier: 
-  UniqueId: 2547173ec0804de5b875569db2518645
+  UniqueId: 7ba9445617d04583aa3745399d820885
   <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 3
   <CompanyId>k__BackingField: {fileID: 11400000, guid: 5064f36ee8e24db38a34b79f3d81c0b8, type: 2}

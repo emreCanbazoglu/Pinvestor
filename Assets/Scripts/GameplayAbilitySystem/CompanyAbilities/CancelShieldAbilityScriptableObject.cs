@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AbilitySystem;
 using AbilitySystem.Authoring;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -25,6 +26,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new CancelShieldAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (BonusRevenueEffect != null) yield return BonusRevenueEffect;
+            if (FineEffect != null) yield return FineEffect;
         }
     }
 
@@ -83,13 +90,13 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 {
                     var spec = Owner.MakeOutgoingSpec(this, CancelShieldAbility.BonusRevenueEffect);
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
-                    Debug.Log("[CancelShield] PR survived — bonus revenue granted.");
+                    GameEventLog.Add("ABILITY", $"[CancelShield] PR survived — bonus revenue granted ({_hitsThisTurn} hits)", new UnityEngine.Color(0.4f, 1f, 0.4f));
                 }
                 else if (!bonusRevenue && CancelShieldAbility.FineEffect != null)
                 {
                     var spec = Owner.MakeOutgoingSpec(this, CancelShieldAbility.FineEffect);
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
-                    Debug.Log("[CancelShield] PR overexposed — fine applied.");
+                    GameEventLog.Add("ABILITY", $"[CancelShield] PR overexposed — fine applied ({_hitsThisTurn} hits)", new UnityEngine.Color(1f, 0.4f, 0.4f));
                 }
             }
 

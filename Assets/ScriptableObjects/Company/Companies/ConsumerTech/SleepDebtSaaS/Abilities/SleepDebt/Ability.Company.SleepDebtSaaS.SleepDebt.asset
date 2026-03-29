@@ -29,7 +29,9 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Exactly 2 hits → +permanent RPH (cap 6); over-hit → extra HP loss
+  CustomDescription: "Exactly 2 hits \u2192 permanent +1% {attribute:rph_buff} (cap
+    +6 RPH); over-hit \u2192 {value:hp_modifier} {attribute:hp_modifier} per excess
+    hit"
   <PermanentRphBonusEffect>k__BackingField: {fileID: 11400000, guid: d2776850970b4c8a8a7b7ee5ed2b8e02, type: 2}
   <ExtraHpLossEffect>k__BackingField: {fileID: 11400000, guid: 1acdd959b2b748ab82bd98ba7843082b, type: 2}
   <TargetHitCount>k__BackingField: 2

@@ -29,5 +29,6 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Adjacent collapse → move into tile, trigger free hit payout (once/round). TODO(spec-006): collapse handler
+  CustomDescription: "Adjacent collapse \u2192 move into tile, trigger {value:rph_buff}
+    free hit payout (once per round)"
   <FreeHitPayoutEffect>k__BackingField: {fileID: 11400000, guid: 74470a1e632f462bb6d364e8c07d8830, type: 2}

@@ -2,7 +2,9 @@ using System.Globalization;
 using AttributeSystem.Authoring;
 using AttributeSystem.Components;
 using MMFramework.MMUI;
+using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
+
 using Pinvestor.CompanySystem;
 using Pinvestor.GameConfigSystem;
 using UnityEngine;
@@ -20,6 +22,7 @@ namespace Pinvestor.UI
 
         [SerializeField] private AttributeScriptableObject _maxHPAttribute = null;
         [SerializeField] private AttributeScriptableObject _rphAttribute = null;
+        [SerializeField] private CardContainerScriptableObject _cardContainer = null;
 
         private bool _isPopulatedFromConfig;
         
@@ -156,7 +159,7 @@ namespace Pinvestor.UI
             RPHText = model.HasRevenuePerHit
                 ? model.RevenuePerHit.ToString("C0", CultureInfo.GetCultureInfo("en-US")) + " RPH"
                 : "-- RPH";
-            AbilityDescription = string.Empty;
+            AbilityDescription = ResolveAbilityDescription(model.CompanyId);
             CompanyArtwork = null;
 
             if (model.TryGetCompanyCategory(out ECompanyCategory category)
@@ -222,6 +225,31 @@ namespace Pinvestor.UI
         {
             AbilityDescription
                 = _companyCardWrapper.CompanyCard.GetCompanyAbilityDescription();
+        }
+
+        private string ResolveAbilityDescription(string companyId)
+        {
+            if (_cardContainer == null)
+            {
+                Debug.LogWarning("[Widget_CompanyCard] _cardContainer is not assigned — ability description will be empty.", this);
+                return string.Empty;
+            }
+
+            var allCompanyCards = _cardContainer
+                .GetCardDataOfType<CompanyCardDataScriptableObject>();
+
+            foreach (var cardData in allCompanyCards)
+            {
+                if (cardData.CompanyId != null
+                    && cardData.CompanyId.CompanyId == companyId
+                    && cardData.AbilityTriggerDefinitions.Length > 0)
+                {
+                    return cardData.AbilityTriggerDefinitions[0].Ability?.GetDescription()
+                           ?? string.Empty;
+                }
+            }
+
+            return string.Empty;
         }
         
         private void SetCompanyArtwork()

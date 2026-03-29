@@ -29,4 +29,5 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: First collapse each round is hidden until round end. TODO(spec-006): collapse handler
+  CustomDescription: First collapse each round is hidden until round end; hidden
+    company still generates revenue

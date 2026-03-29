@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 452f271dc70644cc993f1fcea924c59a, type: 3}
   m_Name: Ability.Company.TrendNecroAgency.RecycledHype
   m_EditorClassIdentifier: 
-  AbilityId: 84e794f21b7f4afe9d04d7f79fce6c73
+  AbilityId: 592241a42f2c4290a96906aa12f36594
   AbilityTags:
     AssetTag: {fileID: 0}
     CancelAbilitiesWithTags: []
@@ -29,5 +29,6 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Adjacent collapse → Recycled Hype stack; next cashout doubled. TODO(spec-006): cashout doubling
+  CustomDescription: "Adjacent collapse \u2192 gain Recycled Hype stack; next cashout
+    doubled (cap 1 stack)"
   <MaxStacks>k__BackingField: 1

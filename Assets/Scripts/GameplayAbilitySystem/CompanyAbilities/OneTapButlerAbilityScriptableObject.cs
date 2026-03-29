@@ -4,6 +4,7 @@ using AbilitySystem.Authoring;
 using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using UnityEngine;
 
@@ -23,6 +24,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         [field: SerializeField] public GameplayEffectScriptableObject CopiedRphBuffEffect { get; private set; } = null;
         [field: SerializeField] public float CopyRatio { get; private set; } = 0.5f;
         [field: SerializeField] public int BuffDurationTurns { get; private set; } = 2;
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (CopiedRphBuffEffect != null) yield return CopiedRphBuffEffect;
+        }
 
         public override AbstractAbilitySpec CreateSpec(
             AbilitySystemCharacter owner,
@@ -121,7 +127,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             if (!foundAdjacent)
             {
-                Debug.Log("[OneTapButler] No adjacent company found to copy from.");
+                GameEventLog.Add("ABILITY", "[OneTapButler] No adjacent company found to copy from", new UnityEngine.Color(0.7f, 0.7f, 0.7f));
                 return;
             }
 
@@ -130,7 +136,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _buffContainer = Owner.ApplyGameplayEffectSpecToSelf(spec);
             _copyApplied = true;
 
-            Debug.Log($"[OneTapButler] Copied {copiedRph} RPH from cheapest adjacent company (ratio={OneTapButlerAbility.CopyRatio}).");
+            GameEventLog.Add("ABILITY", $"[OneTapButler] Copied {copiedRph:F1} RPH from cheapest adjacent (×{OneTapButlerAbility.CopyRatio:F0%})", new UnityEngine.Color(0.4f, 1f, 0.7f));
         }
 
         private void OnTurnResolution(TurnResolutionStartedEvent _)

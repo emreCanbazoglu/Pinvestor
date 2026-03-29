@@ -29,6 +29,7 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: On cashout: mark random adjacent company as Collateral (+RPH, +HP loss per hit, 2 turns)
+  CustomDescription: "On cashout mark random adjacent as Collateral \u2192 +15% {attribute:rph_buff}
+    but extra {attribute:hp_modifier} loss per hit (2 turns)"
   <CollateralRphBonusEffect>k__BackingField: {fileID: 11400000, guid: 7386745d5a824f3684aa0c2af8264309, type: 2}
   <CollateralHpDebuffEffect>k__BackingField: {fileID: 11400000, guid: 1b92295d444d4afd9c01c8ad69db28ee, type: 2}

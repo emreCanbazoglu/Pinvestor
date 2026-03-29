@@ -29,6 +29,8 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Round start: predict category; end of turn: under-hit = payout, over-hit = penalty
+  CustomDescription: "Round start predict a category; under-hit \u2192 {value:rph_buff}
+    {attribute:rph_buff} payout; over-hit \u2192 {value:hp_modifier} {attribute:hp_modifier}
+    penalty"
   <PredictionPayoutEffect>k__BackingField: {fileID: 11400000, guid: 7e24a3ce07144b988baeb74dfea7f401, type: 2}
   <MispredictionPenaltyEffect>k__BackingField: {fileID: 11400000, guid: 379390c470054c518f4b7570eff61ea4, type: 2}

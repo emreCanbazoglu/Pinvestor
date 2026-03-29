@@ -3,6 +3,7 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using AttributeSystem.Components;
 using Pinvestor.BoardSystem.Authoring;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -28,6 +29,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new SleepDebtAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (PermanentRphBonusEffect != null) yield return PermanentRphBonusEffect;
+            if (ExtraHpLossEffect != null) yield return ExtraHpLossEffect;
         }
     }
 
@@ -92,7 +99,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                     var spec = Owner.MakeOutgoingSpec(this, SleepDebtAbility.PermanentRphBonusEffect);
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
                     _permanentBonusCount++;
-                    Debug.Log($"[SleepDebt] Perfect 2 hits — permanent RPH bonus #{_permanentBonusCount}.");
+                    GameEventLog.Add("ABILITY", $"[SleepDebt] Perfect 2 hits — permanent RPH bonus #{_permanentBonusCount}", new UnityEngine.Color(0.4f, 1f, 0.7f));
                 }
             }
             else if (_hitsThisTurn > SleepDebtAbility.TargetHitCount)
@@ -108,7 +115,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
                 }
 
-                Debug.Log($"[SleepDebt] Over-hit by {extraHits} — extra HP loss applied.");
+                GameEventLog.Add("ABILITY", $"[SleepDebt] Over-hit by {extraHits} — extra HP loss ×{extraHits}", new UnityEngine.Color(1f, 0.4f, 0.4f));
             }
 
             _hitsThisTurn = 0;

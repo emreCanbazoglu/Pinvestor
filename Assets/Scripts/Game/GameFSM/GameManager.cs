@@ -10,6 +10,7 @@ using Pinvestor.Game.BallSystem;
 using Pinvestor.Game.Economy;
 using Pinvestor.Game.Offer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 namespace Pinvestor.Game
@@ -193,12 +194,17 @@ namespace Pinvestor.Game
             if (TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds))
             {
                 await PlayConfiguredRunAsync(rounds);
-                Debug.Log("Configured run cycle completed.");
+                Debug.Log("Configured run cycle completed. Restarting...");
             }
             else
             {
                 Debug.LogWarning("Run cycle config is missing or empty in GameConfig. Skipping run cycle execution.");
+                return;
             }
+
+            // Brief pause so the player can see the final board state before restart.
+            await UniTask.Delay(2000);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         private async UniTask PlayConfiguredRunAsync(RoundCycleSettings[] rounds)

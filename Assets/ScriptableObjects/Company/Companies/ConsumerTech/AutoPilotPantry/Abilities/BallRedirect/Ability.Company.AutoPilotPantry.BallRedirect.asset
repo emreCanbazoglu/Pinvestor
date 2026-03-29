@@ -29,4 +29,5 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: TODO: requires ball miss detection hook
+  CustomDescription: Ball misses all companies? Auto-redirects once to nearest ConsumerTech
+    (once per turn)

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c37f39cc8374d2090b3d5176d3c16f1, type: 3}
   m_Name: CompanyId.CreditKaraoke
   m_EditorClassIdentifier: 
-  UniqueId: b497f451f4324652af750463d9e25476
+  UniqueId: 39ba4d3de99a4688ab48f30b2d1e960e
   <CompanyId>k__BackingField: CreditKaraoke

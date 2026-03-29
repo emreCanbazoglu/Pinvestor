@@ -29,5 +29,6 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Once per turn: nullify first negative market/news modifier on this company
+  CustomDescription: Once per turn nullifies the first negative market/news modifier
+    targeting this company
   <NegativeModifierShieldEffect>k__BackingField: {fileID: 11400000, guid: caf82ac15efe4091bbf83547f0739255, type: 2}

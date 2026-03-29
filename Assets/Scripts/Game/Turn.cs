@@ -356,19 +356,12 @@ namespace Pinvestor.Game
         private bool IsCollapsed(BoardItem_Company companyBoardItem)
         {
             BoardItemWrapper_Company wrapper = companyBoardItem?.Wrapper as BoardItemWrapper_Company;
-            if (wrapper == null || wrapper.AttributeSystemComponent == null)
+            if (wrapper == null)
                 return false;
 
-            AttributeSystemComponent attributeSystem = wrapper.AttributeSystemComponent;
-            if (!attributeSystem.AttributeSet.TryGetAttributeByName(
-                    HpAttributeName,
-                    out AttributeScriptableObject hpAttribute))
-                return false;
-
-            if (!attributeSystem.TryGetAttributeValue(hpAttribute, out AttributeValue hpValue))
-                return false;
-
-            return hpValue.CurrentValue <= 0f;
+            // PendingCollapse is set by Damagable.OnDied and never cleared, so it correctly
+            // persists even if duration-based HP-reducing GEs expire after OnDied fires.
+            return wrapper.HealthState?.PendingCollapse == true;
         }
 
         private bool TryGetPlayerBalance(

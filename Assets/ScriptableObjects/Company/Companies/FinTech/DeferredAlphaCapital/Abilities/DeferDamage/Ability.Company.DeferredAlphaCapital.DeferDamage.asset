@@ -29,7 +29,8 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: On hit: defer 1 damage to round end; deferred damage +15% cashout. TODO(spec-006): deferred damage cashout value
+  CustomDescription: On hit defer 1 damage to round end; each deferred hit grants
+    +15% cashout value (cap 3 deferrals/round)
   <DeferHpEffect>k__BackingField: {fileID: 11400000, guid: 5d91775b461842ec928bd80d9b8b3fde, type: 2}
   <MaxDeferralsPerRound>k__BackingField: 3
   <CashoutBonusPerDeferral>k__BackingField: 0.15

@@ -27,6 +27,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         {
             return new CreditKaraokeAbilitySpec(this, owner);
         }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (RphPerCategoryEffect != null) yield return RphPerCategoryEffect;
+        }
     }
 
     public class CreditKaraokeAbilitySpec : AbstractAbilitySpec

@@ -29,6 +29,7 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Gains +RPH per company below 50% HP (live bonus cap +8)
+  CustomDescription: Gains +2% {attribute:rph_buff} per company currently below 50%
+    HP (cap +8 RPH total)
   <RphBonusPerCompanyEffect>k__BackingField: {fileID: 11400000, guid: 10df7b32e131453fba19d52a7c009f0b, type: 2}
   <MaxBonusStacks>k__BackingField: 8

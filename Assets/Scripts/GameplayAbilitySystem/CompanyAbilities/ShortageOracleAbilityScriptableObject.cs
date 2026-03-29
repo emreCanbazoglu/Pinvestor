@@ -6,6 +6,7 @@ using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.CompanySystem;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -30,6 +31,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new ShortageOracleAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (PredictionPayoutEffect != null) yield return PredictionPayoutEffect;
+            if (MispredictionPenaltyEffect != null) yield return MispredictionPenaltyEffect;
         }
     }
 
@@ -123,7 +130,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _predictionActive = true;
             _categoryHits.Clear();
 
-            Debug.Log($"[ShortageOracle] Predicted category: {_predictedCategory}");
+            GameEventLog.Add("ABILITY", $"[ShortageOracle] Predicted: {_predictedCategory}", new UnityEngine.Color(0.8f, 0.8f, 0.4f));
         }
 
         private void OnRoundStarted(RoundStartedEvent _)
@@ -155,7 +162,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                     var spec = Owner.MakeOutgoingSpec(this, ShortageOracleAbility.PredictionPayoutEffect);
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
                 }
-                Debug.Log($"[ShortageOracle] Prediction correct! {_predictedCategory} was under-hit ({predictedHits} vs avg {average:F1}). Payout applied.");
+                GameEventLog.Add("ABILITY", $"[ShortageOracle] Correct! {_predictedCategory} under-hit ({predictedHits} vs avg {average:F1}) — payout", new UnityEngine.Color(0.4f, 1f, 0.4f));
             }
             else if (predictedHits > average)
             {
@@ -165,7 +172,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                     var spec = Owner.MakeOutgoingSpec(this, ShortageOracleAbility.MispredictionPenaltyEffect);
                     Owner.ApplyGameplayEffectSpecToSelf(spec);
                 }
-                Debug.Log($"[ShortageOracle] Prediction failed! {_predictedCategory} was over-hit ({predictedHits} vs avg {average:F1}). Penalty applied.");
+                GameEventLog.Add("ABILITY", $"[ShortageOracle] Failed! {_predictedCategory} over-hit ({predictedHits} vs avg {average:F1}) — penalty", new UnityEngine.Color(1f, 0.4f, 0.4f));
             }
         }
     }

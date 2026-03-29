@@ -28,6 +28,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         {
             return new PanicFulfillmentAbilitySpec(this, owner);
         }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (RphBonusPerCompanyEffect != null) yield return RphBonusPerCompanyEffect;
+        }
     }
 
     public class PanicFulfillmentAbilitySpec : AbstractAbilitySpec

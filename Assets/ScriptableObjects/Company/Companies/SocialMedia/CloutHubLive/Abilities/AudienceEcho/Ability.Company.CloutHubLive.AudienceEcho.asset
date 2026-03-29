@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce454ce57db4a5fbb52c81045b76f16, type: 3}
   m_Name: Ability.Company.CloutHubLive.AudienceEcho
   m_EditorClassIdentifier: 
-  AbilityId: 7a212d1cad8d4287b011a75b22c968cd
+  AbilityId: 1634e1134c5a4c63aeda95bbacdbb533
   AbilityTags:
     AssetTag: {fileID: 0}
     CancelAbilitiesWithTags: []
@@ -29,4 +29,5 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: TODO: requires echo node board entity mechanic
+  CustomDescription: First hit/turn spawns Audience Echo on adjacent tile; ball through
+    echo grants chain bonus (max 2 echoes, expire turn end)

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dab4dc407074b268bc6654be3f4fc7f, type: 3}
   m_Name: CardData.Company.CreditKaraoke
   m_EditorClassIdentifier: 
-  UniqueId: b1172a0fef8441ff97e48b583490797d
+  UniqueId: 67eb0be6c4fe4492859dcd138ef9b034
   <CardWrapperPrefab>k__BackingField: {fileID: 2753373217358395624, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
   <CompanyCategory>k__BackingField: 3
   <CompanyId>k__BackingField: {fileID: 11400000, guid: 39ba4d3de99a4688ab48f30b2d1e960e, type: 2}

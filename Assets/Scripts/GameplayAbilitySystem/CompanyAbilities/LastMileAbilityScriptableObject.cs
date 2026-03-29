@@ -3,6 +3,7 @@ using AbilitySystem;
 using AbilitySystem.Authoring;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
 using UnityEngine;
@@ -30,6 +31,11 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             float? level = default)
         {
             return new LastMileAbilitySpec(this, owner);
+        }
+
+        protected override IEnumerable<GameplayEffectScriptableObject> GetDescriptiveGameplayEffects()
+        {
+            if (FreeHitPayoutEffect != null) yield return FreeHitPayoutEffect;
         }
     }
 
@@ -90,14 +96,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             // TODO(spec-006): collapse handler — move this company into the collapsed tile.
             // For now, log intent and apply free payout.
-            Debug.Log($"[LastMile] Adjacent company collapsed. " +
-                      $"TODO(spec-006): move into collapsed tile at {collapsedCompany.MainPiece?.Cell?.Position}.");
+            GameEventLog.Add("ABILITY", $"[LastMile] Adjacent collapse at {collapsedCompany.MainPiece?.Cell?.Position} — free payout triggered", new UnityEngine.Color(0.4f, 1f, 0.7f));
 
             if (LastMileAbility.FreeHitPayoutEffect != null)
             {
                 var spec = Owner.MakeOutgoingSpec(this, LastMileAbility.FreeHitPayoutEffect);
                 Owner.ApplyGameplayEffectSpecToSelf(spec);
-                Debug.Log("[LastMile] Free hit payout applied.");
             }
         }
 

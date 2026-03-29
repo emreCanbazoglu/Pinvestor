@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba6cb01f2af4718a4895b752bd3f5b1, type: 3}
   m_Name: Ability.Company.CreditKaraoke.CategoryDiversityBuff
   m_EditorClassIdentifier: 
-  AbilityId: 41addc3bfff641afbd2c1c578f1fdc9b
+  AbilityId: e66b0c3cbf3d4fee937d4026c05ad197
   AbilityTags:
     AssetTag: {fileID: 0}
     CancelAbilitiesWithTags: []
@@ -29,6 +29,7 @@ MonoBehaviour:
       IgnoreTags: []
   Cost: {fileID: 0}
   Cooldown: {fileID: 0}
-  CustomDescription: Gains temp RPH when adjacent neighbors are from distinct categories (cap: 3 categories)
+  CustomDescription: Gains +10% {attribute:rph_buff} per distinct adjacent category
+    (cap 3 categories)
   <RphPerCategoryEffect>k__BackingField: {fileID: 11400000, guid: 9d005c871e494d79bac663824c1bf21a, type: 2}
   <MaxCategoryCount>k__BackingField: 3
