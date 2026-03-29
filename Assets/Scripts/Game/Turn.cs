@@ -197,6 +197,21 @@ namespace Pinvestor.Game
             int turnIndex)
         {
             LogPhase(ETurnPhase.Placement, roundIndex, turnIndex);
+
+            if (SelectedCompany == null)
+            {
+                Debug.LogError("[Turn] RunPlacementPhase: SelectedCompany is null. Cannot run placement phase.");
+                return;
+            }
+
+            // Create board item directly from config company ID — no card system needed.
+            var boardItemData = new BoardItemData_Company(SelectedCompany.CompanyId);
+            var boardItem = BoardItemFactory.Instance.CreateBoardItem(boardItemData) as BoardItem_Company;
+            var wrapper = boardItem.CreateWrapper() as BoardItemWrapper_Company;
+
+            // Signal the input controller to start drag-to-place.
+            EventBus<CompanyReadyForPlacementEvent>.Raise(new CompanyReadyForPlacementEvent(wrapper));
+
             await UniTask.WaitUntil(() => _isCompanyPlaced);
         }
 

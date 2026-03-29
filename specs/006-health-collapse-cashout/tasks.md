@@ -3,7 +3,22 @@
 **Input**: `specs/006-health-collapse-cashout/spec.md`, `plan.md`
 **Codebase audit required**: `Assets/Scripts/Damagable/`, `Board/Stability/`, `BoardItemWrapper_Company.cs`, `GameplayAbilitySystem/CompanyAbilities/`, `Turn.cs`
 
-**Status: IN REVIEW / PR: #4**
+Status: MERGED
+PR: #4
+Merged: 2026-03-28
+Merge commit: e11b4a0
+
+Deferred to post-merge:
+- T019–T021 (cashout UI in CompanyOfferPanel) — requires Unity editor
+- T025 manual smoke test — requires Unity editor
+
+Post-merge notes:
+- CompanyHealthState, CompanyCollapseHandler, CashoutService, CompanyValuationModel all implemented
+- Health reduction hooks into existing GAS OnDied path — no new hit listener
+- Board removal uses BoardItemPropertySpec_Destroyable.Destroy() internally
+- cashout_rate added to game-config.json balance section (0.5 default)
+- Balance credited via AttributeSystem.ModifyBaseValue (same pattern as ApplyTurnlyCosts)
+- CompanyOfferPanel stub created for cashout UI wiring
 
 ## Phase 1: Health State
 

@@ -68,8 +68,9 @@ Use this as the engineering bridge between:
 
 - `VMBase`, `WidgetBase`, `VMCreator*`, `UIManager`:
   - `Assets/MMFramework_2.0/MMUI/...`
-- Company selection UI already event-driven:
+- Company selection / offer UI (event-driven):
   - `Assets/Scripts/UI/CompanySelection/CompanySelectionUI.cs`
+  - Prefab: `Assets/Prefabs/UI/CompanySelection/P_UI_CompanySelection.prefab`
 
 ## GameConfig System Architecture (Current + Direction)
 
@@ -129,11 +130,12 @@ Use this as the engineering bridge between:
 
 ## Offer/Placement/Launch/Resolution
 
-- Offer and placement currently map to card + board wrappers.
+- Offer phase: `Turn.RunNewOfferPhase()` draws 3 companies via `CompanyOfferDrawer` from `RunCompanyPool`, opens `CompanySelectionUI`, awaits player selection via `OfferPhaseContext`.
+- Placement phase: `Turn.RunPlacementPhase()` creates a `BoardItemData_Company` → `BoardItemFactory.CreateBoardItem()` → `CreateWrapper()` directly from the selected company's config ID. Raises `CompanyReadyForPlacementEvent` to trigger `CompanySelectionInputController` drag-to-place flow. No card system involvement.
 - Launch maps to `BallShooter`.
 - Resolution effects are distributed across company wrappers, GAS effects, and turn flow.
 
-Target evolution:
+Architecture:
 - Keep orchestration in `Turn`/`GameManager`.
 - Move per-domain rules into dedicated services/systems (cost deduction, collapse checks, market news,
   boosters, run themes) without bloating manager classes.

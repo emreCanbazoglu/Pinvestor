@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attributeSystemEvents:
   - {fileID: 11400000, guid: fa87884c7c75a497ebe5306b3887e0c2, type: 2}
-  _attributeSet: {fileID: 0}
+  _attributeSet: {fileID: 11400000, guid: f3306b97064c54849bb920db8960293a, type: 2}
   _attributeValues: []
   _initializeOnAwake: 0
 --- !u!114 &6644549119313106851

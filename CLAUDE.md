@@ -73,6 +73,112 @@ Always load in this order:
 
 ---
 
+## UI Architecture & Conventions
+
+### Framework: MMFramework MMUI (`Assets/MMFramework_2.0/MMUI/`)
+
+All UI is built on a custom MVVM stack with UnityWeld data binding. **Never replace or bypass this stack.**
+
+### Base Classes
+
+| Base Class | Use For | Location |
+|------------|---------|----------|
+| `VMBase` | Root-level UI panels, screens, windows | `MMUI/ViewModels/VMBase.cs` |
+| `WidgetBase` (extends `VMBase`) | Child UI elements within a panel (cards, bars, buttons) | `MMUI/ViewModels/Widgets/WidgetBase.cs` |
+| `ButtonWidget` (extends `WidgetBase`) | Clickable buttons — auto-manages `onClick` listeners on activate/deactivate | `MMUI/ViewModels/Widgets/ButtonWidget.cs` |
+
+### Naming Conventions
+
+| Type | Pattern | Examples |
+|------|---------|----------|
+| Panel / Screen VM | `{Feature}UI` or `VM_{Feature}` | `CompanySelectionUI`, `VM_Game` |
+| Widget | `Widget_{Feature}` or `{Feature}Widget` | `Widget_CompanyCard`, `Widget_Balance`, `Widget_HPBar`, `Widget_FloatingText`, `ButtonWidget` |
+| Prefab | `P_UI_{Feature}` or `P_{WidgetName}` | `P_UI_CompanySelection`, `P_Button.ShowUI` |
+| Events (show/hide) | `Show{Panel}Event` / `Hide{Panel}Event` | `ShowCompanyOfferPanelEvent`, `HideCompanyOfferPanelEvent` |
+| Events (gameplay) | `{Action}Event` | `CompanyReadyForPlacementEvent`, `CompanyPlacedEvent`, `CompanyCollapsedEvent` |
+
+### Lifecycle Hooks (Override These, Never Call Directly)
+
+- `AwakeCustomActions()` — register EventBus bindings, cache references
+- `OnDestroyCustomActions()` — deregister EventBus bindings, cleanup
+- `ActivatingCustomActions()` — populate data, set initial visual state (fires during activation transition)
+- `ActivatedCustomActions()` — wire runtime listeners (e.g., `Button.onClick`)
+- `DeactivatingCustomActions()` — begin teardown
+- `DeactivatedCustomActions()` — clear state, kill tweens, destroy dynamic children
+
+### Activation / Deactivation
+
+- Call `TryActivate()` / `TryDeactivate()` — **never** call `gameObject.SetActive()` directly
+- `TryActivate` routes through `UIManager` (for windows) or `SequencableVMManager` (for sequenced panels) automatically
+- `TrySleep()` / `TryWake()` — hide without full deactivation (preserves event subscriptions and state)
+
+### Subwidget Discovery
+
+- Annotate widget properties with `[SubWidget]` attribute for auto-discovery by `VMBaseResolver`
+- `ActivateTogetherWithParent` / `DeactivateTogetherWithParent` flags control child lifecycle
+- Alternatively, wire subwidgets via `_subWidgetInfoColl` in the inspector
+
+### Data Binding (UnityWeld)
+
+- Mark VM/Widget class with `[Binding]` attribute
+- Mark bindable properties and command methods with `[Binding]`
+- Call `OnPropertyChanged(nameof(PropertyName))` in property setters
+- Prefab wires bindings via `viewModelMethodName: Namespace.ClassName.MethodName`
+
+### Event-Driven UI Pattern
+
+All UI panels are shown/hidden via EventBus events, **not** by direct method calls:
+
+```csharp
+// Turn.cs raises event → UI listens and responds
+EventBus<ShowCompanyOfferPanelEvent>.Raise(new ShowCompanyOfferPanelEvent(context));
+
+// In the VM's AwakeCustomActions:
+_showBinding = new EventBinding<ShowCompanyOfferPanelEvent>(OnShowEvent);
+EventBus<ShowCompanyOfferPanelEvent>.Register(_showBinding);
+```
+
+### DOTween Animation Conventions
+
+- Use `DOScale` for show/hide card animations, `DOFade` for overlays
+- Store active tweens in a dictionary keyed by target object
+- Always `Kill()` existing tweens before starting new ones on the same target
+- Clean up all tweens in `DeactivatedCustomActions()` or `OnDestroyCustomActions()`
+- Tween parameters (`duration`, `ease`) should be `[SerializeField]` for designer tuning
+
+### Critical Rules for Agents
+
+1. **NEVER delete an existing UI script that has a prefab referencing it** — the prefab stores the script GUID in its `.meta` file; deleting the script creates a "Missing Script" error that breaks the game. Instead, adapt the existing class in-place.
+2. **NEVER delete `.meta` files** — Unity uses GUIDs from `.meta` files to maintain all references. Losing a `.meta` means every prefab, scene, and ScriptableObject reference to that asset breaks.
+3. **Extend, don't replace** — if a UI class exists, refactor it to support the new behavior. Change internal logic, add new serialized fields, but preserve the class name, namespace, and file path.
+4. **Prefab wiring happens in Unity Editor** — code can create the VM/Widget scripts, but the actual prefab hookup (serialized references, transitions, layout) must be done in the editor. Don't assume a new script will automatically appear on a prefab.
+5. **Check prefab references before renaming or moving UI scripts** — search `*.prefab` and `*.unity` files for the script's GUID before any rename/move/delete.
+
+### Existing UI Panels & Prefabs
+
+| Script | Prefab | Purpose |
+|--------|--------|---------|
+| `CompanySelectionUI` (`Pinvestor.UI`) | `P_UI_CompanySelection` | Company offer/selection panel — shows offered companies, handles selection, show/hide toggle |
+| `VM_Game` (`Pinvestor.UI`) | *(scene-embedded)* | Root game HUD — parent for in-game widgets |
+| `Widget_Balance` | *(child of VM_Game)* | Displays player balance |
+| `Widget_HPBar` | *(child of company board item)* | Company HP bar |
+| `BoardItemInfoUI` | *(scene-embedded)* | Board item tooltip/info overlay |
+
+### Company Placement Pipeline (Config-Driven)
+
+The placement flow bypasses the card system entirely. The pipeline is:
+
+1. **Offer phase**: `Turn.RunNewOfferPhase()` → `CompanyOfferDrawer` draws from `RunCompanyPool` → `CompanySelectionUI` shows 3 cards → player selects → `SelectedCompany` set on `Turn`
+2. **Placement phase**: `Turn.RunPlacementPhase()` → `BoardItemData_Company(companyId)` → `BoardItemFactory.CreateBoardItem()` → `boardItem.CreateWrapper()` → raises `CompanyReadyForPlacementEvent`
+3. **Input controller**: `CompanySelectionInputController` listens for `CompanyReadyForPlacementEvent` (registered in `Awake`, always active) → starts drag-to-place coroutine → on valid placement raises `CompanyPlacedEvent` → `Turn.OnCompanyPlaced()` marks pool and sets `_isCompanyPlaced = true`
+
+Key points:
+- `CompanySelectionPile` / `CardFactory` / `CardContainer` are **not** used in the placement flow
+- The `P_BoardItemWrapper.Company.prefab` must have `AttributeSet.Company.asset` wired to `_attributeSet` — without it, `WrapCore()` → `Initialize()` will NullRef
+- Cancel during direct placement re-raises `CompanyReadyForPlacementEvent` to restart drag (no card selection to return to)
+
+---
+
 ## Parallel Implementation Workflow (Codex Agents + Claude Review)
 
 Specs are implemented by spawning parallel OpenAI Codex agents via CLI, one per spec (or per phase). Claude Code reviews each PR, agents iterate on feedback, and all approved PRs are merged to `main`.
