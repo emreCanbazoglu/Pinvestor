@@ -256,6 +256,7 @@ MonoBehaviour:
   _hideUIEase: 26
   _showUIDuration: 0.1
   _showUIEase: 27
+  _cardPrefab: {fileID: 8455102489131460471, guid: e49e45b2b50ec4c90bad8cb32929e74c, type: 3}
 --- !u!114 &4911733811232225235
 MonoBehaviour:
   m_ObjectHideFlags: 0
