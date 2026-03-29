@@ -189,6 +189,16 @@ namespace Pinvestor.BoardSystem.Authoring
             gameObject.SetActive(true);
         }
 
+        public void SetCardWrapper(
+            CardSystem.Authoring.CompanyCardWrapper companyCardWrapper)
+        {
+            BoardItem.TryGetPropertySpec(
+                out BoardItemPropertySpec_CardOwner cardOwnerSpec);
+
+            cardOwnerSpec.SetCard(
+                companyCardWrapper.Card);
+        }
+
         public void ReleaseToSlot()
         {
             if (_slotTransform == null)

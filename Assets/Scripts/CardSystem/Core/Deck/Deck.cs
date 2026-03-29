@@ -42,6 +42,21 @@ namespace Pinvestor.CardSystem
             }
         }
 
+        public bool TryAddCard(
+            CardData cardData,
+            bool setDeckData = true)
+        {
+            if (!CardFactory.Instance.TryCreateCard(
+                    Owner,
+                    cardData,
+                    out CardBase card))
+                return false;
+
+            TryAddCard(card, setDeckData);
+
+            return true;
+        }
+
         private bool TryAddCard(
             CardBase card,
             bool setDeckData = true)
