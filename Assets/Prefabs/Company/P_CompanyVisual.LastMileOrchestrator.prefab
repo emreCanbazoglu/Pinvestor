@@ -136,15 +136,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5915119554860086320, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: <Name>k__BackingField
-      value: Cloud Spire
+      value: Neural Nexus
       objectReference: {fileID: 0}
     - target: {fileID: 5915119554860086320, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: <CompanyId>k__BackingField
       value: 
-      objectReference: {fileID: 11400000, guid: eb149cfa3de4f4d38967cd014478bbfa, type: 2}
+      objectReference: {fileID: 11400000, guid: 0fcc2dfc89e64de38167cc372a5859b4, type: 2}
     - target: {fileID: 8396938909662112425, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: m_Name
-      value: P_CompanyVisual.CloudSpire
+      value: P_CompanyVisual.LastMileOrchestrator
       objectReference: {fileID: 0}
     - target: {fileID: 8396938909662112425, guid: 66982c172e232431e94a140d5f5bfba0, type: 3}
       propertyPath: m_Layer
