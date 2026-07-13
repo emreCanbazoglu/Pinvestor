@@ -29,7 +29,7 @@ public class CanvasLookAtCamera : MonoBehaviour
         
         Timing.RunCoroutine(
             UpdateOnce().CancelWith(gameObject),
-            Segment.EndOfFrame);
+            Segment.LateUpdate);
     }
 
     private void InitializeCamera()

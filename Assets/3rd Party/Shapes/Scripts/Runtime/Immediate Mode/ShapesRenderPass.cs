@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 #if SHAPES_URP
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
 #elif SHAPES_HDRP
@@ -16,7 +17,12 @@ namespace Shapes {
 	#if SHAPES_URP
 	internal class ShapesRenderPass : ScriptableRenderPass {
 		DrawCommand drawCommand;
-		readonly CommandBuffer cmdBuf = new CommandBuffer();
+
+		class PassData {
+			public DrawCommand drawCommand;
+			public TextureHandle color;
+			public TextureHandle depth;
+		}
 
 		public ShapesRenderPass Init( DrawCommand drawCommand ) {
 			this.drawCommand = drawCommand;
@@ -24,10 +30,21 @@ namespace Shapes {
 			return this;
 		}
 
-		public override void Execute( ScriptableRenderContext context, ref RenderingData renderingData ) {
-			drawCommand.AppendToBuffer( cmdBuf );
-			context.ExecuteCommandBuffer( cmdBuf );
-			cmdBuf.Clear();
+		public override void RecordRenderGraph( RenderGraph renderGraph, ContextContainer frameData ) {
+			using( IUnsafeRenderGraphBuilder builder = renderGraph.AddUnsafePass( "Shapes Draw Command", out PassData passData ) ) {
+				UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
+				passData.drawCommand = drawCommand;
+				passData.color = resourceData.activeColorTexture;
+				passData.depth = resourceData.activeDepthTexture;
+				builder.UseTexture( passData.color, AccessFlags.Write );
+				builder.UseTexture( passData.depth, AccessFlags.Write );
+				builder.AllowPassCulling( false );
+				builder.SetRenderFunc( ( PassData data, UnsafeGraphContext ctx ) => {
+					CommandBuffer cmd = CommandBufferHelpers.GetNativeCommandBuffer( ctx.cmd );
+					cmd.SetRenderTarget( data.color, data.depth );
+					data.drawCommand.AppendToBuffer( cmd );
+				} );
+			}
 		}
 
 		public override void FrameCleanup( CommandBuffer cmd ) {

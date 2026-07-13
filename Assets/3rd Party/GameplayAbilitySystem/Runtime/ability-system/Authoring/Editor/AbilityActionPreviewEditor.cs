@@ -20,9 +20,6 @@ namespace AbilitySystem.Editor
             var modifiers = ability.GetAllGameplayEffectModifiers();
             float duration = ability.TryGetGlobalDuration();
 
-            if (modifiers == null || modifiers.Length == 0)
-                return;
-
             string preview = AbilityDescriptionUtility.GenerateManualDescription(
                 ability.CustomDescription,
                 modifiers,

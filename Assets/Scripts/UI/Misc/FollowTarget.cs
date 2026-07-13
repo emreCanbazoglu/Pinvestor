@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MEC;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [ExecuteInEditMode]
 public class FollowTarget : MonoBehaviour
@@ -28,7 +29,7 @@ public class FollowTarget : MonoBehaviour
         
         Timing.RunCoroutine(
                 UpdateOnce(),
-                Segment.EndOfFrame);
+                Segment.LateUpdate);
     }
     
     private IEnumerator<float> UpdateOnce()
