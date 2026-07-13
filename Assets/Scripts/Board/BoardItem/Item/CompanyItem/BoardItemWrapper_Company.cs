@@ -78,6 +78,9 @@ namespace Pinvestor.BoardSystem.Authoring
             placableCompanySpec.OnPlaced -= OnCompanyPlaced;
             AttributeSystemComponent.ClearBaseValueOverrideResolver();
 
+            if (RevenueGenerator != null)
+                RevenueGenerator.OnRevenueGenerated -= OnRevenueGeneratedForValuation;
+
             base.DisposeCore();
         }
 
@@ -140,6 +143,7 @@ namespace Pinvestor.BoardSystem.Authoring
             float maxHp = 1f;
             float purchaseCost = 0f;
             float cashoutRate = CompanyValuationModel.DefaultCashoutRate;
+            float appreciationRate = CompanyValuationModel.DefaultAppreciationRate;
 
             if (GameConfigManager.Instance != null && GameConfigManager.Instance.IsInitialized)
             {
@@ -147,14 +151,17 @@ namespace Pinvestor.BoardSystem.Authoring
 
                 if (GameConfigManager.Instance.TryGetService(out CompanyConfigService companyConfigService))
                 {
-                    // Purchase cost: use TurnlyCost as a proxy until a dedicated cost field is added.
-                    // TODO(spec-004): replace with actual purchase cost field when spec 004 merges.
                     if (companyConfigService.TryGetCompanyConfig(
                             companyId,
                             out var companyConfig))
                     {
-                        if (companyConfig.TryGetTurnlyCost(out float turnlyCost))
+                        // Dedicated purchase cost from the company values section;
+                        // TurnlyCost remains only as a legacy fallback for un-migrated entries.
+                        if (!companyConfig.TryGetPurchaseCost(out purchaseCost)
+                            && companyConfig.TryGetTurnlyCost(out float turnlyCost))
+                        {
                             purchaseCost = turnlyCost;
+                        }
 
                         if(companyConfig.HasMaxHP)
                             maxHp = companyConfig.MaxHP;
@@ -166,11 +173,30 @@ namespace Pinvestor.BoardSystem.Authoring
                     balanceService.TryGetValue(
                         CompanyValuationModel.CashoutRateKey,
                         out cashoutRate);
+
+                    if (!balanceService.TryGetValue(
+                            CompanyValuationModel.AppreciationRateKey,
+                            out appreciationRate))
+                    {
+                        appreciationRate = CompanyValuationModel.DefaultAppreciationRate;
+                    }
                 }
             }
 
             HealthState = new CompanyHealthState(maxHp);
-            ValuationModel = new CompanyValuationModel(purchaseCost, cashoutRate);
+            ValuationModel = new CompanyValuationModel(purchaseCost, cashoutRate, appreciationRate);
+
+            // Valuation appreciates with every revenue hit this company generates.
+            if (RevenueGenerator != null)
+                RevenueGenerator.OnRevenueGenerated += OnRevenueGeneratedForValuation;
+        }
+
+        private void OnRevenueGeneratedForValuation(
+            AbilitySystemCharacter source,
+            float amount,
+            float newBalance)
+        {
+            ValuationModel?.RegisterRevenue(amount);
         }
 
 

@@ -7,6 +7,9 @@ namespace Pinvestor.Game
 {
     public sealed class Round
     {
+        /// <summary>How long the round banner interstitial holds before turns begin.</summary>
+        private const int RoundBannerBeatMilliseconds = 1600;
+
         public int RoundIndex { get; }
         public RoundCycleSettings Settings { get; }
 
@@ -43,6 +46,9 @@ namespace Pinvestor.Game
                     Settings.RoundId,
                     turnCount,
                     Settings.RequiredWorth));
+
+            // Give the round banner UI a readable beat before the first turn starts.
+            await UniTask.Delay(RoundBannerBeatMilliseconds);
 
             for (int turnIndex = 0; turnIndex < turnCount; turnIndex++)
             {

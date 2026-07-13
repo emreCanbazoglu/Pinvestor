@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2641cf4bc2dcf4dcf8c64f71a11842a0, type: 3}
   m_Name: GameConfigAuthoring
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   _schemaVersion: 1
   _companies:
   - companyId: CloutHubLive
@@ -22,7 +22,11 @@ MonoBehaviour:
       value: 100
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 1
+    - key: purchaseCost
+      value: 75
   - companyId: RageLoopStudio
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -31,7 +35,11 @@ MonoBehaviour:
       value: 90
     - key: 5699d2d73590242978871b7f76819dde
       value: 45
-    values: []
+    values:
+    - key: companyCategory
+      value: 1
+    - key: purchaseCost
+      value: 70
   - companyId: TrendNecroAgency
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -40,7 +48,11 @@ MonoBehaviour:
       value: 110
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 1
+    - key: purchaseCost
+      value: 75
   - companyId: CancelShieldPR
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -49,7 +61,11 @@ MonoBehaviour:
       value: 80
     - key: 5699d2d73590242978871b7f76819dde
       value: 55
-    values: []
+    values:
+    - key: companyCategory
+      value: 1
+    - key: purchaseCost
+      value: 80
   - companyId: AutoPilotPantry
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -58,7 +74,11 @@ MonoBehaviour:
       value: 95
     - key: 5699d2d73590242978871b7f76819dde
       value: 45
-    values: []
+    values:
+    - key: companyCategory
+      value: 2
+    - key: purchaseCost
+      value: 70
   - companyId: SleepDebtSaaS
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -67,7 +87,11 @@ MonoBehaviour:
       value: 100
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 2
+    - key: purchaseCost
+      value: 75
   - companyId: OneTapButler
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -76,7 +100,11 @@ MonoBehaviour:
       value: 85
     - key: 5699d2d73590242978871b7f76819dde
       value: 40
-    values: []
+    values:
+    - key: companyCategory
+      value: 2
+    - key: purchaseCost
+      value: 60
   - companyId: MoodFridgeCloud
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -85,7 +113,11 @@ MonoBehaviour:
       value: 90
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 2
+    - key: purchaseCost
+      value: 75
   - companyId: LoopholeLedger
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -94,7 +126,11 @@ MonoBehaviour:
       value: 100
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 3
+    - key: purchaseCost
+      value: 75
   - companyId: DeferredAlphaCapital
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -103,7 +139,11 @@ MonoBehaviour:
       value: 110
     - key: 5699d2d73590242978871b7f76819dde
       value: 60
-    values: []
+    values:
+    - key: companyCategory
+      value: 3
+    - key: purchaseCost
+      value: 90
   - companyId: CreditKaraoke
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -112,7 +152,11 @@ MonoBehaviour:
       value: 80
     - key: 5699d2d73590242978871b7f76819dde
       value: 45
-    values: []
+    values:
+    - key: companyCategory
+      value: 3
+    - key: purchaseCost
+      value: 70
   - companyId: AuditFogExchange
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -121,7 +165,11 @@ MonoBehaviour:
       value: 100
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 3
+    - key: purchaseCost
+      value: 75
   - companyId: PanicFulfillmentOS
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -130,7 +178,11 @@ MonoBehaviour:
       value: 90
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 4
+    - key: purchaseCost
+      value: 75
   - companyId: LastMileOrchestrator
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -139,7 +191,11 @@ MonoBehaviour:
       value: 100
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 4
+    - key: purchaseCost
+      value: 75
   - companyId: ShortageOracleAI
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -148,7 +204,11 @@ MonoBehaviour:
       value: 95
     - key: 5699d2d73590242978871b7f76819dde
       value: 50
-    values: []
+    values:
+    - key: companyCategory
+      value: 4
+    - key: purchaseCost
+      value: 75
   - companyId: RepoReaperSystems
     attributes:
     - key: f9426c64767cd41ab9990ea28b95e98b
@@ -157,8 +217,18 @@ MonoBehaviour:
       value: 105
     - key: 5699d2d73590242978871b7f76819dde
       value: 55
-    values: []
-  _balance: []
+    values:
+    - key: companyCategory
+      value: 4
+    - key: purchaseCost
+      value: 80
+  _balance:
+  - key: initialCapital
+    value: 500
+  - key: cashout_rate
+    value: 0.5
+  - key: valuation_appreciation_rate
+    value: 0.3
   _roundCriteria: []
   _runCycleRounds:
   - roundId: Round_1
@@ -170,5 +240,7 @@ MonoBehaviour:
   - roundId: Round_3
     turnCount: 5
     requiredWorth: 12000
-  _ball: []
+  _ball:
+    shootSpeed: 10
+    previewLength: 10
   _shop: []

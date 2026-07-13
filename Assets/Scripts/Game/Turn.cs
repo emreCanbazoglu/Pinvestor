@@ -157,7 +157,7 @@ namespace Pinvestor.Game
 
             // Open the UI panel and wait for selection.
             EventBus<ShowCompanyOfferPanelEvent>.Raise(
-                new ShowCompanyOfferPanelEvent(context));
+                new ShowCompanyOfferPanelEvent(context, this));
 
             CompanyConfigModel result = await context.SelectionTask;
 
@@ -417,11 +417,37 @@ namespace Pinvestor.Game
             string companyId = e.Company.Company.CompanyId.CompanyId;
             Debug.Log("Company placed: " + companyId);
 
+            // Debit the acquisition cost from the player's balance.
+            ApplyPurchaseCost(e.Company);
+
             // Mark the placed company in the pool so it won't be offered again (T004).
             if (_companyPool != null)
                 _companyPool.MarkPlaced(companyId);
 
             _isCompanyPlaced = true;
+        }
+
+        private void ApplyPurchaseCost(
+            BoardItemWrapper_Company companyWrapper)
+        {
+            float purchaseCost = companyWrapper?.ValuationModel?.PurchaseCost ?? 0f;
+            if (purchaseCost <= 0f)
+                return;
+
+            if (!TryGetPlayerBalance(
+                    out AttributeSystemComponent playerAttributeSystem,
+                    out AttributeScriptableObject balanceAttribute))
+            {
+                Debug.LogError("[Turn] ApplyPurchaseCost: player Balance attribute unavailable. Purchase not charged.");
+                return;
+            }
+
+            playerAttributeSystem.ModifyBaseValue(
+                balanceAttribute,
+                new AttributeModifier { Add = -purchaseCost },
+                out _);
+
+            Debug.Log($"[Turn] Charged purchase cost {purchaseCost} for placed company.");
         }
 
         private static void LogPhase(

@@ -191,23 +191,70 @@ namespace Pinvestor.Game
         {
             Debug.Log("Playing...");
 
-            if (TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds))
-            {
-                await PlayConfiguredRunAsync(rounds);
-                Debug.Log("Configured run cycle completed. Restarting...");
-            }
-            else
+            if (!TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds))
             {
                 Debug.LogWarning("Run cycle config is missing or empty in GameConfig. Skipping run cycle execution.");
                 return;
             }
 
-            // Brief pause so the player can see the final board state before restart.
-            await UniTask.Delay(2000);
+            using (RunStatsTracker statsTracker = new RunStatsTracker())
+            {
+                RunResult result = await PlayConfiguredRunAsync(rounds);
+                Debug.Log("Configured run cycle completed. Showing run summary...");
+
+                // Brief pause so the player can see the final board state before the summary.
+                await UniTask.Delay(800);
+
+                bool summaryDismissed = false;
+                EventBinding<RunSummaryDismissedEvent> dismissedBinding =
+                    new EventBinding<RunSummaryDismissedEvent>(
+                        (RunSummaryDismissedEvent _) => summaryDismissed = true);
+                EventBus<RunSummaryDismissedEvent>.Register(dismissedBinding);
+
+                EventBus<ShowRunSummaryEvent>.Raise(
+                    new ShowRunSummaryEvent(
+                        result.IsWin,
+                        result.FinalNetWorth,
+                        result.TargetNetWorth,
+                        result.CompletedRoundCount,
+                        result.TotalRoundCount,
+                        statsTracker.CompaniesPlaced,
+                        statsTracker.CompaniesCollapsed,
+                        statsTracker.CompaniesCashedOut,
+                        statsTracker.TotalCashoutPayout));
+
+                // Wait for the player to acknowledge the outcome before restarting.
+                await UniTask.WaitUntil(() => summaryDismissed);
+                EventBus<RunSummaryDismissedEvent>.Deregister(dismissedBinding);
+            }
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        private async UniTask PlayConfiguredRunAsync(RoundCycleSettings[] rounds)
+        private readonly struct RunResult
+        {
+            public bool IsWin { get; }
+            public float FinalNetWorth { get; }
+            public float TargetNetWorth { get; }
+            public int CompletedRoundCount { get; }
+            public int TotalRoundCount { get; }
+
+            public RunResult(
+                bool isWin,
+                float finalNetWorth,
+                float targetNetWorth,
+                int completedRoundCount,
+                int totalRoundCount)
+            {
+                IsWin = isWin;
+                FinalNetWorth = finalNetWorth;
+                TargetNetWorth = targetNetWorth;
+                CompletedRoundCount = completedRoundCount;
+                TotalRoundCount = totalRoundCount;
+            }
+        }
+
+        private async UniTask<RunResult> PlayConfiguredRunAsync(RoundCycleSettings[] rounds)
         {
             RunCompanyPool companyPool = BuildRunCompanyPool();
 
@@ -223,6 +270,9 @@ namespace Pinvestor.Game
             bool allEvaluatedRoundsPassed = true;
             int completedRoundCount = 0;
             int totalRoundCount = rounds.Length;
+            float lastEvaluatedWorth = 0f;
+            float lastEvaluatedTarget = 0f;
+            bool anyRoundEvaluated = false;
 
             for (int roundIndex = 0; roundIndex < totalRoundCount; roundIndex++)
             {
@@ -233,6 +283,9 @@ namespace Pinvestor.Game
                 completedRoundCount++;
                 if (result.WasRequirementEvaluated)
                 {
+                    anyRoundEvaluated = true;
+                    lastEvaluatedWorth = result.CurrentWorth;
+                    lastEvaluatedTarget = result.RequiredWorth;
                     Debug.Log(
                         $"Round Requirement Check: Round {roundIndex + 1}, CurrentWorth={result.CurrentWorth}, RequiredWorth={result.RequiredWorth}, Passed={result.PassedRequirement}");
 
@@ -258,6 +311,21 @@ namespace Pinvestor.Game
                     allEvaluatedRoundsPassed,
                     completedRoundCount,
                     totalRoundCount));
+
+            // Fall back to reading net worth directly if no round requirement was ever evaluated.
+            if (!anyRoundEvaluated && context.TryGetCurrentNetWorth(out float currentWorth))
+                lastEvaluatedWorth = currentWorth;
+
+            bool isWin = allEvaluatedRoundsPassed
+                && anyRoundEvaluated
+                && completedRoundCount == totalRoundCount;
+
+            return new RunResult(
+                isWin,
+                lastEvaluatedWorth,
+                lastEvaluatedTarget,
+                completedRoundCount,
+                totalRoundCount);
         }
 
         private bool TryGetRunCycleFromGameConfig(out RoundCycleSettings[] rounds)

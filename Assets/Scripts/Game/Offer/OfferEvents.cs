@@ -11,9 +11,18 @@ namespace Pinvestor.Game.Offer
     {
         public OfferPhaseContext Context { get; }
 
-        public ShowCompanyOfferPanelEvent(OfferPhaseContext context)
+        /// <summary>
+        /// The active turn raising this offer. Gives UI access to the board and
+        /// CashoutService for the portfolio/cashout section. May be null in tests.
+        /// </summary>
+        public Turn Turn { get; }
+
+        public ShowCompanyOfferPanelEvent(
+            OfferPhaseContext context,
+            Turn turn = null)
         {
             Context = context;
+            Turn = turn;
         }
     }
 

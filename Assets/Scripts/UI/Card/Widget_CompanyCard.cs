@@ -24,6 +24,9 @@ namespace Pinvestor.UI
         [SerializeField] private AttributeScriptableObject _rphAttribute = null;
         [SerializeField] private CardContainerScriptableObject _cardContainer = null;
 
+        // Direct reference (not UnityWeld-bound): shows the one-time acquisition cost.
+        [SerializeField] private TMPro.TextMeshProUGUI _purchaseCostText = null;
+
         private bool _isPopulatedFromConfig;
         
         private string _companyNameText;
@@ -161,6 +164,13 @@ namespace Pinvestor.UI
                 : "-- RPH";
             AbilityDescription = ResolveAbilityDescription(model.CompanyId);
             CompanyArtwork = null;
+
+            if (_purchaseCostText != null)
+            {
+                _purchaseCostText.text = model.TryGetPurchaseCost(out float purchaseCost)
+                    ? "Cost " + purchaseCost.ToString("C0", CultureInfo.GetCultureInfo("en-US"))
+                    : string.Empty;
+            }
 
             if (model.TryGetCompanyCategory(out ECompanyCategory category)
                 && CompanyFactory.Instance.CompanyCardSettings

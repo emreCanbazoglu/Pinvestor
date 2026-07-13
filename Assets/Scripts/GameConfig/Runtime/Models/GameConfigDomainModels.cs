@@ -172,6 +172,15 @@ namespace Pinvestor.GameConfigSystem
             category = (ECompanyCategory)enumValue;
             return category != ECompanyCategory.None;
         }
+
+        /// <summary>
+        /// One-time acquisition cost from the company's values section
+        /// (key: <see cref="CompanyConfigValueKeys.PurchaseCost"/>).
+        /// </summary>
+        public bool TryGetPurchaseCost(out float value)
+        {
+            return Values.TryGetValue(CompanyConfigValueKeys.PurchaseCost, out value);
+        }
     }
 
     public sealed class NamedConfigSectionModel : ConfigModelBase
