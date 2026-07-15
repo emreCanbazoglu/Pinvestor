@@ -59,6 +59,9 @@ namespace Pinvestor.BoardSystem.Authoring
 
             InitializeHealthAndValuation();
 
+            GetComponentInChildren<UI.Widget_BoardItemWrapper_Company>(true)
+                ?.Bind(this);
+
             string companyId = BoardItem.CompanyData.RefCardId;
             gameObject.name = "BoardItemWrapper_" + companyId;
 
@@ -218,6 +221,7 @@ namespace Pinvestor.BoardSystem.Authoring
             Debug.Log("Company: " + (Company != null ? Company.CompanyId?.CompanyId : "null") + " SetSelected: " + isSelected);
 
             gameObject.SetActive(true);
+            Company?.SetSelectedVisual(isSelected);
         }
 
         public void SetCardWrapper(

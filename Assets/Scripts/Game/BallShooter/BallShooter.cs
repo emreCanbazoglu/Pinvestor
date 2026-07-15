@@ -20,6 +20,7 @@ namespace Pinvestor.Game.BallSystem
         [SerializeField] private Ball _ballPrefab = null;
         
         [SerializeField] private LineRenderer _trajectoryRenderer = null;
+        [SerializeField] private Transform _trajectoryImpactMarker = null;
         
         [SerializeField] private float _previewLength = 10f;
         [SerializeField] private int _previewMaxCollisions = 3;
@@ -161,6 +162,14 @@ namespace Pinvestor.Game.BallSystem
                 = _trajectoryPoints.Count;
             _trajectoryRenderer.SetPositions(
                 _trajectoryPoints.ToArray());
+
+            if (_trajectoryImpactMarker != null)
+            {
+                bool hasImpact = _trajectoryPoints.Count > 0;
+                _trajectoryImpactMarker.gameObject.SetActive(hasImpact);
+                if (hasImpact)
+                    _trajectoryImpactMarker.position = _trajectoryPoints[^1];
+            }
         }
         
         private void OnShootInput(
@@ -174,6 +183,9 @@ namespace Pinvestor.Game.BallSystem
 
             _trajectoryRenderer.positionCount = 0;
             _trajectoryRenderer.SetPositions(Array.Empty<Vector3>());
+
+            if (_trajectoryImpactMarker != null)
+                _trajectoryImpactMarker.gameObject.SetActive(false);
         }
 
         private void ThrowBall(

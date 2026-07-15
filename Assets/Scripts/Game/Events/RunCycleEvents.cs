@@ -1,5 +1,15 @@
 namespace Pinvestor.Game
 {
+    public sealed class AbilityTriggeredEvent : IEvent
+    {
+        public string AbilityName { get; }
+
+        public AbilityTriggeredEvent(string abilityName)
+        {
+            AbilityName = abilityName;
+        }
+    }
+
     public sealed class RoundStartedEvent : IEvent
     {
         public int RoundIndex { get; }
@@ -29,6 +39,23 @@ namespace Pinvestor.Game
             int roundIndex,
             int turnIndex)
         {
+            RoundIndex = roundIndex;
+            TurnIndex = turnIndex;
+        }
+    }
+
+    public sealed class TurnPhaseChangedEvent : IEvent
+    {
+        public ETurnPhase Phase { get; }
+        public int RoundIndex { get; }
+        public int TurnIndex { get; }
+
+        public TurnPhaseChangedEvent(
+            ETurnPhase phase,
+            int roundIndex,
+            int turnIndex)
+        {
+            Phase = phase;
             RoundIndex = roundIndex;
             TurnIndex = turnIndex;
         }

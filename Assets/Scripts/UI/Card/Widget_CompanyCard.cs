@@ -9,6 +9,7 @@ using Pinvestor.CompanySystem;
 using Pinvestor.GameConfigSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 using UnityWeld.Binding;
 
 namespace Pinvestor.UI
@@ -26,6 +27,7 @@ namespace Pinvestor.UI
 
         // Direct reference (not UnityWeld-bound): shows the one-time acquisition cost.
         [SerializeField] private TMPro.TextMeshProUGUI _purchaseCostText = null;
+        [SerializeField] private TextMeshProUGUI _categoryText = null;
 
         private bool _isPopulatedFromConfig;
         
@@ -157,18 +159,19 @@ namespace Pinvestor.UI
         {
             _isPopulatedFromConfig = true;
 
-            CompanyNameText = model.CompanyId;
+            CompanyNameText = MvpVisualTheme.HumanizeCompanyName(model.CompanyId);
             MaxHPText = model.HasMaxHP ? $"{model.MaxHP} HP" : "-- HP";
             RPHText = model.HasRevenuePerHit
-                ? model.RevenuePerHit.ToString("C0", CultureInfo.GetCultureInfo("en-US")) + " RPH"
+                ? model.RevenuePerHit.ToString("C0", CultureInfo.GetCultureInfo("en-US")) + " / HIT"
                 : "-- RPH";
-            AbilityDescription = ResolveAbilityDescription(model.CompanyId);
+            AbilityDescription = NormalizeAbilityDescription(
+                ResolveAbilityDescription(model.CompanyId));
             CompanyArtwork = null;
 
             if (_purchaseCostText != null)
             {
                 _purchaseCostText.text = model.TryGetPurchaseCost(out float purchaseCost)
-                    ? "Cost " + purchaseCost.ToString("C0", CultureInfo.GetCultureInfo("en-US"))
+                    ? "BUY " + purchaseCost.ToString("C0", CultureInfo.GetCultureInfo("en-US"))
                     : string.Empty;
             }
 
@@ -181,7 +184,25 @@ namespace Pinvestor.UI
                 NameContainerColor = settings.NameContainerColor;
                 InfoContainerColor = settings.InfoContainerColor;
                 CategoryIcon = settings.CategoryIcon;
+                CompanyArtwork = settings.CategoryIcon;
+
+                if (_categoryText != null)
+                {
+                    _categoryText.text = MvpVisualTheme.GetCategoryLabel(category);
+                    _categoryText.color = MvpVisualTheme.GetCategoryColor(category);
+                }
             }
+        }
+
+        private static string NormalizeAbilityDescription(string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                return "No special behavior.";
+
+            string[] words = description.Split(
+                (char[])null,
+                System.StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(" ", words);
         }
 
         protected override void ActivatingCustomActions()

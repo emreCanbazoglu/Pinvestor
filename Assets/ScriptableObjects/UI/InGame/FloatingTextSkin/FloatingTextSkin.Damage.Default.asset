@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f49fcce4b53749b1a80c51abace342b, type: 3}
   m_Name: FloatingTextSkin.Damage.Default
   m_EditorClassIdentifier: 
-  TextSize: 10
-  TextColor: {r: 1, g: 0, b: 0, a: 1}
+  TextSize: 14
+  TextColor: {r: 1, g: 0.35686275, b: 0.43137255, a: 1}
   MovementCurve:
     serializedVersion: 2
     m_Curve:
@@ -38,7 +38,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  YMovement: 1
+  YMovement: 1.2
   FadeOutCurve:
     serializedVersion: 2
     m_Curve:

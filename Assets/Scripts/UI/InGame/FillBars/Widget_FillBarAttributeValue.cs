@@ -166,7 +166,7 @@ namespace Pinvestor.UI
 
         private void UpdateAmountText()
         {
-            AmountText = _baseAttValueState.CurrentValue.ToString();
+            AmountText = $"{Mathf.CeilToInt(_baseAttValueState.CurrentValue)}/{Mathf.CeilToInt(_maxAttValueState.CurrentValue)}";
         }
 
         public void ResetResetable()

@@ -1,5 +1,6 @@
 using System;
 using Pinvestor.BoardSystem.Authoring;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ namespace Pinvestor.UI.Offer
         [SerializeField] private Button _cashoutButton = null;
 
         private Action _onCashoutClicked;
+        private Tween _cashoutTween;
 
         private void Awake()
         {
@@ -27,6 +29,7 @@ namespace Pinvestor.UI.Offer
 
         private void OnDestroy()
         {
+            _cashoutTween?.Kill();
             if (_cashoutButton != null)
                 _cashoutButton.onClick.RemoveListener(OnCashoutButtonClicked);
         }
@@ -65,7 +68,14 @@ namespace Pinvestor.UI.Offer
 
         private void OnCashoutButtonClicked()
         {
-            _onCashoutClicked?.Invoke();
+            if (_cashoutButton != null)
+                _cashoutButton.interactable = false;
+
+            _cashoutTween?.Kill();
+            transform.localScale = Vector3.one;
+            _cashoutTween = transform
+                .DOPunchScale(Vector3.one * 0.08f, 0.18f, 4, 0.45f)
+                .OnComplete(() => _onCashoutClicked?.Invoke());
         }
     }
 }

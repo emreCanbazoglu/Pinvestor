@@ -462,6 +462,9 @@ namespace Pinvestor.Game
             int roundIndex,
             int turnIndex)
         {
+            EventBus<TurnPhaseChangedEvent>.Raise(
+                new TurnPhaseChangedEvent(phase, roundIndex, turnIndex));
+
             if (roundIndex >= 0 && turnIndex >= 0)
             {
                 Debug.Log($"Turn Phase: {phase} (Round {roundIndex + 1}, Turn {turnIndex + 1})");

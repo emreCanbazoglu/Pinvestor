@@ -16,6 +16,7 @@ namespace Pinvestor.UI
 
         private FloatingTextSkinScriptableObject _skin;
         private CoroutineHandle _lifeTimeRoutineHandle;
+        private Tween _scaleTween;
 
         public void Init(
             Transform pivotTransform,
@@ -30,6 +31,7 @@ namespace Pinvestor.UI
             _text.fontSize = _skin.TextSize;
             _text.color = _skin.TextColor;
             _text.alpha = 1.0f;
+            transform.localScale = Vector3.one * 0.72f;
         }
 
         protected override void ActivatedCustomActions()
@@ -38,6 +40,11 @@ namespace Pinvestor.UI
             _lifeTimeRoutineHandle = LifetimeRoutine()
                 .CancelWith(gameObject)
                 .RunCoroutine();
+
+            _scaleTween?.Kill();
+            _scaleTween = transform
+                .DOScale(1f, 0.18f)
+                .SetEase(Ease.OutBack);
             
             base.ActivatedCustomActions();
         }
@@ -74,6 +81,7 @@ namespace Pinvestor.UI
             Timing.KillCoroutines(_lifeTimeRoutineHandle);
             DOTween.Kill(transform);
             DOTween.Kill(_text);
+            _scaleTween?.Kill();
             base.OnDestroyCustomActions();
         }
 
@@ -82,6 +90,7 @@ namespace Pinvestor.UI
             Timing.KillCoroutines(_lifeTimeRoutineHandle);
             DOTween.Kill(transform);
             DOTween.Kill(_text);
+            _scaleTween?.Kill();
             ObjectPool.Release(this);
             base.DeactivatedCustomActions();
         }

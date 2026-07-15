@@ -18,6 +18,7 @@ namespace Pinvestor.CompanySystem
         private BoardItemWrapper_Company _boardItemWrapper = null;
         
         private Tween _shakeTween = null;
+        private Tween _scaleTween = null;
         
         public void SetBoardItemWrapper(
             BoardItemWrapper_Company boardItemWrapper)
@@ -38,7 +39,48 @@ namespace Pinvestor.CompanySystem
                         _shakeStrength,
                         _shakeVibrato,
                         _shakeRandomness)
-                    .SetEase(_shakeEase);
+                .SetEase(_shakeEase);
+        }
+
+        public void SetSelectedVisual(bool selected)
+        {
+            _scaleTween?.Kill();
+            transform.localScale = Vector3.one;
+            _scaleTween = transform
+                .DOScale(selected ? 1.08f : 1f, 0.16f)
+                .SetEase(Ease.OutBack);
+        }
+
+        public void PlayPlacementFeedback()
+        {
+            _scaleTween?.Kill();
+            transform.localScale = Vector3.one;
+            _scaleTween = transform
+                .DOPunchScale(Vector3.one * 0.16f, 0.28f, 6, 0.55f);
+        }
+
+        public void PlayHitFeedback(bool critical = false)
+        {
+            _scaleTween?.Kill();
+            transform.localScale = Vector3.one;
+            float strength = critical ? 0.22f : 0.12f;
+            _scaleTween = transform
+                .DOPunchScale(Vector3.one * strength, 0.2f, 5, 0.45f);
+        }
+
+        public void PlayDangerFeedback()
+        {
+            _scaleTween?.Kill();
+            transform.localScale = Vector3.one;
+            _scaleTween = transform
+                .DOShakeScale(0.34f, 0.16f, 10, 70f)
+                .SetEase(Ease.OutQuad);
+        }
+
+        private void OnDestroy()
+        {
+            _shakeTween?.Kill();
+            _scaleTween?.Kill();
         }
         
         public BoardItemWrapper_Company GetComponent()

@@ -158,12 +158,14 @@ namespace Pinvestor.CardSystem.Authoring
                         onCompanyBoardItemPlaced);
             else
             {
+                _selectedCompany.Company?.PlayDangerFeedback();
                 OnCancelPlacement(ctx);
             }
             
             void onCompanyBoardItemPlaced()
             {
                 _placedCompany = _selectedCompany;
+                _placedCompany.Company?.PlayPlacementFeedback();
                 _selectedCompany = null;
 
                 if (_isDirectPlacement)

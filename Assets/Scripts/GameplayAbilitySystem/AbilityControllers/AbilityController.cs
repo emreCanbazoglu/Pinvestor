@@ -1,6 +1,7 @@
 using System;
 using AbilitySystem;
 using Cysharp.Threading.Tasks;
+using Pinvestor.Game;
 using UnityEngine;
 
 namespace Pinvestor.GameplayAbilitySystem
@@ -90,8 +91,15 @@ namespace Pinvestor.GameplayAbilitySystem
         private void OnCastTrigger(
             AbilityTriggerDefinitionSpec triggerSpec)
         {
-            AbilitySystemCharacter.TryActivateAbility(
-                triggerSpec.AbilitySpec);
+            if (!AbilitySystemCharacter.TryActivateAbility(
+                    triggerSpec.AbilitySpec))
+                return;
+
+            string abilityName = triggerSpec.ScriptableObject.Ability != null
+                ? triggerSpec.ScriptableObject.Ability.name
+                : "Company Ability";
+            EventBus<AbilityTriggeredEvent>.Raise(
+                new AbilityTriggeredEvent(abilityName));
         }
 
         private void OnCancelTrigger(
