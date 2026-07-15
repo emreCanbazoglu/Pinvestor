@@ -58,13 +58,17 @@ namespace Pinvestor.Game
         public CompanyConfigModel SelectedCompany { get; private set; }
 
 
+        // Optional shared collapse handler; when present, ability interceptors can
+        // defer collapses to round end (AuditFog et al.).
+        private readonly Game.Health.CollapseResolver _collapseResolver;
+
         public Turn(
             CardPlayer player,
             BallShooter ballShooter,
             Board board,
             RunCompanyPool companyPool = null,
             CompanyConfigService companyConfigService = null)
-            : this(player, ballShooter, board, companyPool, companyConfigService, null, null)
+            : this(player, ballShooter, board, companyPool, companyConfigService, null, null, null)
         {
         }
 
@@ -76,6 +80,19 @@ namespace Pinvestor.Game
             CompanyConfigService companyConfigService,
             TurnRevenueAccumulator revenueAccumulator,
             EconomyService economyService)
+            : this(player, ballShooter, board, companyPool, companyConfigService, revenueAccumulator, economyService, null)
+        {
+        }
+
+        public Turn(
+            CardPlayer player,
+            BallShooter ballShooter,
+            Board board,
+            RunCompanyPool companyPool,
+            CompanyConfigService companyConfigService,
+            TurnRevenueAccumulator revenueAccumulator,
+            EconomyService economyService,
+            Game.Health.CollapseResolver collapseResolver)
         {
             Player = player;
             BallShooter = ballShooter;
@@ -84,6 +101,7 @@ namespace Pinvestor.Game
             _companyConfigService = companyConfigService;
             _revenueAccumulator = revenueAccumulator;
             _economyService = economyService;
+            _collapseResolver = collapseResolver;
             CashoutService = new Game.Economy.CashoutService(this);
         }
 
@@ -290,31 +308,13 @@ namespace Pinvestor.Game
                 if (!IsCollapsed(companyBoardItem))
                     continue;
 
-                if (!companyBoardItem.TryGetPropertySpec(out BoardItemPropertySpec_Destroyable destroyableSpec))
+                // Ability interceptors (AuditFog etc.) may defer this collapse to round end.
+                if (_collapseResolver != null
+                    && _collapseResolver.ShouldDeferCollapse(companyBoardItem))
                     continue;
 
-                if (destroyableSpec.IsDestroying)
-                    continue;
-
-                // Capture company identity before destroy (wrapper reference becomes invalid after).
-                string companyId = string.Empty;
-                var boardPosition = new Vector2Int(
-                    companyBoardItem.BoardItemData.Col,
-                    companyBoardItem.BoardItemData.Row);
-
-                if (companyBoardItem.Wrapper is BoardItemWrapper_Company companyWrapper)
-                {
-                    companyId = companyWrapper.Company?.CompanyId?.CompanyId ?? string.Empty;
-                }
-
-                destroyableSpec.Destroy(null);
-                collapsedCount++;
-
-                // Emit collapse event — investment capital is NOT refunded.
-                EventBus<CompanyCollapsedEvent>.Raise(
-                    new CompanyCollapsedEvent(companyId, boardPosition));
-
-                Debug.Log($"[spec-006] Company '{companyId}' collapsed at {boardPosition}. Investment lost.");
+                if (Game.Health.CollapseResolver.TryExecuteCollapse(companyBoardItem))
+                    collapsedCount++;
             }
 
             return collapsedCount;

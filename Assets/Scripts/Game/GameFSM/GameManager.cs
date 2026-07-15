@@ -258,13 +258,18 @@ namespace Pinvestor.Game
         {
             RunCompanyPool companyPool = BuildRunCompanyPool();
 
+            // Run-scoped collapse handler: lets ability interceptors defer collapses
+            // (AuditFog) and flushes deferred collapses at round end.
+            using var collapseResolver = new Game.Health.CollapseResolver(Table.Board);
+
             RoundContext context = new RoundContext(
                 Table.GamePlayer.CardPlayer,
                 BallShooter,
                 Table.Board,
                 companyPool,
                 _revenueAccumulator,
-                _economyService);
+                _economyService,
+                collapseResolver);
 
             IReadOnlyList<IRoundPhase> phases = BuildRoundPhases();
             bool allEvaluatedRoundsPassed = true;

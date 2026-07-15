@@ -14,10 +14,10 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     /// LastMile Orchestrator — when an adjacent company collapses, move this company into
     /// the collapsed tile and trigger one free hit payout (once per round).
     ///
-    /// TODO(spec-006): collapse handler — full implementation requires spec-006 collapse
-    /// handler to intercept collapse order and allow position swapping.
-    /// Current implementation: detects adjacent collapse and logs movement intent.
-    /// The free hit payout is applied via the FreeHitEffect.
+    /// The move uses Board.TryMoveBoardItem once the collapsed cell is vacated
+    /// (pieces dispose after OnBoardItemRemoved fires, so the move is attempted on
+    /// subsequent frames with a short retry budget). The free hit payout is applied
+    /// via the FreeHitEffect immediately on detection.
     /// </summary>
     [CreateAssetMenu(
         menuName = "Pinvestor/Ability System/Company Abilities/LastMile Ability",
@@ -47,6 +47,13 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         private BoardItemWrapper_Company _selfWrapper;
         private bool _procUsedThisRound;
 
+        // Pending relocation into an adjacent collapsed tile. The cell is only
+        // vacated after the collapsed item's pieces dispose, so the move is retried
+        // across frames from the ability loop until it succeeds or the budget runs out.
+        private Vector2Int? _pendingMoveTarget;
+        private int _pendingMoveFramesLeft;
+        private const int MoveRetryFrameBudget = 120;
+
         private EventBinding<RoundStartedEvent> _roundBinding;
 
         public LastMileAbilitySpec(
@@ -67,7 +74,42 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             while (true)
             {
+                TryExecutePendingMove();
                 yield return MEC.Timing.WaitForOneFrame;
+            }
+        }
+
+        private void TryExecutePendingMove()
+        {
+            if (_pendingMoveTarget == null)
+                return;
+
+            Vector2Int target = _pendingMoveTarget.Value;
+            var board = GameManager.Instance != null
+                ? GameManager.Instance.BoardWrapper?.Board
+                : null;
+
+            if (board != null
+                && _selfWrapper?.BoardItem != null
+                && board.TryMoveBoardItem(_selfWrapper.BoardItem, target))
+            {
+                _pendingMoveTarget = null;
+                _selfWrapper.transform.localPosition = Vector3.zero;
+                GameEventLog.Add(
+                    "ABILITY",
+                    $"[LastMile] Moved into collapsed tile {target}",
+                    new UnityEngine.Color(0.4f, 1f, 0.7f));
+                return;
+            }
+
+            _pendingMoveFramesLeft--;
+            if (_pendingMoveFramesLeft <= 0)
+            {
+                GameEventLog.Add(
+                    "ABILITY",
+                    $"[LastMile] Move to {target} abandoned — tile never became available",
+                    new UnityEngine.Color(1f, 0.7f, 0.4f));
+                _pendingMoveTarget = null;
             }
         }
 
@@ -94,9 +136,17 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             _procUsedThisRound = true;
 
-            // TODO(spec-006): collapse handler — move this company into the collapsed tile.
-            // For now, log intent and apply free payout.
-            GameEventLog.Add("ABILITY", $"[LastMile] Adjacent collapse at {collapsedCompany.MainPiece?.Cell?.Position} — free payout triggered", new UnityEngine.Color(0.4f, 1f, 0.7f));
+            // Capture the vacating tile now — the cell reference is gone once the
+            // collapsed item's pieces dispose. The actual move runs from the ability
+            // loop on subsequent frames (see TryExecutePendingMove).
+            Cell collapsedCell = collapsedCompany.MainPiece?.Cell;
+            if (collapsedCell != null)
+            {
+                _pendingMoveTarget = collapsedCell.Position;
+                _pendingMoveFramesLeft = MoveRetryFrameBudget;
+            }
+
+            GameEventLog.Add("ABILITY", $"[LastMile] Adjacent collapse at {collapsedCell?.Position} — free payout triggered, relocating", new UnityEngine.Color(0.4f, 1f, 0.7f));
 
             if (LastMileAbility.FreeHitPayoutEffect != null)
             {

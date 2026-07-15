@@ -70,12 +70,18 @@ pooled floating text.
 ## Milestone 3 — Company Roster to "all 16 real" (or cut to MVP-8)
 
 **Highest-leverage single item:**
-- [ ] **Build the shared collapse handler** (referenced as "spec-006 collapse handler" in 4 ability
-      SOs). Unblocks in one pass:
-  - [ ] AuditFogExchange — hidden/deferred collapse (currently pure stub)
-  - [ ] TrendNecroAgency — Recycled Hype stacks → cashout multiplier (tracked, payoff unwired)
-  - [ ] DeferredAlphaCapital — +15% cashout value per deferred point (tracked, payoff unwired)
-  - [ ] LastMileOrchestrator — tile repositioning on adjacent collapse (payout works, move doesn't)
+- [x] **Shared collapse handler built** *(2026-07-14)*: `ICollapseInterceptor` +
+      `ICashoutValueModifier` hooks (`Game/Health/CollapseHooks.cs`), run-scoped
+      `CollapseResolver` (deferred collapses flush on `RoundCompletedEvent`), plugged into
+      `Turn.RemoveCollapsedCompanies` + `CashoutService`; new `Board.TryMoveBoardItem`.
+  - [x] AuditFogExchange — first collapse each round deferred to round end (interceptor)
+  - [x] TrendNecroAgency — Recycled Hype stack consumed → cashout ×2 (modifier)
+  - [x] DeferredAlphaCapital — +15% cashout per deferred hit (modifier)
+  - [x] LastMileOrchestrator — relocates into adjacent collapsed tile (frame-deferred move
+        w/ retry budget; falls back to payout-only if the tile never frees)
+  - [ ] **Playtest the four wired abilities in a real run** — esp. AuditFog's hidden company
+        still earning revenue after `CancelAllAbilities`, and LastMile's move visual
+        (localPosition snap) — hard to simulate without drag input
 
 **Separate systems needed:**
 - [ ] AutoPilotPantry `BallRedirect` — needs ball-miss-detection hook in `Ball.cs`

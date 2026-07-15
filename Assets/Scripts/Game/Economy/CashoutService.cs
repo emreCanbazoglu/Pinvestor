@@ -93,6 +93,10 @@ namespace Pinvestor.Game.Economy
 
             float payoutAmount = valuationModel?.CashoutValue ?? 0f;
 
+            // Ability hooks: the company's own ability specs may modify the payout
+            // (TrendNecro's Recycled Hype double, DeferredAlpha's deferred-hit bonus).
+            payoutAmount = ApplyCashoutValueModifiers(companyWrapper, payoutAmount);
+
             // Credit payout to player balance.
             CreditPlayerBalance(payoutAmount);
 
@@ -109,6 +113,38 @@ namespace Pinvestor.Game.Economy
                 new CompanyCashedOutEvent(companyId, payoutAmount, boardPosition));
 
             return true;
+        }
+
+        /// <summary>
+        /// Runs the cashing-out company's own ability specs implementing
+        /// <see cref="Pinvestor.Game.Health.ICashoutValueModifier"/> over the payout,
+        /// in GrantedAbilities order.
+        /// </summary>
+        private static float ApplyCashoutValueModifiers(
+            BoardItemWrapper_Company companyWrapper,
+            float payoutAmount)
+        {
+            var grantedAbilities = companyWrapper.AbilitySystemCharacter?.GrantedAbilities;
+            if (grantedAbilities == null)
+                return payoutAmount;
+
+            foreach (var spec in grantedAbilities)
+            {
+                if (!(spec is Pinvestor.Game.Health.ICashoutValueModifier modifier))
+                    continue;
+
+                float modified = modifier.ModifyCashoutValue(payoutAmount);
+                if (!Mathf.Approximately(modified, payoutAmount))
+                {
+                    Debug.Log(
+                        $"[spec-006][CashoutService] '{companyWrapper.name}' cashout modified " +
+                        $"{payoutAmount} -> {modified} by {spec.GetType().Name}.");
+                }
+
+                payoutAmount = modified;
+            }
+
+            return payoutAmount;
         }
 
         /// <summary>

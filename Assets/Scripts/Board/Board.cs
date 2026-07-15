@@ -242,6 +242,36 @@ namespace Pinvestor.BoardSystem.Base
             return new CanPlaceBoardItemResult(true, targetCellIndices);
         }
         
+        /// <summary>
+        /// Relocates an already-placed board item to a new cell. Fails (returns false)
+        /// if the target cells can't accept the item. Pieces are detached from their
+        /// current cells and re-placed via the item's placable spec, so OnPlaced
+        /// listeners (e.g. wrapper reparenting) fire for the new cell.
+        /// </summary>
+        public bool TryMoveBoardItem(
+            BoardItemBase boardItem,
+            Vector2Int targetCellIndex)
+        {
+            if (boardItem == null)
+                return false;
+
+            if (!boardItem.TryGetPropertySpec(
+                    out BoardItemPropertySpec_PlacableBase placableSpec))
+                return false;
+
+            var canPlaceResult = CanPlaceBoardItem(boardItem, targetCellIndex);
+            if (!canPlaceResult.CanPlace)
+                return false;
+
+            foreach (var piece in boardItem.Pieces)
+                piece.Cell?.TryRemoveBoardItemPiece(piece);
+
+            Cell targetCell = Cells[targetCellIndex];
+            placableSpec.TryPlace(targetCell, force: true);
+
+            return true;
+        }
+
         public bool TryPlaceBoardItem(
             BoardItemBase boardItem,
             Vector2Int selectedCellIndex,

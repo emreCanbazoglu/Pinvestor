@@ -13,10 +13,10 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     /// AuditFog Exchange — first collapse each round is hidden until round end;
     /// hidden company still generates revenue during its turn.
     ///
-    /// TODO(spec-006): collapse handler — requires spec-006 collapse system to intercept
-    /// the collapse event and defer it. This stub logs the intent and tracks state
-    /// but does not modify collapse behavior.
-    /// TODO(spec-006): hidden collapse — wire into collapse handler.
+    /// Wired into the shared collapse handler: the spec implements
+    /// <see cref="Pinvestor.Game.Health.ICollapseInterceptor"/>; CollapseResolver
+    /// consults it during the Resolution Phase and defers the intercepted collapse
+    /// until round end.
     /// </summary>
     [CreateAssetMenu(
         menuName = "Pinvestor/Ability System/Company Abilities/AuditFog Ability",
@@ -31,7 +31,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         }
     }
 
-    public class AuditFogAbilitySpec : AbstractAbilitySpec
+    public class AuditFogAbilitySpec : AbstractAbilitySpec, Pinvestor.Game.Health.ICollapseInterceptor
     {
         private bool _hiddenCollapseUsedThisRound;
 
@@ -50,9 +50,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _roundBinding = new EventBinding<RoundStartedEvent>(OnRoundStarted);
             EventBus<RoundStartedEvent>.Register(_roundBinding);
 
-            // TODO(spec-006): collapse handler — subscribe to collapse events from spec-006
-            // and intercept the first collapse per round, hiding it until round end.
-            GameEventLog.Add("ABILITY+", "[AuditFog] Active — awaiting spec-006 collapse handler", new UnityEngine.Color(0.6f, 0.9f, 0.6f));
+            GameEventLog.Add("ABILITY+", "[AuditFog] Active — first collapse each round is hidden until round end", new UnityEngine.Color(0.6f, 0.9f, 0.6f));
 
             while (true)
             {
@@ -72,17 +70,20 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         }
 
         /// <summary>
-        /// Called by spec-006 collapse handler when a company collapses.
-        /// Returns true if the collapse should be hidden until round end.
-        /// TODO(spec-006): wire this into the collapse handler.
+        /// Collapse handler hook: hides the first collapse each round.
+        /// The collapsing company stays on the board (still generating revenue)
+        /// until CollapseResolver flushes deferred collapses at round end.
         /// </summary>
-        public bool TryHideCollapse(BoardItemBase collapsingItem)
+        public bool TryInterceptCollapse(BoardItemWrapper_Company collapsingCompany)
         {
             if (_hiddenCollapseUsedThisRound)
                 return false;
 
             _hiddenCollapseUsedThisRound = true;
-            GameEventLog.Add("ABILITY", $"[AuditFog] Hidden collapse for {collapsingItem} (TODO spec-006: defer until round end)", new UnityEngine.Color(0.6f, 0.6f, 1f));
+            GameEventLog.Add(
+                "ABILITY",
+                $"[AuditFog] Collapse of {collapsingCompany.Company?.CompanyId?.CompanyId} hidden until round end",
+                new UnityEngine.Color(0.6f, 0.6f, 1f));
             return true;
         }
     }

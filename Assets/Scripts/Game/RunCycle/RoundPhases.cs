@@ -24,7 +24,8 @@ namespace Pinvestor.Game
                 context.CompanyPool,
                 companyConfigService,
                 context.RevenueAccumulator,
-                context.EconomyService);
+                context.EconomyService,
+                context.CollapseResolver);
 
             return turn.ExecuteCoreTurnAsync(runtimeState.RoundIndex, runtimeState.TurnIndex);
         }

@@ -12,11 +12,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     /// DeferredAlpha Capital — on hit, may defer 1 damage to round end (deferred cap 3);
     /// deferred damage amount increases cashout value by +15%.
     ///
-    /// TODO(spec-006): deferred damage cashout value — wire DeferredDamageCount into
-    /// cashout value modifier (+15% per deferred damage point) via spec-006 cashout handler.
-    ///
-    /// Current implementation: defers up to MaxDeferrals hits per round by intercepting
-    /// HP loss. The deferred damage accumulator is exposed for spec-006 to consume.
+    /// Wired into the cashout pipeline: the spec implements
+    /// <see cref="Pinvestor.Game.Health.ICashoutValueModifier"/>; CashoutService applies
+    /// +CashoutBonusPerDeferral per deferred damage point when this company cashes out.
     /// </summary>
     [CreateAssetMenu(
         menuName = "Pinvestor/Ability System/Company Abilities/DeferredAlpha Ability",
@@ -35,7 +33,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         }
     }
 
-    public class DeferredAlphaAbilitySpec : AbstractAbilitySpec
+    public class DeferredAlphaAbilitySpec : AbstractAbilitySpec, Pinvestor.Game.Health.ICashoutValueModifier
     {
         private DeferredAlphaAbilityScriptableObject DeferredAlphaAbility
             => (DeferredAlphaAbilityScriptableObject)Ability;
@@ -45,9 +43,28 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
         /// <summary>
         /// Accumulated deferred damage count for this round.
-        /// TODO(spec-006): consume this value in cashout modifier to apply +15% per point.
+        /// Consumed by ModifyCashoutValue (+CashoutBonusPerDeferral per point).
         /// </summary>
         public int DeferredDamageCount { get; private set; }
+
+        /// <summary>
+        /// Cashout pipeline hook: +15% (configurable) payout per deferred damage point.
+        /// </summary>
+        public float ModifyCashoutValue(float currentValue)
+        {
+            if (DeferredDamageCount <= 0)
+                return currentValue;
+
+            float multiplier = 1f + DeferredAlphaAbility.CashoutBonusPerDeferral * DeferredDamageCount;
+            float modified = currentValue * multiplier;
+
+            GameEventLog.Add(
+                "ABILITY",
+                $"[DeferredAlpha] {DeferredDamageCount} deferred hits → cashout ×{multiplier:F2} ({currentValue} → {modified})",
+                new UnityEngine.Color(0.6f, 0.6f, 1f));
+
+            return modified;
+        }
 
         private EventBinding<TurnResolutionStartedEvent> _turnBinding;
         private EventBinding<RoundStartedEvent> _roundBinding;

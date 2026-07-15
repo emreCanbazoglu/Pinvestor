@@ -26,6 +26,12 @@ namespace Pinvestor.Game
         public RunCompanyPool CompanyPool { get; }
 
         /// <summary>
+        /// Run-scoped shared collapse handler (ability interceptors + deferred
+        /// collapses). May be null in tests.
+        /// </summary>
+        public Game.Health.CollapseResolver CollapseResolver { get; }
+
+        /// <summary>
         /// Constructor without economy wiring (backward-compatible).
         /// </summary>
         public RoundContext(
@@ -33,7 +39,7 @@ namespace Pinvestor.Game
             BallShooter ballShooter,
             Board board,
             RunCompanyPool companyPool = null)
-            : this(cardPlayer, ballShooter, board, companyPool, null, null)
+            : this(cardPlayer, ballShooter, board, companyPool, null, null, null)
         {
         }
 
@@ -46,7 +52,8 @@ namespace Pinvestor.Game
             Board board,
             RunCompanyPool companyPool,
             TurnRevenueAccumulator revenueAccumulator,
-            EconomyService economyService)
+            EconomyService economyService,
+            Game.Health.CollapseResolver collapseResolver = null)
         {
             CardPlayer = cardPlayer;
             BallShooter = ballShooter;
@@ -54,6 +61,7 @@ namespace Pinvestor.Game
             CompanyPool = companyPool ?? new RunCompanyPool();
             RevenueAccumulator = revenueAccumulator;
             EconomyService = economyService;
+            CollapseResolver = collapseResolver;
         }
 
         /// <summary>

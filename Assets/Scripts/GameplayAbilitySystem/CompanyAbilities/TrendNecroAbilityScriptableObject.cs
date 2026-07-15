@@ -13,9 +13,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     /// TrendNecro Agency — when an adjacent company collapses, gain 1 "Recycled Hype" stack;
     /// next cashout from this company is doubled (stack cap 1, consumed on cashout).
     ///
-    /// Note: cashout doubling depends on spec 006 cashout system.
-    /// Stack tracking is implemented; cashout multiplier is stubbed.
-    /// TODO(spec-006): cashout doubling — wire RecycledHypeStack into cashout value modifier.
+    /// Wired into the cashout pipeline: the spec implements
+    /// <see cref="Pinvestor.Game.Health.ICashoutValueModifier"/>; CashoutService
+    /// consumes the stack and doubles the payout when this company cashes out.
     /// </summary>
     [CreateAssetMenu(
         menuName = "Pinvestor/Ability System/Company Abilities/TrendNecro Ability",
@@ -32,7 +32,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         }
     }
 
-    public class TrendNecroAbilitySpec : AbstractAbilitySpec
+    public class TrendNecroAbilitySpec : AbstractAbilitySpec, Pinvestor.Game.Health.ICashoutValueModifier
     {
         private TrendNecroAbilityScriptableObject TrendNecroAbility
             => (TrendNecroAbilityScriptableObject)Ability;
@@ -83,9 +83,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         }
 
         /// <summary>
-        /// Called by spec-006 cashout system when this company cashs out.
         /// Consumes the stack and returns whether the cashout should be doubled.
-        /// TODO(spec-006): wire this into cashout value modifier.
         /// </summary>
         public bool TryConsumeCashoutDouble()
         {
@@ -94,6 +92,22 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
             RecycledHypeStacks--;
             return true;
+        }
+
+        /// <summary>
+        /// Cashout pipeline hook: doubles the payout if a Recycled Hype stack is available.
+        /// </summary>
+        public float ModifyCashoutValue(float currentValue)
+        {
+            if (!TryConsumeCashoutDouble())
+                return currentValue;
+
+            GameEventLog.Add(
+                "ABILITY",
+                $"[TrendNecro] Recycled Hype consumed — cashout doubled ({currentValue} → {currentValue * 2f})",
+                new UnityEngine.Color(0.9f, 0.6f, 1f));
+
+            return currentValue * 2f;
         }
 
         private bool IsAdjacentTo(BoardItem_Company other)
