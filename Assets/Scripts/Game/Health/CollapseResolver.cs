@@ -43,8 +43,12 @@ namespace Pinvestor.Game.Health
         /// Returns true if the given collapsing company should be kept on the board
         /// for now (its collapse is deferred to round end).
         /// </summary>
-        public bool ShouldDeferCollapse(BoardItem_Company collapsingItem)
+        public bool ShouldDeferCollapse(
+            BoardItem_Company collapsingItem,
+            out bool newlyRecognizedCollapse)
         {
+            newlyRecognizedCollapse = false;
+
             if (collapsingItem == null)
                 return false;
 
@@ -61,6 +65,8 @@ namespace Pinvestor.Game.Health
                     continue;
 
                 _deferredThisRound.Add(collapsingItem);
+                newlyRecognizedCollapse = true;
+                RaiseCompanyCollapsedEvent(collapsingItem);
                 Debug.Log(
                     $"[CollapseResolver] Collapse of '{collapsingWrapper.Company?.CompanyId?.CompanyId}' " +
                     "deferred until round end.");
@@ -109,7 +115,7 @@ namespace Pinvestor.Game.Health
 
             foreach (BoardItem_Company companyItem in deferred)
             {
-                if (TryExecuteCollapse(companyItem))
+                if (TryExecuteCollapse(companyItem, emitCollapseEvent: false))
                 {
                     Debug.Log("[CollapseResolver] Deferred collapse executed at round end.");
                 }
@@ -117,12 +123,15 @@ namespace Pinvestor.Game.Health
         }
 
         /// <summary>
-        /// Shared collapse execution: destroys the company and emits
-        /// <see cref="CompanyCollapsedEvent"/>. Used by Turn's Resolution Phase and
-        /// by the round-end flush. Returns false if the item can't be destroyed
+        /// Shared collapse execution: destroys the company and optionally emits
+        /// <see cref="CompanyCollapsedEvent"/>. Deferred collapses already emitted
+        /// their logical event, so the round-end flush suppresses a duplicate.
+        /// Returns false if the item can't be destroyed
         /// (missing spec, already destroying, or already off the board).
         /// </summary>
-        public static bool TryExecuteCollapse(BoardItem_Company companyItem)
+        public static bool TryExecuteCollapse(
+            BoardItem_Company companyItem,
+            bool emitCollapseEvent = true)
         {
             if (companyItem == null)
                 return false;
@@ -133,23 +142,32 @@ namespace Pinvestor.Game.Health
             if (destroyableSpec.IsDestroying)
                 return false;
 
-            // Capture identity before destroy (wrapper reference becomes invalid after).
-            string companyId = string.Empty;
+            destroyableSpec.Destroy(null);
+
+            if (emitCollapseEvent)
+                RaiseCompanyCollapsedEvent(companyItem);
+
+            Debug.Log("[spec-006] Company collapse executed. Investment lost.");
+            return true;
+        }
+
+        private static void RaiseCompanyCollapsedEvent(
+            BoardItem_Company companyItem)
+        {
+            if (companyItem == null)
+                return;
+
+            string companyId = companyItem.CompanyData?.RefCardId ?? string.Empty;
             var boardPosition = new Vector2Int(
                 companyItem.BoardItemData.Col,
                 companyItem.BoardItemData.Row);
 
-            if (companyItem.Wrapper is BoardItemWrapper_Company companyWrapper)
-                companyId = companyWrapper.Company?.CompanyId?.CompanyId ?? string.Empty;
-
-            destroyableSpec.Destroy(null);
-
-            // Emit collapse event — investment capital is NOT refunded.
             EventBus<CompanyCollapsedEvent>.Raise(
                 new CompanyCollapsedEvent(companyId, boardPosition));
 
-            Debug.Log($"[spec-006] Company '{companyId}' collapsed at {boardPosition}. Investment lost.");
-            return true;
+            Debug.Log(
+                $"[spec-006] Company '{companyId}' recognized as collapsed " +
+                $"at {boardPosition}. Investment lost.");
         }
 
         public void Dispose()

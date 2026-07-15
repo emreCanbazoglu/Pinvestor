@@ -3,6 +3,10 @@ using AttributeSystem.Components;
 using Pinvestor.BoardSystem;
 using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
+using Pinvestor.Game.Health;
+using AbilitySystem.Authoring;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Pinvestor.Game.Economy
@@ -93,8 +97,8 @@ namespace Pinvestor.Game.Economy
 
             float payoutAmount = valuationModel?.CashoutValue ?? 0f;
 
-            // Ability hooks: the company's own ability specs may modify the payout
-            // (TrendNecro's Recycled Hype double, DeferredAlpha's deferred-hit bonus).
+            // Active board abilities may modify the payout. DeferredAlpha targets
+            // its owner; TrendNecro can consume hype on an eligible SocialMedia cashout.
             payoutAmount = ApplyCashoutValueModifiers(companyWrapper, payoutAmount);
 
             // Credit payout to player balance.
@@ -116,35 +120,52 @@ namespace Pinvestor.Game.Economy
         }
 
         /// <summary>
-        /// Runs the cashing-out company's own ability specs implementing
+        /// Runs active board ability specs implementing
         /// <see cref="Pinvestor.Game.Health.ICashoutValueModifier"/> over the payout,
         /// in GrantedAbilities order.
         /// </summary>
-        private static float ApplyCashoutValueModifiers(
+        private float ApplyCashoutValueModifiers(
             BoardItemWrapper_Company companyWrapper,
             float payoutAmount)
         {
-            var grantedAbilities = companyWrapper.AbilitySystemCharacter?.GrantedAbilities;
-            if (grantedAbilities == null)
+            var modifiers = new List<ICashoutValueModifier>();
+            var companies = _turn?.Board?.BoardItems
+                .OfType<BoardItem_Company>()
+                .OrderBy(company => company.BoardItemData.Row)
+                .ThenBy(company => company.BoardItemData.Col)
+                .ThenBy(company => company.CompanyData.RefCardId)
+                .ToList();
+
+            if (companies == null)
                 return payoutAmount;
 
-            foreach (var spec in grantedAbilities)
+            foreach (BoardItem_Company company in companies)
             {
-                if (!(spec is Pinvestor.Game.Health.ICashoutValueModifier modifier))
+                var wrapper = company.Wrapper as BoardItemWrapper_Company;
+                var grantedAbilities = wrapper?.AbilitySystemCharacter?.GrantedAbilities;
+                if (grantedAbilities == null)
                     continue;
 
-                float modified = modifier.ModifyCashoutValue(payoutAmount);
-                if (!Mathf.Approximately(modified, payoutAmount))
+                foreach (AbstractAbilitySpec spec in grantedAbilities)
                 {
-                    Debug.Log(
-                        $"[spec-006][CashoutService] '{companyWrapper.name}' cashout modified " +
-                        $"{payoutAmount} -> {modified} by {spec.GetType().Name}.");
+                    if (spec is ICashoutValueModifier modifier && spec.isActive)
+                        modifiers.Add(modifier);
                 }
-
-                payoutAmount = modified;
             }
 
-            return payoutAmount;
+            float modifiedPayout = CashoutModifierPipeline.Apply(
+                modifiers,
+                companyWrapper,
+                payoutAmount);
+
+            if (!Mathf.Approximately(modifiedPayout, payoutAmount))
+            {
+                Debug.Log(
+                    $"[spec-006][CashoutService] '{companyWrapper.name}' cashout modified " +
+                    $"{payoutAmount} -> {modifiedPayout}.");
+            }
+
+            return modifiedPayout;
         }
 
         /// <summary>

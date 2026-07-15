@@ -14,10 +14,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     /// LastMile Orchestrator — when an adjacent company collapses, move this company into
     /// the collapsed tile and trigger one free hit payout (once per round).
     ///
-    /// The move uses Board.TryMoveBoardItem once the collapsed cell is vacated
-    /// (pieces dispose after OnBoardItemRemoved fires, so the move is attempted on
-    /// subsequent frames with a short retry budget). The free hit payout is applied
-    /// via the FreeHitEffect immediately on detection.
+    /// The move uses Board.TryMoveBoardItem once the collapsed cell is vacant. AuditFog
+    /// may keep the physical item there until round end, so the target remains pending
+    /// without a frame-count timeout. The free payout fires when collapse is recognized.
     /// </summary>
     [CreateAssetMenu(
         menuName = "Pinvestor/Ability System/Company Abilities/LastMile Ability",
@@ -47,14 +46,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         private BoardItemWrapper_Company _selfWrapper;
         private bool _procUsedThisRound;
 
-        // Pending relocation into an adjacent collapsed tile. The cell is only
-        // vacated after the collapsed item's pieces dispose, so the move is retried
-        // across frames from the ability loop until it succeeds or the budget runs out.
+        // Pending relocation into a logically collapsed tile. AuditFog can defer
+        // physical removal until round end, so this is intentionally not frame-limited.
         private Vector2Int? _pendingMoveTarget;
-        private int _pendingMoveFramesLeft;
-        private const int MoveRetryFrameBudget = 120;
 
         private EventBinding<RoundStartedEvent> _roundBinding;
+        private EventBinding<CompanyCollapsedEvent> _collapseBinding;
 
         public LastMileAbilitySpec(
             AbstractAbilityScriptableObject abilitySO,
@@ -68,9 +65,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _procUsedThisRound = false;
 
             _roundBinding = new EventBinding<RoundStartedEvent>(OnRoundStarted);
+            _collapseBinding = new EventBinding<CompanyCollapsedEvent>(OnCompanyCollapsed);
             EventBus<RoundStartedEvent>.Register(_roundBinding);
-
-            GameManager.Instance.BoardWrapper.Board.OnBoardItemRemoved += OnBoardItemRemoved;
+            EventBus<CompanyCollapsedEvent>.Register(_collapseBinding);
 
             while (true)
             {
@@ -94,7 +91,6 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 && board.TryMoveBoardItem(_selfWrapper.BoardItem, target))
             {
                 _pendingMoveTarget = null;
-                _selfWrapper.transform.localPosition = Vector3.zero;
                 GameEventLog.Add(
                     "ABILITY",
                     $"[LastMile] Moved into collapsed tile {target}",
@@ -102,51 +98,29 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 return;
             }
 
-            _pendingMoveFramesLeft--;
-            if (_pendingMoveFramesLeft <= 0)
-            {
-                GameEventLog.Add(
-                    "ABILITY",
-                    $"[LastMile] Move to {target} abandoned — tile never became available",
-                    new UnityEngine.Color(1f, 0.7f, 0.4f));
-                _pendingMoveTarget = null;
-            }
         }
 
         public override void CancelAbility()
         {
             EventBus<RoundStartedEvent>.Deregister(_roundBinding);
-
-            if (GameManager.Instance != null)
-                GameManager.Instance.BoardWrapper.Board.OnBoardItemRemoved -= OnBoardItemRemoved;
+            EventBus<CompanyCollapsedEvent>.Deregister(_collapseBinding);
 
             base.CancelAbility();
         }
 
-        private void OnBoardItemRemoved(BoardItemBase boardItem)
+        private void OnCompanyCollapsed(CompanyCollapsedEvent e)
         {
             if (_procUsedThisRound)
                 return;
 
-            if (!(boardItem is BoardItem_Company collapsedCompany))
-                return;
-
-            if (!IsAdjacentTo(collapsedCompany))
+            if (!IsAdjacentTo(e.BoardPosition))
                 return;
 
             _procUsedThisRound = true;
 
-            // Capture the vacating tile now — the cell reference is gone once the
-            // collapsed item's pieces dispose. The actual move runs from the ability
-            // loop on subsequent frames (see TryExecutePendingMove).
-            Cell collapsedCell = collapsedCompany.MainPiece?.Cell;
-            if (collapsedCell != null)
-            {
-                _pendingMoveTarget = collapsedCell.Position;
-                _pendingMoveFramesLeft = MoveRetryFrameBudget;
-            }
+            _pendingMoveTarget = e.BoardPosition;
 
-            GameEventLog.Add("ABILITY", $"[LastMile] Adjacent collapse at {collapsedCell?.Position} — free payout triggered, relocating", new UnityEngine.Color(0.4f, 1f, 0.7f));
+            GameEventLog.Add("ABILITY", $"[LastMile] Adjacent collapse at {e.BoardPosition} — free payout triggered, relocating", new UnityEngine.Color(0.4f, 1f, 0.7f));
 
             if (LastMileAbility.FreeHitPayoutEffect != null)
             {
@@ -157,19 +131,32 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
         private void OnRoundStarted(RoundStartedEvent _)
         {
+            // AuditFog flushes its deferred physical removal on RoundCompleted.
+            // The next RoundStarted can fire before the ability loop advances a frame,
+            // so make one immediate move attempt before treating the target as stale.
+            TryExecutePendingMove();
+
+            if (_pendingMoveTarget != null)
+            {
+                Debug.LogWarning(
+                    $"[LastMile] Pending move to {_pendingMoveTarget.Value} " +
+                    "did not resolve before the next round.");
+                _pendingMoveTarget = null;
+            }
+
             _procUsedThisRound = false;
         }
 
-        private bool IsAdjacentTo(BoardItem_Company other)
+        private bool IsAdjacentTo(Vector2Int boardPosition)
         {
             if (_selfWrapper?.BoardItem?.MainPiece?.Cell == null)
                 return false;
 
-            var otherCell = other.MainPiece?.Cell;
-            if (otherCell == null)
+            var board = _selfWrapper.BoardItem.MainPiece.Cell.Board;
+            if (!board.TryGetCellAt(boardPosition, out Cell collapsedCell))
                 return false;
 
-            return _selfWrapper.BoardItem.MainPiece.Cell.IsLinkedCell(otherCell);
+            return _selfWrapper.BoardItem.MainPiece.Cell.IsLinkedCell(collapsedCell);
         }
     }
 }

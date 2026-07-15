@@ -310,8 +310,15 @@ namespace Pinvestor.Game
 
                 // Ability interceptors (AuditFog etc.) may defer this collapse to round end.
                 if (_collapseResolver != null
-                    && _collapseResolver.ShouldDeferCollapse(companyBoardItem))
+                    && _collapseResolver.ShouldDeferCollapse(
+                        companyBoardItem,
+                        out bool newlyRecognizedCollapse))
+                {
+                    if (newlyRecognizedCollapse)
+                        collapsedCount++;
+
                     continue;
+                }
 
                 if (Game.Health.CollapseResolver.TryExecuteCollapse(companyBoardItem))
                     collapsedCount++;

@@ -1,4 +1,5 @@
 using Pinvestor.BoardSystem.Authoring;
+using System.Collections.Generic;
 
 namespace Pinvestor.Game.Health
 {
@@ -22,8 +23,38 @@ namespace Pinvestor.Game.Health
     /// </summary>
     public interface ICashoutValueModifier
     {
+        /// <param name="cashingOutCompany">The company whose payout is being calculated.</param>
         /// <param name="currentValue">Payout after previous modifiers.</param>
         /// <returns>The adjusted payout.</returns>
-        float ModifyCashoutValue(float currentValue);
+        float ModifyCashoutValue(
+            BoardItemWrapper_Company cashingOutCompany,
+            float currentValue);
+    }
+
+    /// <summary>
+    /// Deterministic cashout-modifier composition shared by runtime code and tests.
+    /// </summary>
+    public static class CashoutModifierPipeline
+    {
+        public static float Apply(
+            IEnumerable<ICashoutValueModifier> modifiers,
+            BoardItemWrapper_Company cashingOutCompany,
+            float payoutAmount)
+        {
+            if (modifiers == null)
+                return payoutAmount;
+
+            foreach (ICashoutValueModifier modifier in modifiers)
+            {
+                if (modifier == null)
+                    continue;
+
+                payoutAmount = modifier.ModifyCashoutValue(
+                    cashingOutCompany,
+                    payoutAmount);
+            }
+
+            return payoutAmount;
+        }
     }
 }

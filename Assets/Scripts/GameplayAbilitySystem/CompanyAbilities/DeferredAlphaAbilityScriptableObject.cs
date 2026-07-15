@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using AbilitySystem;
 using AbilitySystem.Authoring;
+using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.Diagnostics;
 using Pinvestor.Game;
 using Pinvestor.Game.BallSystem;
+using Pinvestor.Game.Health;
 using UnityEngine;
 
 namespace Pinvestor.GameplayAbilitySystem.Abilities
@@ -22,6 +24,7 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
     public class DeferredAlphaAbilityScriptableObject : AbstractAbilityScriptableObject
     {
         [field: SerializeField] public GameplayEffectScriptableObject DeferHpEffect { get; private set; } = null;
+        [field: SerializeField] public GameplayEffectScriptableObject DeferredDamageEffect { get; private set; } = null;
         [field: SerializeField] public int MaxDeferralsPerRound { get; private set; } = 3;
         [field: SerializeField] public float CashoutBonusPerDeferral { get; private set; } = 0.15f;
 
@@ -39,19 +42,25 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             => (DeferredAlphaAbilityScriptableObject)Ability;
 
         private BallTarget _ballTarget;
-        private int _deferralsThisRound;
+        private DeferredDamageState _deferredDamage;
+        private int _turnCountThisRound;
 
         /// <summary>
         /// Accumulated deferred damage count for this round.
         /// Consumed by ModifyCashoutValue (+CashoutBonusPerDeferral per point).
         /// </summary>
-        public int DeferredDamageCount { get; private set; }
+        public int DeferredDamageCount => _deferredDamage?.PendingDamage ?? 0;
 
         /// <summary>
         /// Cashout pipeline hook: +15% (configurable) payout per deferred damage point.
         /// </summary>
-        public float ModifyCashoutValue(float currentValue)
+        public float ModifyCashoutValue(
+            BoardItemWrapper_Company cashingOutCompany,
+            float currentValue)
         {
+            if (cashingOutCompany?.AbilitySystemCharacter != Owner)
+                return currentValue;
+
             if (DeferredDamageCount <= 0)
                 return currentValue;
 
@@ -74,6 +83,8 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             AbilitySystemCharacter owner) : base(abilitySO, owner)
         {
             _ballTarget = owner.GetComponentInChildren<BallTarget>();
+            _deferredDamage = new DeferredDamageState(
+                DeferredAlphaAbility.MaxDeferralsPerRound);
         }
 
         protected override IEnumerator<float> ActivateAbility()
@@ -82,7 +93,9 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 _ballTarget.OnBallCollided += OnBallCollided;
 
             _roundBinding = new EventBinding<RoundStartedEvent>(OnRoundStarted);
+            _turnBinding = new EventBinding<TurnResolutionStartedEvent>(OnTurnResolution);
             EventBus<RoundStartedEvent>.Register(_roundBinding);
+            EventBus<TurnResolutionStartedEvent>.Register(_turnBinding);
 
             while (true)
             {
@@ -96,33 +109,72 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
                 _ballTarget.OnBallCollided -= OnBallCollided;
 
             EventBus<RoundStartedEvent>.Deregister(_roundBinding);
+            EventBus<TurnResolutionStartedEvent>.Deregister(_turnBinding);
             base.CancelAbility();
         }
 
         private void OnBallCollided(Ball ball)
         {
-            if (_deferralsThisRound >= DeferredAlphaAbility.MaxDeferralsPerRound)
+            if (DeferredAlphaAbility.DeferHpEffect == null)
+            {
+                Debug.LogError(
+                    "[DeferredAlpha] DeferHpEffect is not assigned; " +
+                    "the hit cannot be deferred.");
+                return;
+            }
+
+            if (!_deferredDamage.TryDeferDamage())
                 return;
 
             // Defer 1 damage: negate the HP loss from this hit and count it.
             // The actual HP is reduced by the GAS collision system; here we apply
             // a compensating heal (DeferHpEffect) to offset the damage.
-            if (DeferredAlphaAbility.DeferHpEffect != null)
+            var spec = Owner.MakeOutgoingSpec(this, DeferredAlphaAbility.DeferHpEffect);
+            Owner.ApplyGameplayEffectSpecToSelf(spec);
+
+            GameEventLog.Add(
+                "ABILITY",
+                $"[DeferredAlpha] Deferred hit #{DeferredDamageCount} " +
+                $"(cap {DeferredAlphaAbility.MaxDeferralsPerRound})",
+                new UnityEngine.Color(0.6f, 0.6f, 1f));
+        }
+
+        private void OnRoundStarted(RoundStartedEvent e)
+        {
+            _turnCountThisRound = e.TurnCount;
+        }
+
+        private void OnTurnResolution(TurnResolutionStartedEvent e)
+        {
+            if (_turnCountThisRound <= 0
+                || e.TurnIndex != _turnCountThisRound - 1)
+                return;
+
+            if (DeferredDamageCount <= 0)
+                return;
+
+            if (DeferredAlphaAbility.DeferredDamageEffect == null)
             {
-                var spec = Owner.MakeOutgoingSpec(this, DeferredAlphaAbility.DeferHpEffect);
+                Debug.LogError(
+                    "[DeferredAlpha] DeferredDamageEffect is not assigned; " +
+                    $"could not resolve {DeferredDamageCount} deferred damage.");
+                return;
+            }
+
+            int deferredDamage = _deferredDamage.ConsumePendingDamage();
+
+            for (int i = 0; i < deferredDamage; i++)
+            {
+                var spec = Owner.MakeOutgoingSpec(
+                    this,
+                    DeferredAlphaAbility.DeferredDamageEffect);
                 Owner.ApplyGameplayEffectSpecToSelf(spec);
             }
 
-            _deferralsThisRound++;
-            DeferredDamageCount++;
-
-            GameEventLog.Add("ABILITY", $"[DeferredAlpha] Deferred hit #{DeferredDamageCount} (this round: {_deferralsThisRound}/{DeferredAlphaAbility.MaxDeferralsPerRound})", new UnityEngine.Color(0.6f, 0.6f, 1f));
-        }
-
-        private void OnRoundStarted(RoundStartedEvent _)
-        {
-            _deferralsThisRound = 0;
-            DeferredDamageCount = 0;
+            GameEventLog.Add(
+                "ABILITY",
+                $"[DeferredAlpha] Round-end debt resolved: -{deferredDamage} HP",
+                new UnityEngine.Color(1f, 0.55f, 0.35f));
         }
     }
 }

@@ -32,5 +32,6 @@ MonoBehaviour:
   CustomDescription: On hit defer 1 damage to round end; each deferred hit grants
     +15% cashout value (cap 3 deferrals/round)
   <DeferHpEffect>k__BackingField: {fileID: 11400000, guid: 5d91775b461842ec928bd80d9b8b3fde, type: 2}
+  <DeferredDamageEffect>k__BackingField: {fileID: 11400000, guid: f35a60822e944ff98ebd52d92d35b30b, type: 2}
   <MaxDeferralsPerRound>k__BackingField: 3
   <CashoutBonusPerDeferral>k__BackingField: 0.15

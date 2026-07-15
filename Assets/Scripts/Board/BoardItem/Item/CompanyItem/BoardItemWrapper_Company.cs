@@ -72,6 +72,11 @@ namespace Pinvestor.BoardSystem.Authoring
 
         protected override void DisposeCore()
         {
+            // Ability cleanup belongs to actual removal, not HP reaching zero. This
+            // lets AuditFog keep a hidden-collapse company's abilities/revenue active
+            // until the resolver physically removes it at round end.
+            AbilitySystemCharacter?.CancelAllAbilities();
+
             BoardItem.TryGetPropertySpec(
                 out BoardItemPropertySpec_PlacableCompany placableCompanySpec);
 
@@ -250,9 +255,6 @@ namespace Pinvestor.BoardSystem.Authoring
             AbilitySystemCharacter other,
             DamageInfo damageInfo)
         {
-            // Cancel all abilities immediately so no further revenue or effects fire.
-            AbilitySystemCharacter.CancelAllAbilities();
-
             // Mark the runtime health model as pending collapse.
             // Actual board removal and CompanyCollapsedEvent emission happen in
             // Turn.RemoveCollapsedCompanies() during the Resolution Phase, so the

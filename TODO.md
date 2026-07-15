@@ -17,17 +17,15 @@ pooled floating text.
 010 (Market News) — 0% built. 008 blocks 009 and 010.
 
 **Biggest problems:**
-1. Run ends with a `Debug.Log` and a silent 2s scene reload — no win/lose/summary UX at all.
-2. Cashout backend (`CashoutService.TryCashout`) is fully implemented but has **zero callers** —
-   the player cannot cash out. `CompanyOfferPanel.cs` is an empty stub.
-3. No `PurchaseCost`/`Valuation` attribute — `TurnlyCost` does triple duty (price proxy, per-turn
-   drain, cashout basis). Cashout value = 0.5 × TurnlyCost, which is always worse than one good
-   hit (RPH is 1.5–2.2× TurnlyCost) → the headline "bubble economy" mechanic is dead weight.
-4. The missing "spec-006 collapse handler" blocks the payoffs of 4 companies at once
-   (TrendNecro, DeferredAlpha, AuditFog, LastMile).
-5. Shop phase is a literal no-op (`ShopPlaceholderRoundPhase` → `return UniTask.CompletedTask`).
-6. Zero audio, no VFX/screen-shake; only juice is card animations + floating text.
-7. 8 of 16 companies have stubbed, unwired, or silently-reworked abilities.
+1. The new purchase-cost/valuation economy has not had a balance or full-run playtest pass.
+2. The four collapse/cashout abilities now have compile + EditMode coverage, but still need a
+   real-run playtest for hit ordering, hidden revenue, cashout targeting, and movement visuals.
+3. Shop phase is a literal no-op (`ShopPlaceholderRoundPhase` → `return UniTask.CompletedTask`).
+4. Zero audio, no VFX/screen-shake; only juice is card animations + floating text.
+5. Four roster abilities remain stubbed or silently reworked (AutoPilotPantry, CloutHubLive,
+   CreditKaraoke, OneTapButler).
+6. Synergy is not implemented, so industry clustering has no system-level payoff or feedback.
+7. `GameFSM.GetTransitionDict()` is empty even though the run loop now has real outcomes.
 
 ---
 
@@ -74,14 +72,20 @@ pooled floating text.
       `ICashoutValueModifier` hooks (`Game/Health/CollapseHooks.cs`), run-scoped
       `CollapseResolver` (deferred collapses flush on `RoundCompletedEvent`), plugged into
       `Turn.RemoveCollapsedCompanies` + `CashoutService`; new `Board.TryMoveBoardItem`.
-  - [x] AuditFogExchange — first collapse each round deferred to round end (interceptor)
-  - [x] TrendNecroAgency — Recycled Hype stack consumed → cashout ×2 (modifier)
-  - [x] DeferredAlphaCapital — +15% cashout per deferred hit (modifier)
-  - [x] LastMileOrchestrator — relocates into adjacent collapsed tile (frame-deferred move
-        w/ retry budget; falls back to payout-only if the tile never frees)
+  - [x] AuditFogExchange — first logical collapse each round emits once for downstream combos;
+        physical removal is deferred to round end and abilities remain live until removal
+  - [x] TrendNecroAgency — adjacent `CompanyCollapsedEvent` grants Recycled Hype; the next
+        eligible SocialMedia cashout consumes it for ×2 (cashouts no longer count as collapses)
+  - [x] DeferredAlphaCapital — +15% cashout per pending deferred hit; HP debt resolves during
+        the final turn's Resolution Phase through a dedicated GAS damage effect
+  - [x] LastMileOrchestrator — logical adjacent collapse triggers payout; relocation remains
+        pending until the tile is physically free, including AuditFog-delayed removal
   - [ ] **Playtest the four wired abilities in a real run** — esp. AuditFog's hidden company
-        still earning revenue after `CancelAllAbilities`, and LastMile's move visual
-        (localPosition snap) — hard to simulate without drag input
+        still earning revenue, DeferredAlpha hit/heal ordering, TrendNecro targeting another
+        SocialMedia company, and LastMile's placement tween after a delayed move
+  - [ ] **Resolve TrendNecro timing wording** — design says "this turn," but collapses occur in
+        Resolution after the Offer-only cashout window; runtime carries the stack to the next
+        eligible SocialMedia cashout so the mechanic is usable
 
 **Separate systems needed:**
 - [ ] AutoPilotPantry `BallRedirect` — needs ball-miss-detection hook in `Ball.cs`
@@ -138,14 +142,19 @@ behind implementation.
       review (T056)
 - [ ] Manual editor smoke tests outstanding: 002 T049/T052/T053, 003 T012/T013, 004 T017,
       005 T026, 006 T025
+- [ ] Fix Play Mode teardown errors: `CompanySelectionPileWrapper.OnDestroy()` dereferences an
+      uninitialized legacy pile, and a destroyed `Ball` is accessed during scene teardown.
+      The 2026-07-15 smoke test completed offer selection and company placement without runtime
+      errors; both exceptions appeared only after stopping Play Mode.
 - [ ] Minor stubs: `BoardVisualController.Dispose`, `BoardItemProperty_PlacableBase.Remove()`
 - [ ] Refresh `skills/game-element-designer/references/content-catalog.md` (stale — dated
       2026-03-22, pre-dates the 16-company roster; run
       `./skills/game-element-designer/scripts/refresh-content-catalog.sh`)
 - [ ] Delete stale merged remote branches: `feat/spec-002-company-refresh`,
       `feat/spec-004-economy-resolution`, `feat/spec-006-health-collapse-cashout`
-- [ ] Audit whether spec-002's deferred-to-006 items actually landed in the 006 merge
-      (AuditFog / TrendNecro / DeferredAlpha / LastMile — evidence says they did NOT)
+- [x] Audited spec-002's deferred-to-006 items and implemented the missing delta for AuditFog,
+      TrendNecro, DeferredAlpha, and LastMile. Unity compile + 37/37 EditMode tests pass
+      *(2026-07-15; manual real-run playtest remains above)*
 
 ---
 

@@ -5,13 +5,14 @@ using Pinvestor.BoardSystem.Authoring;
 using Pinvestor.BoardSystem.Base;
 using Pinvestor.Diagnostics;
 using Pinvestor.Game;
+using Pinvestor.CompanySystem;
 using UnityEngine;
 
 namespace Pinvestor.GameplayAbilitySystem.Abilities
 {
     /// <summary>
     /// TrendNecro Agency — when an adjacent company collapses, gain 1 "Recycled Hype" stack;
-    /// next cashout from this company is doubled (stack cap 1, consumed on cashout).
+    /// next eligible SocialMedia cashout is doubled (stack cap 1, consumed on cashout).
     ///
     /// Wired into the cashout pipeline: the spec implements
     /// <see cref="Pinvestor.Game.Health.ICashoutValueModifier"/>; CashoutService
@@ -49,9 +50,12 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             _selfWrapper = owner.GetComponent<BoardItemWrapper_Company>();
         }
 
+        private EventBinding<CompanyCollapsedEvent> _collapseBinding;
+
         protected override IEnumerator<float> ActivateAbility()
         {
-            GameManager.Instance.BoardWrapper.Board.OnBoardItemRemoved += OnBoardItemRemoved;
+            _collapseBinding = new EventBinding<CompanyCollapsedEvent>(OnCompanyCollapsed);
+            EventBus<CompanyCollapsedEvent>.Register(_collapseBinding);
 
             while (true)
             {
@@ -61,18 +65,14 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
 
         public override void CancelAbility()
         {
-            if (GameManager.Instance != null)
-                GameManager.Instance.BoardWrapper.Board.OnBoardItemRemoved -= OnBoardItemRemoved;
+            EventBus<CompanyCollapsedEvent>.Deregister(_collapseBinding);
 
             base.CancelAbility();
         }
 
-        private void OnBoardItemRemoved(BoardItemBase boardItem)
+        private void OnCompanyCollapsed(CompanyCollapsedEvent e)
         {
-            if (!(boardItem is BoardItem_Company companyItem))
-                return;
-
-            if (!IsAdjacentTo(companyItem))
+            if (!IsAdjacentTo(e.BoardPosition))
                 return;
 
             if (RecycledHypeStacks >= TrendNecroAbility.MaxStacks)
@@ -97,8 +97,15 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
         /// <summary>
         /// Cashout pipeline hook: doubles the payout if a Recycled Hype stack is available.
         /// </summary>
-        public float ModifyCashoutValue(float currentValue)
+        public float ModifyCashoutValue(
+            BoardItemWrapper_Company cashingOutCompany,
+            float currentValue)
         {
+            string companyId = cashingOutCompany?.Company?.CompanyId?.CompanyId;
+            if (CompanyCategoryResolver.ResolveOrNone(companyId)
+                != ECompanyCategory.SocialMedia)
+                return currentValue;
+
             if (!TryConsumeCashoutDouble())
                 return currentValue;
 
@@ -110,16 +117,16 @@ namespace Pinvestor.GameplayAbilitySystem.Abilities
             return currentValue * 2f;
         }
 
-        private bool IsAdjacentTo(BoardItem_Company other)
+        private bool IsAdjacentTo(Vector2Int boardPosition)
         {
             if (_selfWrapper?.BoardItem?.MainPiece?.Cell == null)
                 return false;
 
-            var otherCell = other.MainPiece?.Cell;
-            if (otherCell == null)
+            var board = _selfWrapper.BoardItem.MainPiece.Cell.Board;
+            if (!board.TryGetCellAt(boardPosition, out Cell collapsedCell))
                 return false;
 
-            return _selfWrapper.BoardItem.MainPiece.Cell.IsLinkedCell(otherCell);
+            return _selfWrapper.BoardItem.MainPiece.Cell.IsLinkedCell(collapsedCell);
         }
     }
 }

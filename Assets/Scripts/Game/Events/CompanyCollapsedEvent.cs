@@ -4,8 +4,9 @@ using UnityEngine;
 namespace Pinvestor.Game
 {
     /// <summary>
-    /// Emitted when a company collapses (HP reaches 0) and is removed from the board.
-    /// Investment capital is NOT refunded when this fires.
+    /// Emitted once when a company is logically recognized as collapsed.
+    /// Physical removal normally happens immediately, but an interceptor such as
+    /// AuditFog may defer removal until round end. Investment is never refunded.
     /// </summary>
     public sealed class CompanyCollapsedEvent : IEvent
     {
