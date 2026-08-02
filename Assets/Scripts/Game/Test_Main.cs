@@ -45,7 +45,7 @@ namespace Pinvestor.Game
 
         private BoardData GetBoardData()
         {
-            return new BoardData(_boardSize);
+            return new BoardData(_boardSize, Vector2.zero);
         }
 
         private async UniTask PlayAsync()

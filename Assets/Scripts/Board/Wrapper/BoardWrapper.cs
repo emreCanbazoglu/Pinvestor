@@ -33,6 +33,7 @@ namespace Pinvestor.BoardSystem.Authoring
 
         [Header("Walls")]
         [SerializeField] private Transform _boardEnterTransform = null;
+        [SerializeField] private GameObject _wallPrefab = null;
 
         [Tooltip("Total height of the bounding walls, centered on the board surface. "
                  + "Must comfortably exceed the ball diameter, or the ball can catch a wall's "
@@ -133,9 +134,9 @@ namespace Pinvestor.BoardSystem.Authoring
         {
             Vector3 size
                 = new Vector3(
-                    Board.Dimensions.x * _cellSize.x,
+                    Board.Dimensions.x * _cellSize.x + (Board.WallExtension.x * 2f),
                     _wallHeight,
-                    Board.Dimensions.y * _cellSize.y);
+                    Board.Dimensions.y * _cellSize.y + (Board.WallExtension.y * 2f));
 
             // Centered on the surface rather than resting on it: the ball travels at
             // surface height, so it needs clearance both above and below. A wall whose
@@ -195,27 +196,36 @@ namespace Pinvestor.BoardSystem.Authoring
                     _wallThickness);
 
             // Left wall (-X)
-            _colliders[0] = gameObject.AddComponent<BoxCollider>();
-            _colliders[0].size = sideWallSize;
-            _colliders[0].center = new Vector3(
+            GameObject wallGO = Instantiate(
+                _wallPrefab,
+                transform);
+            _colliders[0] = wallGO.GetComponent<BoxCollider>();
+            wallGO.transform.localScale = sideWallSize;
+            wallGO.transform.position = new Vector3(
                 LocalBounds.min.x - _wallThickness * 0.5f,
                 centerY,
                 LocalBounds.center.z);
             _colliders[0].isTrigger = true;
 
             // Far wall (+Z)
-            _colliders[1] = gameObject.AddComponent<BoxCollider>();
-            _colliders[1].size = endWallSize;
-            _colliders[1].center = new Vector3(
+            wallGO = Instantiate(
+                _wallPrefab,
+                transform);
+            _colliders[1] = wallGO.GetComponent<BoxCollider>();
+            wallGO.transform.localScale = endWallSize;
+            wallGO.transform.position = new Vector3(
                 LocalBounds.center.x,
                 centerY,
                 LocalBounds.max.z + _wallThickness * 0.5f);
             _colliders[1].isTrigger = true;
 
             // Right wall (+X)
-            _colliders[2] = gameObject.AddComponent<BoxCollider>();
-            _colliders[2].size = sideWallSize;
-            _colliders[2].center = new Vector3(
+            wallGO = Instantiate(
+                _wallPrefab,
+                transform);
+            _colliders[2] = wallGO.GetComponent<BoxCollider>();
+            wallGO.transform.localScale = sideWallSize;
+            wallGO.transform.position = new Vector3(
                 LocalBounds.max.x + _wallThickness * 0.5f,
                 centerY,
                 LocalBounds.center.z);

@@ -27,6 +27,7 @@ namespace Pinvestor.Game
 
         [SerializeField] private SerializedDeckDataProvider _serializedDeckDataProvider = null;
         [SerializeField] private Vector2Int _boardSize = new Vector2Int(5, 5);
+        [SerializeField] private Vector2 _wallExtension = new Vector2(1f, 1f);
         [SerializeField] private CellLayerInfoSO[] _cellLayerInfoColl
             = Array.Empty<CellLayerInfoSO>();
 
@@ -184,7 +185,9 @@ namespace Pinvestor.Game
 
         private BoardData GetBoardData()
         {
-            return new BoardData(_boardSize);
+            return new BoardData(
+                _boardSize, 
+                _wallExtension);
         }
 
         private async UniTask PlayAsync()

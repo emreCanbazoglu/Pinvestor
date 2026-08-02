@@ -35,6 +35,7 @@ namespace Pinvestor.BoardSystem.Base
             = new HashSet<BoardItemBase>();
         
         public Vector2Int Dimensions { get; private set; }
+        public Vector2 WallExtension { get; private set; }
 
         private readonly BoardItemSOContainer _boardItemSOContainer;
         private readonly BoardItemWrapperPoolManager _boardItemWrapperPoolManager;
@@ -62,6 +63,7 @@ namespace Pinvestor.BoardSystem.Base
             bool createCells = false)
         {
             Dimensions = boardData.Dimensions;
+            WallExtension = boardData.WallExtension;
             
             Debug.Log("Board Init: " + Dimensions);
             

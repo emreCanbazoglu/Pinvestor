@@ -258,8 +258,8 @@ namespace Pinvestor.UI
             if (_targetText != null)
             {
                 string targetText = _currentTargetWorth <= 0f
-                    ? "Target: -"
-                    : $"Target {currentBalance.ToString("C0", CultureInfo.GetCultureInfo("en-US"))} / {_currentTargetWorth.ToString("C0", CultureInfo.GetCultureInfo("en-US"))}";
+                    ? "-"
+                    : $"{currentBalance.ToString("C0", CultureInfo.GetCultureInfo("en-US"))} / {_currentTargetWorth.ToString("C0", CultureInfo.GetCultureInfo("en-US"))}";
 
                 _targetText.text = targetText;
             }

@@ -22,21 +22,26 @@ namespace Pinvestor.BoardSystem.Base
         #endregion
         
         public Vector2Int Dimensions { get; private set; }
+        public Vector2 WallExtension { get; private set; }
         public List<BoardItemDataBase> BoardItems { get; private set; }
 
 
         public BoardData(
-            Vector2Int dimensions)
+            Vector2Int dimensions,
+            Vector2 wallExtension)
         {
             Dimensions = dimensions;
+            WallExtension = wallExtension;
             BoardItems = new List<BoardItemDataBase>();
         }
 
         public BoardData(
             Vector2Int dimensions,
+            Vector2 wallExtension,
             List<BoardItemDataBase> boardItems)
         {
             Dimensions = dimensions;
+            WallExtension = wallExtension;
             BoardItems = new List<BoardItemDataBase>(boardItems);
         }
         
