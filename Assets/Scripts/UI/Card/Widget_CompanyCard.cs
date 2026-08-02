@@ -1,6 +1,8 @@
+using System;
 using System.Globalization;
 using AttributeSystem.Authoring;
 using AttributeSystem.Components;
+using DG.Tweening;
 using MMFramework.MMUI;
 using Pinvestor.CardSystem;
 using Pinvestor.CardSystem.Authoring;
@@ -19,6 +21,11 @@ namespace Pinvestor.UI
     {
         [field: SerializeField] public EventTrigger ButtonEventTrigger { get; private set; } = null;
 
+        [Header("Hover")]
+        [SerializeField] private float _hoverScale = 1.1f;
+        [SerializeField] private float _hoverDuration = 0.5f;
+        [SerializeField] private Ease _hoverEase = Ease.OutBounce;
+
         [SerializeField] private CompanyCardWrapper _companyCardWrapper = null;
 
         [SerializeField] private AttributeScriptableObject _maxHPAttribute = null;
@@ -29,8 +36,20 @@ namespace Pinvestor.UI
         [SerializeField] private TMPro.TextMeshProUGUI _purchaseCostText = null;
         [SerializeField] private TextMeshProUGUI _categoryText = null;
 
+        /// <summary>Raised when the player clicks this card. The owning panel subscribes on creation.</summary>
+        public Action<Widget_CompanyCard> OnClicked { get; set; }
+
+        /// <summary>Config entry this card was populated from, so the panel does not have to track indices.</summary>
+        public CompanyConfigModel Model { get; private set; }
+
         private bool _isPopulatedFromConfig;
-        
+
+        private EventTrigger.Entry _clickEntry;
+        private EventTrigger.Entry _pointerEnterEntry;
+        private EventTrigger.Entry _pointerExitEntry;
+
+        private Tween _scaleTween;
+
         private string _companyNameText;
         [Binding]
         public string CompanyNameText
@@ -158,6 +177,7 @@ namespace Pinvestor.UI
         public void PopulateFromConfig(CompanyConfigModel model)
         {
             _isPopulatedFromConfig = true;
+            Model = model;
 
             CompanyNameText = MvpVisualTheme.HumanizeCompanyName(model.CompanyId);
             MaxHPText = model.HasMaxHP ? $"{model.MaxHP} HP" : "-- HP";
@@ -219,7 +239,131 @@ namespace Pinvestor.UI
 
             base.ActivatingCustomActions();
         }
-        
+
+        protected override void ActivatedCustomActions()
+        {
+            RegisterPointerEntries();
+
+            base.ActivatedCustomActions();
+        }
+
+        protected override void DeactivatedCustomActions()
+        {
+            UnregisterPointerEntries();
+
+            KillScaleTween();
+
+            base.DeactivatedCustomActions();
+        }
+
+        protected override void OnDestroyCustomActions()
+        {
+            UnregisterPointerEntries();
+
+            KillScaleTween();
+
+            OnClicked = null;
+
+            base.OnDestroyCustomActions();
+        }
+
+        /// <summary>
+        /// Adds this widget's own pointer entries to the card's EventTrigger. Only
+        /// the entries created here are removed again, so any authored on the prefab
+        /// are left alone.
+        /// </summary>
+        private void RegisterPointerEntries()
+        {
+            if (ButtonEventTrigger == null)
+            {
+                Debug.LogError(
+                    "[Widget_CompanyCard] ButtonEventTrigger is not assigned. The card will not respond to input.",
+                    this);
+                return;
+            }
+
+            if (_clickEntry != null)
+                return;
+
+            _clickEntry = CreateEntry(EventTriggerType.PointerClick, OnPointerClick);
+            _pointerEnterEntry = CreateEntry(EventTriggerType.PointerEnter, OnPointerEnter);
+            _pointerExitEntry = CreateEntry(EventTriggerType.PointerExit, OnPointerExit);
+
+            ButtonEventTrigger.triggers.Add(_clickEntry);
+            ButtonEventTrigger.triggers.Add(_pointerEnterEntry);
+            ButtonEventTrigger.triggers.Add(_pointerExitEntry);
+        }
+
+        private void UnregisterPointerEntries()
+        {
+            if (_clickEntry == null)
+                return;
+
+            if (ButtonEventTrigger != null)
+            {
+                ButtonEventTrigger.triggers.Remove(_clickEntry);
+                ButtonEventTrigger.triggers.Remove(_pointerEnterEntry);
+                ButtonEventTrigger.triggers.Remove(_pointerExitEntry);
+            }
+
+            _clickEntry = null;
+            _pointerEnterEntry = null;
+            _pointerExitEntry = null;
+        }
+
+        private static EventTrigger.Entry CreateEntry(
+            EventTriggerType eventType,
+            UnityEngine.Events.UnityAction<BaseEventData> callback)
+        {
+            var entry = new EventTrigger.Entry { eventID = eventType };
+            entry.callback.AddListener(callback);
+
+            return entry;
+        }
+
+        private void OnPointerClick(BaseEventData eventData)
+        {
+            OnClicked?.Invoke(this);
+        }
+
+        private void OnPointerEnter(BaseEventData eventData)
+        {
+            PlayScale(_hoverScale, _hoverDuration, _hoverEase);
+        }
+
+        private void OnPointerExit(BaseEventData eventData)
+        {
+            PlayScale(1f, _hoverDuration, _hoverEase);
+        }
+
+        /// <summary>Scales the card in from nothing. Duration/ease come from the owning panel.</summary>
+        public void PlayShow(float duration, Ease ease)
+        {
+            PlayScale(1f, duration, ease);
+        }
+
+        /// <summary>Scales the card away. Duration/ease come from the owning panel.</summary>
+        public void PlayHide(float duration, Ease ease)
+        {
+            PlayScale(0f, duration, ease);
+        }
+
+        private void PlayScale(float target, float duration, Ease ease)
+        {
+            KillScaleTween();
+
+            _scaleTween = transform
+                .DOScale(target, duration)
+                .SetEase(ease)
+                .OnKill(() => _scaleTween = null);
+        }
+
+        private void KillScaleTween()
+        {
+            _scaleTween?.Kill();
+            _scaleTween = null;
+        }
+
         private void SetCompanyNameText()
         {
             CompanyNameText 

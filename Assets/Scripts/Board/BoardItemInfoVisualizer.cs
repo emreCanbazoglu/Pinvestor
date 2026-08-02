@@ -12,8 +12,11 @@ namespace Pinvestor.BoardSystem.Base
     public class BoardItemInfoVisualizer : MonoBehaviour,
         PlayerInput.IBoardInteractionActions
     {
+        [Tooltip("Camera used to project clicks onto the board surface. Falls back to Camera.main.")]
+        [SerializeField] private Camera _camera = null;
+
         private PlayerInput _playerInput;
-        
+
         private BoardItemBase _currentBoardItem;
         
         private EventBinding<OnViewBoardModeEnterEvent> _viewBoardModeEnterBinding;
@@ -60,6 +63,14 @@ namespace Pinvestor.BoardSystem.Base
             }
         }
 
+        private Camera GetCamera()
+        {
+            if (_camera == null)
+                _camera = Camera.main;
+
+            return _camera;
+        }
+
         private void InitializeInput()
         {
             if(_playerInput != null)
@@ -90,18 +101,14 @@ namespace Pinvestor.BoardSystem.Base
         {
             if (context.performed)
             {
-                Vector2 screenPosition 
+                Vector2 screenPosition
                     = Mouse.current.position.ReadValue();
-                
-                Vector3 worldPosition
-                    = Camera.main.ScreenToWorldPoint(
-                        new Vector3(
-                            screenPosition.x, 
-                            screenPosition.y, 
-                            Camera.main.nearClipPlane));
 
-                if (!GameManager.Instance.BoardWrapper.TryGetCellAt(
-                        worldPosition,
+                // Perspective camera: the click only resolves to a board position
+                // once its ray is intersected with the board surface plane.
+                if (!GameManager.Instance.BoardWrapper.TryGetCellAtScreenPoint(
+                        GetCamera(),
+                        screenPosition,
                         out var cell))
                 {
                     onProcessBoardItemSelection(null);

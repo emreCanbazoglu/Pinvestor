@@ -17,6 +17,16 @@ namespace Pinvestor.CardSystem.Authoring
     {
         [SerializeField] private CompanySelectionPileWrapper _pileWrapper = null;
 
+        [Header("Drag To Place")]
+        [Tooltip("Camera used to project the pointer onto the board surface. Falls back to Camera.main.")]
+        [SerializeField] private Camera _camera = null;
+
+        [Tooltip("How far above the board surface the dragged company hovers.")]
+        [SerializeField] private float _dragHeight = 0.75f;
+
+        [Tooltip("Snap the dragged company to the hovered cell instead of following the pointer freely.")]
+        [SerializeField] private bool _snapToCell = true;
+
         private PlayerInput _playerInput;
 
         private BoardItemWrapper_Company _selectedCompany = null;
@@ -216,23 +226,94 @@ namespace Pinvestor.CardSystem.Authoring
 
         private IEnumerator<float> MoveSelectedCompanyRoutine()
         {
+            BoardWrapper boardWrapper = GameManager.Instance.BoardWrapper;
+
+            // Park the company over the board so it never flashes at world origin
+            // on the frame the drag starts.
+            _selectedCompany.transform.SetPositionAndRotation(
+                GetHoverPosition(boardWrapper, boardWrapper.SurfaceCenter),
+                boardWrapper.transform.rotation);
+
             while (_selectedCompany != null)
             {
-                Vector2 inputPosition = Input.mousePosition;
+                if (TryGetPointerSurfacePoint(
+                        boardWrapper,
+                        out Vector3 surfacePoint))
+                {
+                    // Placement is evaluated first — the snap target depends on it.
+                    CheckPlacement(surfacePoint);
 
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(
-                    new Vector3(
-                        inputPosition.x,
-                        inputPosition.y));
+                    _selectedCompany.transform.SetPositionAndRotation(
+                        GetDragPosition(boardWrapper, surfacePoint),
+                        boardWrapper.transform.rotation);
+                }
 
-                worldPosition.z = _selectedCompany.transform.position.z;
-
-                _selectedCompany.transform.position = worldPosition;
-
-                CheckPlacement(worldPosition);
-                
                 yield return Timing.WaitForOneFrame;
             }
+        }
+
+        /// <summary>
+        /// Projects the pointer onto the board surface plane. Under a perspective
+        /// camera a screen point has no single world position, so it only becomes
+        /// meaningful once intersected with the board plane.
+        /// </summary>
+        private bool TryGetPointerSurfacePoint(
+            BoardWrapper boardWrapper,
+            out Vector3 worldPosition)
+        {
+            worldPosition = default;
+
+            if (Pointer.current == null)
+                return false;
+
+            return boardWrapper.TryGetSurfacePoint(
+                GetCamera(),
+                Pointer.current.position.ReadValue(),
+                out worldPosition);
+        }
+
+        /// <summary>
+        /// Hovered cell center when the current placement is valid, otherwise the
+        /// raw pointer position — both lifted off the surface by <see cref="_dragHeight"/>.
+        /// </summary>
+        private Vector3 GetDragPosition(
+            BoardWrapper boardWrapper,
+            Vector3 surfacePoint)
+        {
+            if (!_snapToCell
+                || !_currentPlacementResult.CanPlace
+                || _currentPlacementResult.TargetCellIndices.Length == 0)
+                return GetHoverPosition(boardWrapper, surfacePoint);
+
+            Vector2Int targetCellIndex = _currentPlacementResult.TargetCellIndices[0];
+
+            if (boardWrapper.TryGetCellWrapper(
+                    targetCellIndex,
+                    out CellWrapper cellWrapper)
+                && cellWrapper.PlacementPivot != null)
+                return GetHoverPosition(
+                    boardWrapper,
+                    cellWrapper.PlacementPivot.position);
+
+            return GetHoverPosition(
+                boardWrapper,
+                boardWrapper.GetCellWorldPosition(targetCellIndex));
+        }
+
+        private Vector3 GetHoverPosition(
+            BoardWrapper boardWrapper,
+            Vector3 surfacePoint)
+        {
+            return surfacePoint
+                   + boardWrapper.SurfaceNormal * _dragHeight;
+        }
+
+        private Camera GetCamera()
+        {
+            if (_camera == null)
+                _camera = Camera.main;
+
+            return _camera;
         }
 
         public async UniTask<BoardItemWrapper_Company> WaitUntilCompanyPlacementAsync()

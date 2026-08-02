@@ -39,7 +39,7 @@ namespace Pinvestor.Game.BallSystem
 
         public void Shoot(
             BallMover ballMover,
-            Vector2 direction,
+            Vector3 direction,
             float speed)
         {
             IsActive = true;
@@ -52,11 +52,11 @@ namespace Pinvestor.Game.BallSystem
 
         private IEnumerator<float> MoveRoutine(
             BallMover ballMover,
-            Vector2 direction,
+            Vector3 direction,
             float speed)
         {
-            transform.forward = new Vector3(direction.x, direction.y);
-            
+            transform.forward = direction;
+
             while (true)
             {
                 var distance 
@@ -108,12 +108,15 @@ namespace Pinvestor.Game.BallSystem
         {
             if(!other.TryGetComponent(out BallEntrance entrance))
                 return;
-            
-            if(transform.forward.y > 0)
+
+            // The entrance faces into the board, so a positive dot means the ball is
+            // still travelling up the board and is only leaving the entrance volume
+            // on its way in. Only a ball heading back out is despawned.
+            if(Vector3.Dot(transform.forward, entrance.transform.forward) > 0f)
                 return;
-            
+
             IsActive = false;
-            
+
             Destroy(gameObject);
         }
     }

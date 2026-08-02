@@ -5,7 +5,6 @@ using Pinvestor.BoardSystem.Base;
 using Pinvestor.Game.Offer;
 using Pinvestor.GameConfigSystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityWeld.Binding;
 
@@ -19,12 +18,8 @@ namespace Pinvestor.UI
 
         [SerializeField] private Image _bgImage = null;
 
+        [Tooltip("Carrier with the HorizontalLayoutGroup that arranges the offer cards.")]
         [SerializeField] private RectTransform _cardParentRect = null;
-        [SerializeField] private float _yOffset = 120f;
-
-        [SerializeField] private float _cardTweenScale = 1.1f;
-        [SerializeField] private float _cardTweenDuration = 0.5f;
-        [SerializeField] private Ease _cardTweenEase = Ease.OutBounce;
 
         [SerializeField] private float _hideUIDuration = 0.1f;
         [SerializeField] private Ease _hideUIEase = Ease.OutBack;
@@ -41,7 +36,6 @@ namespace Pinvestor.UI
         private EventBinding<HideCompanyOfferPanelEvent> _hideOfferBinding;
 
         private readonly List<Widget_CompanyCard> _cardWidgets = new List<Widget_CompanyCard>();
-        private readonly Dictionary<GameObject, Tween> _cardTweenMap = new Dictionary<GameObject, Tween>();
 
         protected override void AwakeCustomActions()
         {
@@ -111,154 +105,56 @@ namespace Pinvestor.UI
                 return;
             }
 
-            float totalWidth = _cardParentRect.rect.width;
-            int count = companies.Count;
-            float cardWidth = 300f;
-            float spacing = (totalWidth - cardWidth * count) / (count + 1);
-
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < companies.Count; i++)
             {
                 var company = companies[i];
-                int cardIndex = i;
 
+                // Layout is the carrier's HorizontalLayoutGroup job — the panel only
+                // parents the card and lets the group place it.
                 var cardWidget = Instantiate(_cardPrefab, _cardParentRect);
-                cardWidget.gameObject.name = $"OfferCard_{cardIndex}_{company.CompanyId}";
-
-                // Position cards horizontally within the parent
-                var rt = cardWidget.GetComponent<RectTransform>();
-                if (rt != null)
-                {
-                    rt.anchorMin = new Vector2(0, 0.5f);
-                    rt.anchorMax = new Vector2(0, 0.5f);
-                    rt.pivot = new Vector2(0.5f, 0.5f);
-                    float xPos = spacing + cardWidth * 0.5f + i * (cardWidth + spacing);
-                    rt.anchoredPosition = new Vector2(xPos, _yOffset);
-                }
+                cardWidget.gameObject.name = $"OfferCard_{i}_{company.CompanyId}";
 
                 cardWidget.transform.localScale = Vector3.zero;
 
                 cardWidget.PopulateFromConfig(company);
+                cardWidget.OnClicked += OnCardClicked;
 
-                // Wire click event via the card's EventTrigger
-                var clickEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-                int capturedIndex = cardIndex;
-                clickEntry.callback.AddListener(_ => OnCardClicked(capturedIndex));
-
-                var hoverEnterEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
-                var cardGo = cardWidget.gameObject;
-                hoverEnterEntry.callback.AddListener(_ => OnCardPointerEnter(cardGo));
-
-                var hoverExitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
-                hoverExitEntry.callback.AddListener(_ => OnCardPointerExit(cardGo));
-
-                if (cardWidget.ButtonEventTrigger != null)
-                {
-                    cardWidget.ButtonEventTrigger.triggers.Add(clickEntry);
-                    cardWidget.ButtonEventTrigger.triggers.Add(hoverEnterEntry);
-                    cardWidget.ButtonEventTrigger.triggers.Add(hoverExitEntry);
-                }
-                else
-                {
-                    var eventTrigger = cardWidget.gameObject.GetComponent<EventTrigger>();
-                    if (eventTrigger == null)
-                        eventTrigger = cardWidget.gameObject.AddComponent<EventTrigger>();
-
-                    eventTrigger.triggers.Add(clickEntry);
-                    eventTrigger.triggers.Add(hoverEnterEntry);
-                    eventTrigger.triggers.Add(hoverExitEntry);
-                }
+                cardWidget.TryActivate();
 
                 _cardWidgets.Add(cardWidget);
             }
         }
 
-        private void OnCardClicked(int index)
+        private void OnCardClicked(Widget_CompanyCard cardWidget)
         {
-            if (_context == null)
+            if (_context == null || cardWidget.Model == null)
                 return;
 
-            if (index < 0 || index >= _context.OfferedCompanies.Count)
-                return;
-
-            _context.ConfirmSelection(_context.OfferedCompanies[index]);
-        }
-
-        private void OnCardPointerEnter(GameObject cardGo)
-        {
-            if (_cardTweenMap.TryGetValue(cardGo, out var existingTween))
-                existingTween?.Kill();
-
-            var tween = cardGo.transform
-                .DOScale(_cardTweenScale, _cardTweenDuration)
-                .SetEase(_cardTweenEase)
-                .OnKill(() => _cardTweenMap.Remove(cardGo));
-
-            _cardTweenMap[cardGo] = tween;
-        }
-
-        private void OnCardPointerExit(GameObject cardGo)
-        {
-            if (_cardTweenMap.TryGetValue(cardGo, out var existingTween))
-                existingTween?.Kill();
-
-            var tween = cardGo.transform
-                .DOScale(1f, _cardTweenDuration)
-                .SetEase(_cardTweenEase)
-                .OnKill(() => _cardTweenMap.Remove(cardGo));
-
-            _cardTweenMap[cardGo] = tween;
+            _context.ConfirmSelection(cardWidget.Model);
         }
 
         private void ShowCards()
         {
             foreach (var widget in _cardWidgets)
-            {
-                var go = widget.gameObject;
-
-                if (_cardTweenMap.TryGetValue(go, out var existingTween))
-                    existingTween?.Kill();
-
-                var tween = go.transform
-                    .DOScale(1f, _showUIDuration)
-                    .SetEase(_showUIEase)
-                    .OnKill(() => _cardTweenMap.Remove(go));
-
-                _cardTweenMap[go] = tween;
-            }
+                widget.PlayShow(_showUIDuration, _showUIEase);
         }
 
         private void HideCards()
         {
             foreach (var widget in _cardWidgets)
-            {
-                var go = widget.gameObject;
-
-                if (_cardTweenMap.TryGetValue(go, out var existingTween))
-                    existingTween?.Kill();
-
-                var tween = go.transform
-                    .DOScale(0f, _hideUIDuration)
-                    .SetEase(_hideUIEase)
-                    .OnKill(() => _cardTweenMap.Remove(go));
-
-                _cardTweenMap[go] = tween;
-            }
+                widget.PlayHide(_hideUIDuration, _hideUIEase);
         }
 
         private void ClearCards()
         {
-            // Copy values before iterating — Kill() triggers OnKill callbacks
-            // that remove entries from _cardTweenMap during enumeration.
-            var tweens = new List<Tween>(_cardTweenMap.Values);
-            _cardTweenMap.Clear();
-
-            foreach (var tween in tweens)
-                tween?.Kill();
-
             foreach (var widget in _cardWidgets)
             {
-                if (widget != null)
-                    Destroy(widget.gameObject);
+                if (widget == null)
+                    continue;
+
+                widget.OnClicked -= OnCardClicked;
+
+                Destroy(widget.gameObject);
             }
 
             _cardWidgets.Clear();
