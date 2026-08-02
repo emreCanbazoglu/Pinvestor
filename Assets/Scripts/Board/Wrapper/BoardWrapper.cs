@@ -34,7 +34,9 @@ namespace Pinvestor.BoardSystem.Authoring
         [Header("Walls")]
         [SerializeField] private Transform _boardEnterTransform = null;
 
-        [Tooltip("How far the bounding walls rise above the board surface.")]
+        [Tooltip("Total height of the bounding walls, centered on the board surface. "
+                 + "Must comfortably exceed the ball diameter, or the ball can catch a wall's "
+                 + "top/bottom face and get reflected off the board plane.")]
         [SerializeField] private float _wallHeight = 1f;
 
         [Tooltip("Thickness of the bounding walls along the board plane.")]
@@ -42,7 +44,11 @@ namespace Pinvestor.BoardSystem.Authoring
 
         public Board Board { get; private set; }
 
-        /// <summary>Playfield volume in board-local space. Rests on the surface and rises by <see cref="_wallHeight"/>.</summary>
+        /// <summary>
+        /// Playfield volume in board-local space: the board footprint extruded
+        /// <see cref="_wallHeight"/> and centered on the surface, so a ball travelling
+        /// at surface height has clearance from the walls' horizontal faces.
+        /// </summary>
         public Bounds LocalBounds { get; private set; }
 
         /// <summary>World-space axis-aligned bounds enclosing <see cref="LocalBounds"/>.</summary>
@@ -131,10 +137,11 @@ namespace Pinvestor.BoardSystem.Authoring
                     _wallHeight,
                     Board.Dimensions.y * _cellSize.y);
 
-            // The playfield volume rests on the surface and extends upwards.
-            LocalBounds = new Bounds(
-                _centerPosition + new Vector3(0f, _wallHeight * 0.5f, 0f),
-                size);
+            // Centered on the surface rather than resting on it: the ball travels at
+            // surface height, so it needs clearance both above and below. A wall whose
+            // bottom face sits exactly on the surface would let the ball's lower
+            // hemisphere catch that face and reflect straight down, off the board.
+            LocalBounds = new Bounds(_centerPosition, size);
 
             Bounds = CalculateWorldBounds(LocalBounds);
         }

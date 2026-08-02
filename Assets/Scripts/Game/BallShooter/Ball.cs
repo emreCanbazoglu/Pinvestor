@@ -20,6 +20,10 @@ namespace Pinvestor.Game.BallSystem
     {
         [field: SerializeField] public LayerMask LayerMask { get; private set; }
 
+        [Tooltip("Safety net: a ball that never finds its way back out of the entrance is "
+                 + "despawned after this long, so the launch phase cannot deadlock.")]
+        [SerializeField] private float _maxFlightDuration = 30f;
+
         [SerializeField] private AbilitySystemCharacter _abilitySystemCharacter = null;
         [SerializeField] private BallCollideAbilityScriptableObject _ballCollideAbility = null;
         
@@ -57,15 +61,38 @@ namespace Pinvestor.Game.BallSystem
         {
             transform.forward = direction;
 
+            float elapsed = 0f;
+
             while (true)
             {
-                var distance 
+                var distance
                     = speed * Time.fixedDeltaTime;
-                
+
                 Step(ballMover, distance);
-                
+
+                elapsed += Time.fixedDeltaTime;
+
+                if (_maxFlightDuration > 0f
+                    && elapsed >= _maxFlightDuration)
+                {
+                    Debug.LogWarning(
+                        $"[Ball] Flight exceeded {_maxFlightDuration}s without leaving through the " +
+                        "entrance — despawning so the launch phase can continue.",
+                        this);
+
+                    Despawn();
+                    yield break;
+                }
+
                 yield return Timing.WaitForOneFrame;
             }
+        }
+
+        private void Despawn()
+        {
+            IsActive = false;
+
+            Destroy(gameObject);
         }
         
         private StepResult Step(
@@ -115,9 +142,7 @@ namespace Pinvestor.Game.BallSystem
             if(Vector3.Dot(transform.forward, entrance.transform.forward) > 0f)
                 return;
 
-            IsActive = false;
-
-            Destroy(gameObject);
+            Despawn();
         }
     }
 }

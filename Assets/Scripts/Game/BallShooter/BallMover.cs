@@ -34,7 +34,9 @@ namespace Pinvestor.Game.BallSystem
             Vector3 origin = ball.transform.position;
             Vector3 currentDir = ball.transform.forward;
             float remainingDistance = distance;
-            float sphereRadius = ball.transform.localScale.x / 2f;
+            // lossyScale, not localScale — the ball is parented to the shoot point,
+            // so its local scale does not describe its size in the world.
+            float sphereRadius = ball.transform.lossyScale.x / 2f;
 
             for (int index = 0; index < _maxIterations && remainingDistance > 0.01f; index++)
             {
@@ -76,7 +78,9 @@ namespace Pinvestor.Game.BallSystem
             Vector3 origin)
         {
             float remainingDistance = distance;
-            float sphereRadius = ball.transform.localScale.x / 2f;
+            // lossyScale, not localScale — the ball is parented to the shoot point,
+            // so its local scale does not describe its size in the world.
+            float sphereRadius = ball.transform.lossyScale.x / 2f;
 
             bool isHit = false;
 

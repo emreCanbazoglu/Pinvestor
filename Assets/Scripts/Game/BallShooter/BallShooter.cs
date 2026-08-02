@@ -11,7 +11,12 @@ namespace Pinvestor.Game.BallSystem
     {
         [SerializeField] private BallShooterInputController _inputController = null;
 
+        [Tooltip("Only its position across the board is used — the launch height comes from the board surface.")]
         [SerializeField] private Transform _shootPoint = null;
+
+        [Tooltip("Height above the board surface the ball travels at.")]
+        [SerializeField] private float _launchHeightOffset = 0f;
+
         [SerializeField] private float _shootSpeed = 10f;
 
         [Tooltip("Camera used to project the aim pointer onto the board surface. Falls back to Camera.main.")]
@@ -113,12 +118,31 @@ namespace Pinvestor.Game.BallSystem
         {
             var ball = Instantiate(
                 _ballPrefab,
-                _shootPoint.position,
+                GetLaunchPosition(),
                 Quaternion.identity);
-            
+
             ball.transform.SetParent(_shootPoint);
-            
+
             return ball;
+        }
+
+        /// <summary>
+        /// The shoot point's position projected onto the board surface. Only its
+        /// position across the board matters — the travel height is derived from the
+        /// board so the ball is always in the same plane as the companies, instead of
+        /// depending on the transform being hand-placed at exactly the right height.
+        /// </summary>
+        private Vector3 GetLaunchPosition()
+        {
+            BoardWrapper boardWrapper = GameManager.Instance.BoardWrapper;
+
+            Vector3 shootPosition = _shootPoint.position;
+
+            Plane surfacePlane = boardWrapper.SurfacePlane;
+
+            return shootPosition
+                   - surfacePlane.normal * surfacePlane.GetDistanceToPoint(shootPosition)
+                   + boardWrapper.SurfaceNormal * _launchHeightOffset;
         }
         
         private void OnAimInput(
